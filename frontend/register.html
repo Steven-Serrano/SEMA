@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Crear cuenta · SEMA</title>
+<link rel="icon" type="image/png" href="assets/logo.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+<script defer src="js/app.js"></script>
+<script defer src="js/register.js"></script>
+</head>
+<body>
+<section class="login">
+<div class="login__left">
+<div class="login__content">
+<img src="assets/logo.png" class="login__logo" alt="SEMA">
+<span class="chip">💙 Comunicación que Sana</span>
+<h1>Únete a SEMA</h1>
+<p>Crea tu cuenta y comienza tu camino hacia el bienestar emocional.</p>
+<div class="login__features">
+<div>💬 Comunidad segura</div>
+<div>🧑‍⚕️ Psicólogos verificados</div>
+<div>📊 Seguimiento emocional</div>
+<div>🔒 Privacidad protegida</div>
+</div>
+</div>
+</div>
+<div class="login__right">
+<div class="login__card" style="max-width:700px">
+<h2>Crear cuenta</h2>
+<p>Completa la información para registrarte.</p>
+<form id="registerForm">
+<div class="grid grid-2">
+<div class="form-grupo"><label>Nombre completo</label><input id="nombre" required></div>
+<div class="form-grupo"><label>Documento</label><input id="documento" required></div>
+<div class="form-grupo"><label>Correo</label><input type="email" id="correo" required></div>
+<div class="form-grupo"><label>Teléfono</label><input type="tel" id="telefono"></div>
+<div class="form-grupo"><label>Fecha de nacimiento</label><input type="date" id="fecha"></div>
+<div class="form-grupo"><label>Género</label><select id="genero"><option>Selecciona</option><option>Masculino</option><option>Femenino</option><option>Prefiero no decirlo</option></select></div>
+<div class="form-grupo"><label>Ciudad</label><input id="ciudad"></div>
+<div class="form-grupo"><label>Contraseña</label><input type="password" id="password" required></div>
+<div class="form-grupo"><label>Confirmar contraseña</label><input type="password" id="confirmPassword" required></div>
+</div>
+<div style="margin:1rem 0">
+<label><input type="checkbox" required> Acepto los términos y condiciones.</label>
+</div>
+<button class="btn btn-primario login__btn" type="submit">Crear cuenta</button>
+</form>
+<div class="login__divider"><span>o</span></div>
+<a class="btn btn-secundario login__register" href="login.html">Ya tengo una cuenta</a>
+<div class="login__back"><a href="index.html">← Volver al inicio</a></div>
+</div>
+</div>
+</section>
+</body>
+</html>

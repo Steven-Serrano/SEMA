@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Comunidad · SEMA</title>
+<meta name="description" content="Un espacio seguro donde los jóvenes se apoyan mutuamente.">
+<link rel="icon" type="image/png" href="assets/logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+<script defer src="js/app.js"></script>
+<script defer src="js/layout.js"></script>
+</head>
+<body>
+<div id="sema-nav"></div>
+
+<section class="seccion contenedor">
+  <div class="seccion__titulo">
+    <span class="chip">Comunidad SEMA</span>
+    <h2>No estás solo/a</h2>
+    <p>Un espacio seguro donde jóvenes comparten y se apoyan.</p>
+  </div>
+
+  <form class="tarjeta" id="form-post" style="max-width:700px; margin:0 auto 2rem">
+    <div class="form-grupo">
+      <label for="post-texto">Comparte lo que sientes</label>
+      <textarea id="post-texto" placeholder="Hoy me pasó..." required></textarea>
+    </div>
+    <button type="submit" class="btn btn-primario">Publicar</button>
+  </form>
+
+  <div id="posts" style="max-width:700px; margin:0 auto"></div>
+</section>
+
+<div id="sema-footer"></div>
+
+<script>
+let posts = [
+  { autor:'Mario', ini:'M', tiempo:'hace 2h', texto:'Logré terminar mis exámenes finales. Fue duro, pero SEMA me ayudó a mantenerme enfocado. 💪', likes:24, gustado:false },
+  { autor:'Sofía', ini:'S', tiempo:'hace 5h', texto:'Compartir aquí me hace sentir menos sola. Gracias a todos por leer 💙', likes:42, gustado:false },
+  { autor:'Diego', ini:'D', tiempo:'hace 1d', texto:'Empecé a meditar 10 min al día. La diferencia es real.', likes:31, gustado:false }
+];
+
+function render() {
+  document.getElementById('posts').innerHTML = posts.map((p,i) => `
+    <article class="post">
+      <div class="avatar">${p.ini}</div>
+      <div style="flex:1">
+        <h4>${p.autor}</h4>
+        <div class="meta">${p.tiempo}</div>
+        <p style="color:var(--texto)">${p.texto}</p>
+        <div class="acciones">
+          <button onclick="darLike(${i})" class="${p.gustado?'gustado':''}">💙 ${p.likes}</button>
+          <button>💬 Comentar</button>
+          <button>🔗 Compartir</button>
+        </div>
+      </div>
+    </article>`).join('');
+}
+function darLike(i) { posts[i].gustado = !posts[i].gustado; posts[i].likes += posts[i].gustado ? 1 : -1; render(); }
+
+document.getElementById('form-post').addEventListener('submit', e => {
+  e.preventDefault();
+  const t = document.getElementById('post-texto').value.trim();
+  if (!t) return;
+  posts.unshift({ autor:'Tú', ini:'T', tiempo:'ahora', texto:t, likes:0, gustado:false });
+  e.target.reset(); render();
+  SEMA.toast('Publicación compartida 💙');
+});
+document.addEventListener('DOMContentLoaded', render);
+</script>
+</body></html>

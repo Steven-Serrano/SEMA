@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Psicólogos · SEMA</title>
+<meta name="description" content="Directorio de psicólogos verificados en SEMA.">
+<link rel="icon" type="image/png" href="assets/logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+<script defer src="js/app.js"></script>
+<script defer src="js/layout.js"></script>
+</head>
+<body>
+<div id="sema-nav"></div>
+
+<section class="seccion contenedor">
+  <div class="seccion__titulo">
+    <span class="chip">Directorio verificado</span>
+    <h2>Encuentra tu psicólogo/a ideal</h2>
+    <p>Profesionales con credenciales revisadas, especializados en jóvenes.</p>
+  </div>
+
+  <div class="form-grupo" style="max-width:520px; margin:0 auto 2rem">
+    <input type="search" id="buscador-psi" placeholder="🔎 Buscar por nombre o especialidad..." aria-label="Buscar psicólogo">
+  </div>
+
+  <div class="grid grid-3" id="psi-grid">
+    <!-- Se llena con JS -->
+  </div>
+</section>
+
+<div id="sema-footer"></div>
+
+<script>
+const psicologos = [
+  { n:'Dra. Laura Méndez', esp:'Ansiedad y adolescencia', rating:'4.9', ini:'LM' },
+  { n:'Dr. Carlos Ramírez', esp:'Terapia cognitivo-conductual', rating:'4.8', ini:'CR' },
+  { n:'Dra. Sofía Herrera', esp:'Depresión juvenil', rating:'4.9', ini:'SH' },
+  { n:'Dr. Andrés López', esp:'Duelo y pérdida', rating:'4.7', ini:'AL' },
+  { n:'Dra. Camila Torres', esp:'Autoestima y relaciones', rating:'5.0', ini:'CT' },
+  { n:'Dr. Mateo Ríos', esp:'Trastornos del sueño', rating:'4.8', ini:'MR' }
+];
+
+function render(lista) {
+  const g = document.getElementById('psi-grid');
+  g.innerHTML = lista.map(p => `
+    <article class="tarjeta psi-card">
+      <div class="avatar-grande">${p.ini}</div>
+      <h3>${p.n}</h3>
+      <p class="especialidad">${p.esp}</p>
+      <p class="rating">⭐ ${p.rating}</p>
+      <a href="citas.html" class="btn btn-primario" style="margin-top:.5rem">Agendar cita</a>
+    </article>`).join('');
+}
+document.addEventListener('DOMContentLoaded', () => {
+  render(psicologos);
+  document.getElementById('buscador-psi').addEventListener('input', e => {
+    const q = e.target.value.toLowerCase();
+    render(psicologos.filter(p => (p.n + ' ' + p.esp).toLowerCase().includes(q)));
+  });
+});
+</script>
+</body></html>

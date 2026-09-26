@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Dashboard · SEMA</title>
+<meta name="description" content="Tu panel personal de bienestar emocional en SEMA." />
+<link rel="icon" type="image/png" href="assets/logo.png" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css" />
+<script defer src="js/app.js"></script>
+<script defer src="js/layout.js"></script>
+<script defer src="js/usuario.js"></script>
+<script defer src="js/dashboard.js"></script>
+</head>
+<body>
+<div id="sema-nav"></div>
+
+<div class="dashboard">
+  <aside class="sidebar">
+    <h5>Mi espacio</h5>
+    <a href="dashboard.html" class="activo">🏠 Dashboard</a>
+    <a href="seguimiento.html">📊 Seguimiento</a>
+    <a href="citas.html">📅 Mis citas</a>
+    <a href="chat.html">💬 Mensajes</a>
+    <h5>Explorar</h5>
+    <a href="psicologos.html">🧑‍⚕️ Psicólogos</a>
+    <a href="comunidad.html">🌱 Comunidad</a>
+    <h5>Cuenta</h5>
+    <a href="#">⚙️ Configuración</a>
+    <a href="index.html">🚪 Cerrar sesión</a>
+  </aside>
+
+<div class="dashboard__main">
+
+    <header class="dashboard-header">
+
+        <div class="dashboard-title">
+
+            <h1 id="saludoUsuario">
+                Hola, Usuario SEMA
+            </h1>
+
+            <p>
+                ¿Cómo te sientes hoy? Registrar tu ánimo toma solo un segundo.
+            </p>
+
+        </div>
+
+        <div class="dashboard-actions">
+
+            <!-- Notificaciones -->
+            <button class="notification-btn" title="Notificaciones">
+                🔔
+            </button>
+
+            <!-- Usuario -->
+            <div class="user-menu">
+
+                <button id="userMenuBtn" class="user-menu-btn">
+
+                    <img
+                        class="foto-usuario"
+                        src="assets/avatar-default.png"
+                        alt="Foto de perfil">
+
+                    <div class="user-info">
+
+                        <span class="nombre-usuario">
+                            Usuario SEMA
+                        </span>
+
+                        <small class="correo-usuario">
+                            usuario@sema.com
+                        </small>
+
+                    </div>
+
+                    <span class="user-arrow">
+                        ▼
+                    </span>
+
+                </button>
+
+                <div class="user-dropdown" id="userDropdown">
+
+                    <a href="perfil.html">
+                        👤 Mi perfil
+                    </a>
+
+                    <a href="configuracion.html">
+                        ⚙️ Configuración
+                    </a>
+
+                    <hr>
+
+                    <a href="index.html">
+                        🚪 Cerrar sesión
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </header>
+</header>
+    <section class="tarjeta aparecer-2" style="margin-top:1.5rem">
+      <h3>Mi ánimo hoy</h3>
+      <div class="animo-selector" id="animo-selector">
+        <button class="animo-btn" data-animo="Muy bien" aria-label="Muy bien">😄</button>
+        <button class="animo-btn" data-animo="Bien" aria-label="Bien">🙂</button>
+        <button class="animo-btn" data-animo="Neutro" aria-label="Neutro">😐</button>
+        <button class="animo-btn" data-animo="Triste" aria-label="Triste">😔</button>
+        <button class="animo-btn" data-animo="Ansioso" aria-label="Ansioso">😰</button>
+      </div>
+    </section>
+
+    <div class="grid grid-3 aparecer-3" style="margin-top:1.5rem">
+      <div class="tarjeta">
+        <div class="tarjeta__icono">🎯</div>
+        <h3>Meditación diaria</h3>
+        <p>4 de 7 días esta semana</p>
+        <div class="progreso"><div class="progreso__barra" style="width:57%"></div></div>
+      </div>
+      <div class="tarjeta">
+        <div class="tarjeta__icono">📝</div>
+        <h3>Diario emocional</h3>
+        <p>5 de 7 entradas</p>
+        <div class="progreso"><div class="progreso__barra" style="width:71%"></div></div>
+      </div>
+      <div class="tarjeta">
+        <div class="tarjeta__icono">💤</div>
+        <h3>Sueño saludable</h3>
+        <p>6 de 7 noches</p>
+        <div class="progreso"><div class="progreso__barra" style="width:86%"></div></div>
+      </div>
+    </div>
+
+    <div class="grid grid-2" style="margin-top:1.5rem">
+      <div class="tarjeta">
+        <h3>Próxima cita</h3>
+        <div class="cita-item" style="margin-top:.8rem">
+          <div class="cita-fecha"><div class="dia">18</div><div class="mes">Jul</div></div>
+          <div class="cita-info"><h4>Dra. Laura Méndez</h4><p>Sesión online · 15:00</p></div>
+          <span class="badge badge-verde">Confirmada</span>
+        </div>
+        <a href="citas.html" class="btn btn-secundario" style="margin-top:.5rem">Ver todas</a>
+      </div>
+      <div class="tarjeta">
+        <h3>Notificaciones</h3>
+        <ul style="list-style:none; padding:0; margin:0">
+          <li style="padding:.6rem 0; border-bottom:1px solid var(--borde)">💬 Nuevo mensaje del Dr. Ramírez</li>
+          <li style="padding:.6rem 0; border-bottom:1px solid var(--borde)">🌱 Publicación popular en Comunidad</li>
+          <li style="padding:.6rem 0">📅 Recordatorio: cita mañana 15:00</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="sema-footer"></div>
+</body></html>

@@ -1,0 +1,20 @@
+[
+    {
+        "id": 1,
+        "nombre": "Steven",
+        "correo": "steven@sema.com",
+        "tipo_usuario": "usuario"
+    },
+    {
+        "id": 2,
+        "nombre": "Jonier",
+        "correo": "jonier@sema.com",
+        "tipo_usuario": "usuario"
+    },
+    {
+        "id": 3,
+        "nombre": "Edgardo",
+        "correo": "edgardo@sema.com",
+        "tipo_usuario": "usuario"
+    }
+]
