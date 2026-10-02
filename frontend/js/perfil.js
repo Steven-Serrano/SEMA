@@ -1,171 +1,71 @@
-/*==========================================
-        PERFIL - SEMA
-==========================================*/
+/* ============================================================
+   SEMA - PERFIL (Solo visualización + estadísticas)
+   ============================================================ */
 
-document.addEventListener("DOMContentLoaded",()=>{
+document.addEventListener('DOMContentLoaded', async () => {
+    if (!Auth || !Auth.getToken()) {
+        window.location.href = "login.html";
+        return;
+    }
 
-const tabs=document.querySelectorAll(".perfil-tab");
-const panels=document.querySelectorAll(".perfil-panel");
+    const user = Auth.getUser();
 
-const ultimaTab=localStorage.getItem("perfil-tab")||"informacion";
+    // ==========================================
+    // 1. CARGAR DATOS DEL PERFIL
+    // ==========================================
+    async function cargarPerfil() {
+        try {
+            const perfil = await fetchAuth('/usuarios/perfil');
+            
+            // Actualizar cabecera
+            document.getElementById('perfilNombre').textContent = perfil.nombre || user.nombre;
+            document.getElementById('perfilCorreo').textContent = perfil.email || user.email;
+            
+            if (perfil.fotoPerfil) {
+                document.getElementById('previewFoto').src = perfil.fotoPerfil;
+            }
 
-tabs.forEach(tab=>{
-tab.classList.toggle("activo",tab.dataset.tab===ultimaTab);
-tab.addEventListener("click",()=>cambiarTab(tab.dataset.tab));
+            // Información personal
+            document.getElementById('doc').textContent = perfil.documento || 'No especificado';
+            document.getElementById('tel').textContent = perfil.telefono || 'No especificado';
+            document.getElementById('ciudad').textContent = perfil.ciudad || 'No especificado';
+            document.getElementById('fecha').textContent = perfil.fechaNacimiento ? new Date(perfil.fechaNacimiento).toLocaleDateString() : 'No especificado';
+            document.getElementById('genero').textContent = perfil.genero || 'No especificado';
+            document.getElementById('bio').textContent = perfil.biografia || 'Sin biografía';
+
+        } catch (error) {
+            console.error('Error cargando perfil:', error);
+        }
+    }
+
+    // ==========================================
+    // 2. CARGAR ESTADÍSTICAS
+    // ==========================================
+    async function cargarEstadisticas() {
+        try {
+            const estados = await fetchAuth('/estados-emocionales');
+            const citas = await fetchAuth('/citas');
+            
+            // Contar citas completadas
+            const citasCompletadas = citas.filter(c => c.estado === 'completada').length;
+            
+            // Contar mensajes (aproximado: todos los enviados por el usuario)
+            // Esto requeriría una ruta específica en el backend, por ahora usamos 0
+            let totalMensajes = 0;
+            
+            document.getElementById('totalRegistros').textContent = estados.length;
+            document.getElementById('totalCitas').textContent = citasCompletadas;
+            document.getElementById('totalMensajes').textContent = totalMensajes;
+            
+            // Días usando SEMA (calculado desde la fecha de creación)
+            const dias = Math.floor((new Date() - new Date()) / (1000 * 60 * 60 * 24)) + 1;
+            document.getElementById('diasSEMA').textContent = dias;
+
+        } catch (error) {
+            console.error('Error cargando estadísticas:', error);
+        }
+    }
+
+    await cargarPerfil();
+    await cargarEstadisticas();
 });
-
-panels.forEach(panel=>{
-panel.classList.toggle("activo",panel.id===ultimaTab);
-});
-
-cargarDatos();
-
-const guardar=document.getElementById("guardarPerfil");
-
-if(guardar){
-guardar.addEventListener("click",guardarPerfil);
-}
-
-const inputFoto=document.getElementById("fotoPerfil");
-
-if(inputFoto){
-inputFoto.addEventListener("change",cambiarFoto);
-}
-
-const eliminar=document.getElementById("eliminarFoto");
-
-if(eliminar){
-eliminar.addEventListener("click",eliminarFotoPerfil);
-}
-
-});
-
-/*==========================================
-        CAMBIAR PESTAÑA
-==========================================*/
-
-function cambiarTab(tab){
-
-document.querySelectorAll(".perfil-tab").forEach(btn=>{
-btn.classList.remove("activo");
-});
-
-document.querySelectorAll(".perfil-panel").forEach(panel=>{
-panel.classList.remove("activo");
-});
-
-const boton=document.querySelector(`.perfil-tab[data-tab="${tab}"]`);
-const panel=document.getElementById(tab);
-
-if(boton)boton.classList.add("activo");
-if(panel)panel.classList.add("activo");
-
-localStorage.setItem("perfil-tab",tab);
-
-}
-
-/*==========================================
-        GUARDAR PERFIL
-==========================================*/
-
-function guardarPerfil(){
-
-const datos={
-nombre:document.getElementById("nombre")?.value||"",
-correo:document.getElementById("correo")?.value||"",
-documento:document.getElementById("documento")?.value||"",
-telefono:document.getElementById("telefono")?.value||"",
-ciudad:document.getElementById("ciudad")?.value||"",
-nacimiento:document.getElementById("fechaNacimiento")?.value||"",
-genero:document.getElementById("genero")?.value||"",
-bio:document.getElementById("biografia")?.value||""
-};
-
-actualizarUsuario(datos);
-
-if(typeof SEMA!=="undefined"){
-SEMA.toast("Perfil actualizado correctamente 💙");
-}
-
-}
-
-/*==========================================
-        CARGAR PERFIL
-==========================================*/
-
-function cargarDatos(){
-
-const usuario=obtenerUsuario();
-
-if(document.getElementById("nombre"))document.getElementById("nombre").value=usuario.nombre||"";
-if(document.getElementById("correo"))document.getElementById("correo").value=usuario.correo||"";
-if(document.getElementById("documento"))document.getElementById("documento").value=usuario.documento||"";
-if(document.getElementById("telefono"))document.getElementById("telefono").value=usuario.telefono||"";
-if(document.getElementById("ciudad"))document.getElementById("ciudad").value=usuario.ciudad||"";
-if(document.getElementById("fechaNacimiento"))document.getElementById("fechaNacimiento").value=usuario.nacimiento||"";
-if(document.getElementById("genero"))document.getElementById("genero").value=usuario.genero||"";
-if(document.getElementById("biografia"))document.getElementById("biografia").value=usuario.bio||"";
-
-const foto=obtenerFoto();
-
-const preview=document.getElementById("previewFoto");
-const grande=document.getElementById("fotoGrande");
-
-if(preview)preview.src=foto;
-if(grande)grande.src=foto;
-
-}
-
-/*==========================================
-        CAMBIAR FOTO
-==========================================*/
-
-function cambiarFoto(e){
-
-const archivo=e.target.files[0];
-
-if(!archivo)return;
-
-const reader=new FileReader();
-
-reader.onload=function(ev){
-
-actualizarFoto(ev.target.result);
-
-const preview=document.getElementById("previewFoto");
-const grande=document.getElementById("fotoGrande");
-
-if(preview)preview.src=ev.target.result;
-if(grande)grande.src=ev.target.result;
-
-if(typeof SEMA!=="undefined"){
-SEMA.toast("Foto actualizada 📷");
-}
-
-};
-
-reader.readAsDataURL(archivo);
-
-}
-
-/*==========================================
-        ELIMINAR FOTO
-==========================================*/
-
-function eliminarFotoPerfil(){
-
-eliminarFoto();
-
-const defecto="assets/avatar-default.png";
-
-const preview=document.getElementById("previewFoto");
-const grande=document.getElementById("fotoGrande");
-
-if(preview)preview.src=defecto;
-if(grande)grande.src=defecto;
-
-if(typeof SEMA!=="undefined"){
-SEMA.toast("Foto eliminada");
-}
-
-}

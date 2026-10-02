@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Panel de Administración · SEMA</title>
+  <link rel="icon" type="image/png" href="assets/logo.png">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  
+  <script defer src="js/api.js"></script>
+  <script defer src="js/app.js"></script>
+  <script defer src="js/layout.js"></script>
+  <script defer src="js/dashboard-admin.js"></script>
+</head>
+<body>
+
+  <div id="sema-nav"></div>
+
+  <div class="dashboard">
+    <aside class="sidebar">
+      <h5>Panel Admin</h5>
+      <a href="dashboard-admin.html" class="activo">📊 Dashboard</a>
+      <a href="#usuarios">👥 Usuarios</a>
+      <a href="#psicologos">🧑‍⚕️ Psicólogos</a>
+      <a href="configuracion.html">⚙️ Configuración</a>
+      <a href="index.html" class="logout-link">🚪 Cerrar sesión</a>
+    </aside>
+
+    <main class="dashboard__main">
+      <header class="dashboard-header">
+        <div class="dashboard-title">
+          <h1 id="saludoAdmin">Panel de Administración</h1>
+          <p>Gestión completa de la plataforma SEMA.</p>
+        </div>
+      </header>
+
+      <!-- ESTADÍSTICAS -->
+      <div class="grid grid-4" style="margin-top: 1.5rem;">
+        <div class="tarjeta stat-card">
+          <div class="tarjeta__icono">👥</div>
+          <h2 id="stat-usuarios">0</h2>
+          <p>Estudiantes</p>
+        </div>
+        <div class="tarjeta stat-card">
+          <div class="tarjeta__icono">🧑‍⚕️</div>
+          <h2 id="stat-psicologos">0</h2>
+          <p>Psicólogos</p>
+        </div>
+        <div class="tarjeta stat-card">
+          <div class="tarjeta__icono">📅</div>
+          <h2 id="stat-citas">0</h2>
+          <p>Citas totales</p>
+        </div>
+        <div class="tarjeta stat-card">
+          <div class="tarjeta__icono">💬</div>
+          <h2 id="stat-chats">0</h2>
+          <p>Chats activos</p>
+        </div>
+      </div>
+
+      <!-- PSICÓLOGOS PENDIENTES -->
+      <section class="tarjeta" style="margin-top: 1.5rem;">
+        <h3>‍⚕️ Psicólogos pendientes de aprobación</h3>
+        <div id="lista-psicologos-pendientes" style="margin-top: 1rem;">
+          <p style="color: var(--texto-secundario);">Cargando...</p>
+        </div>
+      </section>
+
+      <!-- LISTA DE USUARIOS -->
+      <section class="tarjeta" style="margin-top: 1.5rem;">
+        <h3>👥 Gestión de Usuarios</h3>
+        <div style="margin: 1rem 0;">
+          <input type="search" id="buscador-usuarios" placeholder="🔎 Buscar por nombre o email..." style="width: 100%; padding: 0.75rem; border: 1px solid var(--borde); border-radius: 8px; background: var(--fondo); color: var(--texto);">
+        </div>
+        <div id="lista-usuarios" style="margin-top: 1rem;">
+          <p style="color: var(--texto-secundario);">Cargando usuarios...</p>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <div id="sema-footer"></div>
+
+</body>
+</html>

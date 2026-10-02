@@ -1,45 +1,83 @@
 <!DOCTYPE html>
 <html lang="es" data-theme="light">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Chat · SEMA</title>
-<meta name="description" content="Conversaciones seguras y confidenciales con profesionales." />
-<link rel="icon" type="image/png" href="assets/logo.png" />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/styles.css" />
-<script defer src="js/app.js"></script>
-<script defer src="js/layout.js"></script>
-<script defer src="js/usuario.js"></script>
-<script defer src="js/chat.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Chat · SEMA</title>
+  <meta name="description" content="Mensajería segura con tu psicólogo.">
+  <link rel="icon" type="image/png" href="assets/logo.png">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  
+  <!-- Scripts en orden correcto -->
+  <script defer src="js/api.js"></script>
+  <script defer src="js/app.js"></script>
+  <script defer src="js/layout.js"></script>
+  <script defer src="js/chat.js"></script>
 </head>
 <body>
-<div id="sema-nav"></div>
 
-<section class="chat">
-  <aside class="chat__lista" aria-label="Contactos">
-    <div class="chat__item activo"><div class="avatar">LM</div><div><div class="nombre">Dra. Laura Méndez</div><div class="previa">En línea · Psicóloga</div></div></div>
-    <div class="chat__item"><div class="avatar">CR</div><div><div class="nombre">Dr. Carlos Ramírez</div><div class="previa">Nos vemos el jueves 👋</div></div></div>
-    <div class="chat__item"><div class="avatar">SP</div><div><div class="nombre">Soporte SEMA</div><div class="previa">Ante cualquier duda...</div></div></div>
-    <div class="chat__item"><div class="avatar">GC</div><div><div class="nombre">Grupo · Bienestar</div><div class="previa">Mario: gracias 💙</div></div></div>
-  </aside>
+  <div id="sema-nav"></div>
 
-  <div class="chat__panel">
-    <div class="chat__header">
-      <div class="avatar">LM</div>
-      <div><div style="font-weight:600">Dra. Laura Méndez</div><div style="font-size:.8rem; color:var(--verde)">● En línea</div></div>
-    </div>
-    <div class="chat__mensajes" id="chat-mensajes">
-      <div class="msg msg--otro">Hola Ana, ¿cómo te has sentido esta semana?</div>
-      <div class="msg msg--yo">Bien en general, aunque el lunes tuve algo de ansiedad.</div>
-      <div class="msg msg--otro">Entiendo. ¿Recuerdas qué la desencadenó?</div>
-    </div>
-    <form class="chat__input" id="chat-form" autocomplete="off">
-      <input type="text" id="chat-input" placeholder="Escribe un mensaje..." aria-label="Mensaje" />
-      <button type="submit" class="btn btn-primario">Enviar</button>
-    </form>
+  <div class="chat-layout">
+    
+    <!-- ==========================================
+         SIDEBAR IZQUIERDO: Lista de chats
+         ========================================== -->
+    <aside class="chat-sidebar">
+      <div class="chat-sidebar__header">
+        <h3>Mis conversaciones</h3>
+      </div>
+      <div id="lista-chats" class="chat-list">
+        <p style="padding: 1rem; color: var(--texto-secundario, #64748b);">
+          Cargando chats...
+        </p>
+      </div>
+    </aside>
+
+    <!-- ==========================================
+         PANEL DERECHO: Chat activo
+         ========================================== -->
+    <main class="chat-main">
+      
+      <!-- Header del chat activo -->
+      <header class="chat-header" id="chat-header">
+        <div class="chat-header__info" id="chat-header-info">
+          <div class="avatar-grande" id="chat-avatar">💬</div>
+          <div>
+            <h3 id="chat-nombre">Selecciona una conversación</h3>
+            <small id="chat-estado" style="color: var(--texto-secundario, #64748b);">
+              Elige un chat de la lista
+            </small>
+          </div>
+        </div>
+      </header>
+
+      <!-- Área de mensajes -->
+      <div class="chat-mensajes" id="chat-mensajes">
+        <div style="text-align: center; padding: 2rem; color: var(--texto-secundario);">
+          <p> Selecciona una conversación para comenzar</p>
+        </div>
+      </div>
+
+      <!-- Formulario de envío -->
+      <form class="chat-form" id="chat-form">
+        <input 
+          type="text" 
+          id="chat-input" 
+          placeholder="Escribe un mensaje..." 
+          autocomplete="off"
+          disabled
+        >
+        <button type="submit" class="btn btn-primario" id="btn-enviar" disabled>
+          Enviar
+        </button>
+      </form>
+
+    </main>
   </div>
-</section>
 
-<div id="sema-footer"></div>
-</body></html>
+  <div id="sema-footer"></div>
+
+</body>
+</html>

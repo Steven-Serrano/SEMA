@@ -1,115 +1,128 @@
-// backend/routes/auth.js
-
 const express = require('express');
-const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const Usuario = require('../models/Usuario');
 
-const router = express.Router();
+const router = express.Router(); // ← ¡ESTA LÍNEA ES LA QUE FALTABA!
 
-// POST /api/auth/registro — crear una cuenta nueva en SEMA
+// ==========================================
+// POST /api/auth/registro
+// ==========================================
 router.post('/registro', async (req, res) => {
   try {
-    const {
-      nombre,
-      apellido,
-      correo,
-      contraseña,
-      fecha_nacimiento,
-      tipo_usuario,
-      rol
+    const { 
+      nombre, 
+      documento, 
+      email, 
+      password, 
+      telefono, 
+      ciudad, 
+      fechaNacimiento, 
+      genero,
+      numeroFicha,
+      programaFormacion,
+      edad,
+      rol = 'usuario'
     } = req.body;
 
-    // Verificar que el correo no exista
-    const existe = await Usuario.findOne({ correo });
-
-    if (existe) {
-      return res.status(400).json({
-        error: 'El correo ya está registrado'
+    // Validar campos obligatorios
+    if (!nombre || !documento || !email || !password || !numeroFicha || !programaFormacion) {
+      return res.status(400).json({ 
+        error: 'Campos obligatorios: nombre, documento, email, password, numeroFicha, programaFormacion' 
       });
     }
 
-    // Encriptar la contraseña antes de guardarla
-    const hash = await bcrypt.hash(contraseña, 10);
+    // Verificar si el email ya existe
+    const emailExistente = await Usuario.findOne({ email });
+    if (emailExistente) {
+      return res.status(400).json({ error: 'El correo electrónico ya está registrado' });
+    }
 
-    // Crear el usuario de SEMA
-    const usuario = await Usuario.create({
+    // Verificar si el documento ya existe
+    const documentoExistente = await Usuario.findOne({ documento });
+    if (documentoExistente) {
+      return res.status(400).json({ error: 'El número de documento ya está registrado' });
+    }
+
+    // Crear usuario
+    const usuario = new Usuario({
       nombre,
-      apellido,
-      correo,
-      contraseña: hash,
-      fecha_nacimiento,
-      tipo_usuario,
+      documento,
+      email,
+      password,
+      telefono,
+      ciudad,
+      fechaNacimiento,
+      genero,
+      numeroFicha,
+      programaFormacion,
+      edad,
       rol
     });
 
-    res.status(201).json({
-      mensaje: 'Usuario creado correctamente en SEMA',
-      id: usuario._id,
-      nombre: usuario.nombre,
-      correo: usuario.correo,
-      tipo_usuario: usuario.tipo_usuario,
-      rol: usuario.rol
-    });
+    await usuario.save();
 
-  } catch (err) {
-    res.status(400).json({
-      error: err.message
+    // Generar token
+    const token = jwt.sign(
+      { id: usuario._id, tipo: rol },
+      process.env.JWT_SECRET,
+      { expiresIn: '24h' }
+    );
+
+    res.status(201).json({
+      mensaje: 'Usuario registrado correctamente',
+      token,
+      usuario: {
+        id: usuario._id,
+        nombre: usuario.nombre,
+        email: usuario.email,
+        rol: usuario.rol
+      }
     });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
   }
 });
 
-// POST /api/auth/login — iniciar sesión en SEMA
+// ==========================================
+// POST /api/auth/login
+// ==========================================
 router.post('/login', async (req, res) => {
   try {
-    const { correo, contraseña } = req.body;
+    const { email, password } = req.body;
 
-    // Buscar el usuario por correo
-    const usuario = await Usuario.findOne({ correo });
+    if (!email || !password) {
+      return res.status(400).json({ error: 'El correo y la contraseña son obligatorios' });
+    }
 
+    // Buscar usuario
+    const usuario = await Usuario.findOne({ email });
     if (!usuario) {
-      return res.status(401).json({
-        error: 'Correo o contraseña incorrectos'
-      });
+      return res.status(401).json({ error: 'Credenciales incorrectas' });
     }
 
-    // Comparar la contraseña recibida con el hash guardado
-    const valida = await bcrypt.compare(
-      contraseña,
-      usuario.contraseña
-    );
-
-    if (!valida) {
-      return res.status(401).json({
-        error: 'Correo o contraseña incorrectos'
-      });
+    // Verificar contraseña
+    const esValida = await usuario.comparePassword(password);
+    if (!esValida) {
+      return res.status(401).json({ error: 'Credenciales incorrectas' });
     }
 
-    // Crear el token JWT
+    // Generar token
     const token = jwt.sign(
-      {
-        id: usuario._id,
-        correo: usuario.correo,
-        rol: usuario.rol
-      },
+      { id: usuario._id, tipo: usuario.rol },
       process.env.JWT_SECRET,
-      {
-        expiresIn: '24h'
-      }
+      { expiresIn: '24h' }
     );
 
     res.json({
+      mensaje: 'Inicio de sesión exitoso',
       token,
       nombre: usuario.nombre,
-      correo: usuario.correo,
-      tipo_usuario: usuario.tipo_usuario,
-      rol: usuario.rol
+      email: usuario.email,
+      rol: usuario.rol,
+      tipo: usuario.rol // Para compatibilidad con el frontend
     });
-
   } catch (err) {
-    res.status(500).json({
-      error: err.message
-    });
+    res.status(500).json({ error: err.message });
   }
 });
 

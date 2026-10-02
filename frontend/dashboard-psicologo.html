@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Panel Profesional · SEMA</title>
+  <meta name="description" content="Panel de gestión para psicólogos.">
+  <link rel="icon" type="image/png" href="assets/logo.png">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  
+  <script defer src="js/api.js"></script>
+  <script defer src="js/app.js"></script>
+  <script defer src="js/layout.js"></script>
+  <script defer src="js/dashboard-psicologo.js"></script>
+</head>
+<body>
+
+  <div id="sema-nav"></div>
+
+  <div class="dashboard">
+    
+    <!-- SIDEBAR PARA PSICÓLOGO -->
+    <aside class="sidebar">
+      <h5>Panel Profesional</h5>
+      <a href="dashboard-psicologo.html" class="activo">🏠 Mi Panel</a>
+      <a href="chat.html">💬 Mensajes</a>
+      <a href="citas-psicologo.html">📅 Mis Citas</a>
+      <a href="pacientes.html">👥 Mis Pacientes</a>
+      
+      <h5>Cuenta</h5>
+      <a href="perfil.html">👤 Mi Perfil</a>
+      <a href="configuracion.html">️ Configuración</a>
+      <a href="index.html" class="logout-link">🚪 Cerrar sesión</a>
+    </aside>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="dashboard__main">
+      
+      <header class="dashboard-header">
+        <div class="dashboard-title">
+          <h1 id="saludoPsicologo">Hola, Psicólogo</h1>
+          <p>Bienvenido a tu panel de gestión profesional.</p>
+        </div>
+
+        <div class="dashboard-actions">
+          <button class="notification-btn" title="Notificaciones">🔔</button>
+          
+          <div class="user-menu">
+            <button id="userMenuBtn" class="user-menu-btn">
+              <img class="foto-usuario" src="assets/avatar-default.png" alt="Foto">
+              <div class="user-info">
+                <span class="nombre-usuario">Cargando...</span>
+                <small class="correo-usuario">...</small>
+              </div>
+              <span class="user-arrow">▼</span>
+            </button>
+            <div class="user-dropdown" id="userDropdown">
+              <a href="perfil.html">👤 Mi perfil</a>
+              <a href="configuracion.html">⚙️ Configuración</a>
+              <hr>
+              <a href="index.html">🚪 Cerrar sesión</a>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- ESTADÍSTICAS PROFESIONALES -->
+      <div class="grid grid-4 aparecer-1" style="margin-top: 1.5rem;">
+        <div class="tarjeta stat-card">
+          <div class="tarjeta__icono">👥</div>
+          <h2 id="stat-pacientes">0</h2>
+          <p>Pacientes activos</p>
+        </div>
+        <div class="tarjeta stat-card">
+          <div class="tarjeta__icono">📅</div>
+          <h2 id="stat-citas-hoy">0</h2>
+          <p>Citas hoy</p>
+        </div>
+        <div class="tarjeta stat-card">
+          <div class="tarjeta__icono">📊</div>
+          <h2 id="stat-citas-mes">0</h2>
+          <p>Citas este mes</p>
+        </div>
+        <div class="tarjeta stat-card">
+          <div class="tarjeta__icono">💬</div>
+          <h2 id="stat-mensajes">0</h2>
+          <p>Mensajes recibidos</p>
+        </div>
+      </div>
+
+      <!-- PRÓXIMAS CITAS -->
+      <section class="tarjeta aparecer-2" style="margin-top: 1.5rem;">
+        <h3>📅 Próximas citas agendadas</h3>
+        <div id="lista-citas-psicologo" style="margin-top: 1rem;">
+          <p style="color: var(--texto-secundario);">Cargando citas...</p>
+        </div>
+      </section>
+
+      <!-- PACIENTES RECIENTES -->
+      <section class="tarjeta aparecer-3" style="margin-top: 1.5rem;">
+        <h3>👥 Pacientes recientes</h3>
+        <div id="lista-pacientes" style="margin-top: 1rem;">
+          <p style="color: var(--texto-secundario);">Cargando pacientes...</p>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <div id="sema-footer"></div>
+
+</body>
+</html>

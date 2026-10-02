@@ -4,15 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mi Perfil | SEMA</title>
-    <meta name="description" content="Administra tu perfil dentro de SEMA.">
     <link rel="icon" type="image/png" href="assets/logo.png">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
+    
+    <script defer src="js/api.js"></script>
     <script defer src="js/app.js"></script>
     <script defer src="js/layout.js"></script>
-    <script defer src="js/usuario.js"></script>
     <script defer src="js/perfil.js"></script>
 </head>
 <body>
@@ -20,530 +18,90 @@
 <div id="sema-nav"></div>
 <div class="dashboard">
 
-    <!--==============================
-            SIDEBAR
-    ==============================-->
     <aside class="sidebar">
         <h5>Mi espacio</h5>
-        <a href="dashboard.html">
-            🏠 Dashboard
-        </a>
-        <a href="perfil.html" class="activo">
-            👤 Mi Perfil
-        </a>
-        <a href="seguimiento.html">
-            📊 Seguimiento
-        </a>
-        <a href="citas.html">
-            📅 Mis citas
-        </a>
-        <a href="chat.html">
-            💬 Mensajes
-        </a>
+        <a href="dashboard.html">🏠 Dashboard</a>
+        <a href="perfil.html" class="activo">👤 Mi Perfil</a>
+        <a href="seguimiento.html">📊 Seguimiento</a>
+        <a href="citas.html">📅 Mis citas</a>
+        <a href="chat.html"> Mensajes</a>
         <h5>Explorar</h5>
-        <a href="psicologos.html">
-            🧑‍⚕️ Psicólogos
-        </a>
-        <a href="comunidad.html">
-            🌱 Comunidad
-        </a>
+        <a href="psicologos.html">🧑‍️ Psicólogos</a>
+        <a href="comunidad.html">🌱 Comunidad</a>
         <h5>Cuenta</h5>
-        <a href="configuracion.html">
-            ⚙️ Configuración
-        </a>
-        <a href="index.html">
-            🚪 Cerrar sesión
-        </a>
+        <a href="configuracion.html">⚙️ Configuración</a>
+        <a href="index.html">🚪 Cerrar sesión</a>
     </aside>
 
-    <!--==============================
-            CONTENIDO
-    ==============================-->
     <main class="dashboard__main">
         <header class="dashboard-header">
             <div class="dashboard-title">
                 <h2>Mi Perfil</h2>
-                <span>
-                    Administra tu información personal y la configuración de tu cuenta.
-                </span>
+                <p>Tu información y estadísticas en SEMA.</p>
             </div>
         </header>
 
-        <!--==============================
-                CABECERA PERFIL
-        ==============================-->
-        <section class="perfil-header tarjeta">
+        <!-- CABECERA DEL PERFIL -->
+        <section class="tarjeta perfil-header" style="margin-top: 1.5rem;">
             <div class="perfil-header__foto">
-                <img
-                    id="previewFoto"
-                    class="foto-usuario"
-                    src="assets/avatar-default.png"
-                    alt="Foto de perfil"
-                >
-
-                <input
-                    type="file"
-                    id="fotoPerfil"
-                    accept="image/*"
-                    hidden
-                >
+                <img id="previewFoto" class="foto-usuario" src="assets/avatar-default.png" alt="Foto">
             </div>
             <div class="perfil-header__info">
-                <h2 id="perfilNombre" class="nombre-usuario">
-                    Usuario SEMA
-                </h2>
-                <p id="perfilCorreo" class="correo-usuario">
-                    usuario@sema.com
-                </p>
+                <h2 id="perfilNombre" class="nombre-usuario">Cargando...</h2>
+                <p id="perfilCorreo" class="correo-usuario">...</p>
                 <div class="perfil-badges">
-                    <span class="badge badge-verde">
-                        Cuenta activa
-                    </span>
-                    <span class="badge badge-azul">
-                        Miembro SEMA
-                    </span>
+                    <span class="badge badge-verde">✓ Cuenta activa</span>
+                    <span class="badge badge-azul">⭐ Miembro SEMA</span>
                 </div>
             </div>
         </section>
 
-        <!--==============================
-                PESTAÑAS
-        ==============================-->
-        <section class="perfil-tabs">
-            <button class="perfil-tab" data-tab="estadisticas">
-
-                📊 Estadísticas
-
-            </button>
-
+        <!-- INFORMACIÓN PERSONAL (Solo visualización) -->
+        <section class="tarjeta" style="margin-top: 1.5rem;">
+            <h3>📋 Información personal</h3>
+            <div class="grid grid-2" id="info-personal" style="margin-top: 1rem;">
+                <div><strong>Documento:</strong> <span id="doc">-</span></div>
+                <div><strong>Teléfono:</strong> <span id="tel">-</span></div>
+                <div><strong>Ciudad:</strong> <span id="ciudad">-</span></div>
+                <div><strong>Fecha nacimiento:</strong> <span id="fecha">-</span></div>
+                <div><strong>Género:</strong> <span id="genero">-</span></div>
+                <div style="grid-column: 1/-1;"><strong>Biografía:</strong> <p id="bio" style="margin-top: 0.5rem; color: var(--texto-secundario);">-</p></div>
+            </div>
+            <a href="configuracion.html" class="btn btn-secundario" style="margin-top: 1.5rem;">
+                ✏️ Editar información en Configuración
+            </a>
         </section>
 
-        <!--==============================
-                CONTENEDOR
-        ==============================-->
-
-        <section class="perfil-contenido">
-
-            <!--==============================
-                    INFORMACIÓN
-            ==============================-->
-
-            <div
-                class="perfil-panel activo"
-                id="informacion"
-            >
-
-                <div class="tarjeta">
-
-                    <h3>
-
-                        Información personal
-
-                    </h3>
-
-                    <div class="grid grid-2">
-                        <div class="form-grupo">
-
-                            <label for="nombre">
-
-                                Nombre completo
-
-                            </label>
-
-                            <input
-                                type="text"
-                                id="nombre"
-                                placeholder="Ingresa tu nombre completo"
-                            >
-
-                        </div>
-
-                        <div class="form-grupo">
-
-                            <label for="correo">
-
-                                Correo electrónico
-
-                            </label>
-
-                            <input
-                                type="email"
-                                id="correo"
-                                placeholder="correo@ejemplo.com"
-                            >
-
-                        </div>
-
-                        <div class="form-grupo">
-
-                            <label for="documento">
-
-                                Documento
-
-                            </label>
-
-                            <input
-                                type="text"
-                                id="documento"
-                                placeholder="Número de documento"
-                            >
-
-                        </div>
-
-                        <div class="form-grupo">
-
-                            <label for="telefono">
-
-                                Teléfono
-
-                            </label>
-
-                            <input
-                                type="tel"
-                                id="telefono"
-                                placeholder="3001234567"
-                            >
-
-                        </div>
-
-                        <div class="form-grupo">
-
-                            <label for="ciudad">
-
-                                Ciudad
-
-                            </label>
-
-                            <input
-                                type="text"
-                                id="ciudad"
-                                placeholder="Ciudad de residencia"
-                            >
-
-                        </div>
-
-                        <div class="form-grupo">
-
-                            <label for="fechaNacimiento">
-
-                                Fecha de nacimiento
-
-                            </label>
-
-                            <input
-                                type="date"
-                                id="fechaNacimiento"
-                            >
-
-                        </div>
-
-                        <div class="form-grupo">
-
-                            <label for="genero">
-
-                                Género
-
-                            </label>
-
-                            <select id="genero">
-
-                                <option value="">
-                                    Selecciona una opción
-                                </option>
-
-                                <option>
-                                    Masculino
-                                </option>
-
-                                <option>
-                                    Femenino
-                                </option>
-
-                                <option>
-                                    Otro
-                                </option>
-
-                                <option>
-                                    Prefiero no decirlo
-                                </option>
-
-                            </select>
-
-                        </div>
-
-                        <div class="form-grupo">
-
-                            <label for="biografia">
-
-                                Biografía
-
-                            </label>
-
-                            <textarea
-                                id="biografia"
-                                placeholder="Cuéntanos un poco sobre ti..."
-                            ></textarea>
-
-                        </div>
-
-                    </div>
-
-                    <button
-                        class="btn btn-primario"
-                        id="guardarPerfil"
-                    >
-
-                        Guardar cambios
-
-                    </button>
-
+        <!-- ESTADÍSTICAS -->
+        <section class="tarjeta" style="margin-top: 1.5rem;">
+            <h3>📊 Mis estadísticas</h3>
+            <div class="grid grid-4" style="margin-top: 1rem;">
+                <div class="tarjeta stat-card">
+                    <div class="tarjeta__icono">📊</div>
+                    <h2 id="totalRegistros">0</h2>
+                    <p>Registros emocionales</p>
                 </div>
-
-            </div>
-
-            <!--==============================
-                    SEGURIDAD
-            ==============================-->
-
-            <div
-                class="perfil-panel"
-                id="seguridad"
-            >
-
-                <div class="tarjeta">
-
-                    <h3>
-
-                        Seguridad de la cuenta
-
-                    </h3>
-
-                    <div class="form-grupo">
-
-                        <label>
-
-                            Contraseña actual
-
-                        </label>
-
-                        <input
-                            type="password"
-                            id="passwordActual"
-                        >
-
-                    </div>
-
-                    <div class="form-grupo">
-
-                        <label>
-
-                            Nueva contraseña
-
-                        </label>
-
-                        <input
-                            type="password"
-                            id="passwordNueva"
-                        >
-
-                    </div>
-
-                    <div class="form-grupo">
-
-                        <label>
-
-                            Confirmar contraseña
-
-                        </label>
-
-                        <input
-                            type="password"
-                            id="passwordConfirmar"
-                        >
-
-                    </div>
-
-                    <button class="btn btn-primario">
-
-                        Actualizar contraseña
-
-                    </button>
-
-                    <hr style="margin:35px 0;">
-
-                    <h3>
-
-                        Información de seguridad
-
-                    </h3>
-
-                    <p>
-
-                        🕒 Último inicio de sesión:
-                        <strong>Hoy</strong>
-
-                    </p>
-
-                    <p>
-
-                        💻 Dispositivo:
-                        <strong>Windows • Chrome</strong>
-
-                    </p>
-
-                    <p>
-
-                        🛡 Estado:
-                        <strong>Cuenta protegida</strong>
-
-                    </p>
-
+                <div class="tarjeta stat-card">
+                    <div class="tarjeta__icono">📅</div>
+                    <h2 id="totalCitas">0</h2>
+                    <p>Citas realizadas</p>
                 </div>
-
-            </div>
-
-            <!--==============================
-                    FOTO
-            ==============================-->
-
-            <div
-                class="perfil-panel"
-                id="foto"
-            >
-
-                <div class="tarjeta">
-
-                    <h3>
-
-                        Foto de perfil
-
-                    </h3>
-
-                    <div class="profile-photo">
-
-                        <img
-                            id="fotoGrande"
-                            class="foto-usuario"
-                            src="assets/avatar-default.png"
-                            alt="Foto de perfil"
-                        >
-
-                        <br>
-
-                        <label
-                            for="fotoPerfil"
-                            class="btn btn-secundario"
-                        >
-
-                            Cambiar foto
-
-                        </label>
-
-                        <br><br>
-
-                        <button
-                            class="btn btn-fantasma"
-                            id="eliminarFoto"
-                        >
-
-                            Eliminar foto
-
-                        </button>
-
-                    </div>
-
+                <div class="tarjeta stat-card">
+                    <div class="tarjeta__icono">💬</div>
+                    <h2 id="totalMensajes">0</h2>
+                    <p>Mensajes enviados</p>
                 </div>
-
-            </div>
-            <!--==============================
-                    ESTADÍSTICAS
-            ==============================-->
-
-            <div
-                class="perfil-panel"
-                id="estadisticas"
-            >
-
-                <div class="grid grid-4">
-
-                    <div class="tarjeta">
-
-                        <div class="tarjeta__icono">📊</div>
-
-                        <h2 id="totalRegistros">
-
-                            0
-
-                        </h2>
-
-                        <p>
-
-                            Registros emocionales
-
-                        </p>
-
-                    </div>
-
-                    <div class="tarjeta">
-
-                        <div class="tarjeta__icono">📅</div>
-
-                        <h2 id="totalCitas">
-
-                            0
-
-                        </h2>
-
-                        <p>
-
-                            Citas realizadas
-
-                        </p>
-
-                    </div>
-
-                    <div class="tarjeta">
-
-                        <div class="tarjeta__icono">💬</div>
-
-                        <h2 id="totalMensajes">
-
-                            0
-
-                        </h2>
-
-                        <p>
-
-                            Mensajes enviados
-
-                        </p>
-
-                    </div>
-
-                    <div class="tarjeta">
-
-                        <div class="tarjeta__icono">🔥</div>
-
-                        <h2 id="diasSEMA">
-
-                            1
-
-                        </h2>
-
-                        <p>
-
-                            Días usando SEMA
-
-                        </p>
-
-                    </div>
-
+                <div class="tarjeta stat-card">
+                    <div class="tarjeta__icono">🔥</div>
+                    <h2 id="diasSEMA">1</h2>
+                    <p>Días usando SEMA</p>
                 </div>
-
             </div>
-            
+        </section>
+
+    </main>
+</div>
+
 <div id="sema-footer"></div>
-
 </body>
-
 </html>

@@ -1,81 +1,86 @@
 <!DOCTYPE html>
 <html lang="es" data-theme="light">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Citas · SEMA</title>
-<meta name="description" content="Agenda y gestiona tus citas con profesionales.">
-<link rel="icon" type="image/png" href="assets/logo.png">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/styles.css">
-<script defer src="js/app.js"></script>
-<script defer src="js/layout.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Citas · SEMA</title>
+  <meta name="description" content="Agenda y gestiona tus citas con profesionales.">
+  <link rel="icon" type="image/png" href="assets/logo.png">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  
+  <!-- Scripts en el orden correcto (api.js primero) -->
+  <script defer src="js/api.js"></script>
+  <script defer src="js/app.js"></script>
+  <script defer src="js/layout.js"></script>
+  <script defer src="js/citas.js"></script>
 </head>
 <body>
-<div id="sema-nav"></div>
 
-<section class="seccion contenedor">
-  <div class="seccion__titulo">
-    <span class="chip">Agenda</span>
-    <h2>Mis citas</h2>
-    <p>Gestiona tus próximas sesiones.</p>
-  </div>
+  <div id="sema-nav"></div>
 
-  <div class="grid grid-2">
-    <div>
-      <h3>Próximas</h3>
-      <div class="cita-item">
-        <div class="cita-fecha"><div class="dia">18</div><div class="mes">Jul</div></div>
-        <div class="cita-info"><h4>Dra. Laura Méndez</h4><p>15:00 · Sesión online</p></div>
-        <span class="badge badge-verde">Confirmada</span>
-      </div>
-      <div class="cita-item">
-        <div class="cita-fecha"><div class="dia">25</div><div class="mes">Jul</div></div>
-        <div class="cita-info"><h4>Dr. Carlos Ramírez</h4><p>10:00 · Sesión online</p></div>
-        <span class="badge badge-azul">Pendiente</span>
-      </div>
+  <section class="seccion contenedor">
+    <div class="seccion__titulo">
+      <span class="chip">Agenda</span>
+      <h2>Mis citas</h2>
+      <p>Gestiona tus próximas sesiones.</p>
     </div>
 
-    <div>
-      <h3>Reservar nueva cita</h3>
-      <form class="tarjeta" id="form-cita">
-        <div class="form-grupo">
-          <label for="psi">Profesional</label>
-          <select id="psi" required>
-            <option value="">Selecciona...</option>
-            <option>Dra. Laura Méndez</option>
-            <option>Dr. Carlos Ramírez</option>
-            <option>Dra. Sofía Herrera</option>
-          </select>
+    <div class="grid grid-2">
+      
+      <!-- 1. LISTA DE CITAS (Se llena automáticamente con JavaScript) -->
+      <div>
+        <h3>Próximas citas</h3>
+        <div id="lista-citas" style="margin-top: 1rem;">
+          <p style="color: var(--texto-secundario, #64748b);">Cargando citas...</p>
         </div>
-        <div class="form-grupo">
-          <label for="fecha">Fecha</label>
-          <input type="date" id="fecha" required>
-        </div>
-        <div class="form-grupo">
-          <label for="hora">Hora</label>
-          <select id="hora" required>
-            <option value="">Selecciona...</option>
-            <option>09:00</option><option>10:00</option><option>11:00</option>
-            <option>15:00</option><option>16:00</option><option>17:00</option>
-          </select>
-        </div>
-        <div class="form-grupo">
-          <label for="motivo">Motivo (opcional)</label>
-          <textarea id="motivo" placeholder="Cuéntanos brevemente..."></textarea>
-        </div>
-        <button type="submit" class="btn btn-primario">Confirmar cita</button>
-      </form>
+      </div>
+
+      <!-- 2. FORMULARIO PARA AGENDAR NUEVA CITA -->
+      <div>
+        <h3>Reservar nueva cita</h3>
+        <form class="tarjeta" id="form-cita">
+          <div class="form-grupo">
+            <label for="psi">Profesional</label>
+            <!-- El JavaScript llenará esto con los psicólogos reales de la base de datos -->
+            <select id="psi" required>
+              <option value="">Cargando psicólogos...</option>
+            </select>
+          </div>
+          
+          <div class="form-grupo">
+            <label for="fecha">Fecha</label>
+            <input type="date" id="fecha" required>
+          </div>
+          
+          <div class="form-grupo">
+            <label for="hora">Hora</label>
+            <select id="hora" required>
+              <option value="">Selecciona...</option>
+              <option>09:00</option>
+              <option>10:00</option>
+              <option>11:00</option>
+              <option>15:00</option>
+              <option>16:00</option>
+              <option>17:00</option>
+            </select>
+          </div>
+          
+          <div class="form-grupo">
+            <label for="motivo">Motivo (opcional)</label>
+            <textarea id="motivo" rows="3" placeholder="Cuéntanos brevemente el motivo de tu consulta..."></textarea>
+          </div>
+          
+          <button type="submit" class="btn btn-primario" id="btn-enviar-cita">
+            Confirmar cita
+          </button>
+        </form>
+      </div>
+
     </div>
-  </div>
-</section>
+  </section>
 
-<div id="sema-footer"></div>
+  <div id="sema-footer"></div>
 
-<script>
-document.getElementById('form-cita').addEventListener('submit', e => {
-  e.preventDefault();
-  SEMA.toast('✅ Cita reservada con éxito');
-  e.target.reset();
-});
-</script>
-</body></html>
+</body>
+</html>
