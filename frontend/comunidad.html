@@ -13,6 +13,21 @@
 <body>
 <div id="sema-nav"></div>
 
+<div class="dashboard">
+  <aside class="sidebar">
+    <h5>Mi espacio</h5>
+    <a href="dashboard.html" class="activo">🏠 Dashboard</a>
+    <a href="seguimiento.html">📊 Seguimiento</a>
+    <a href="citas.html">📅 Mis citas</a>
+    <a href="chat.html">💬 Mensajes</a>
+    <h5>Explorar</h5>
+    <a href="psicologos.html">🧑‍⚕️ Psicólogos</a>
+    <a href="comunidad.html">🌱 Comunidad</a>
+    <h5>Cuenta</h5>
+    <a href="">⚙️ Configuración</a>
+    <a href="#"></a>
+  </aside>
+
 <section class="seccion contenedor">
   <div class="seccion__titulo">
     <span class="chip">Comunidad SEMA</span>
@@ -25,6 +40,17 @@
       <label for="post-texto">Comparte lo que sientes</label>
       <textarea id="post-texto" placeholder="Hoy me pasó..." required></textarea>
     </div>
+
+    
+      <div class="btn-opciones">
+        <h1 class="post-texto">Categoria</h1>
+        <select id="post-categoria">
+          <option value="Motivación">🌟 Motivación</option>
+          <option value="Reflexión">💬 Reflexión</option>
+          <option value="Estrés Académico">📚 Estrés Académico</option>
+          <option value="Logro Personal">🎉 Logro Personal</option>
+        </select>
+      </div>
     <button type="submit" class="btn btn-primario">Publicar</button>
   </form>
 
