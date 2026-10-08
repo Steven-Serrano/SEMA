@@ -28,37 +28,37 @@ document.addEventListener('DOMContentLoaded', () => {
                     <ul class="navbar__menu">
                         <li>
                             <a href="dashboard-psicologo.html" class="${currentPage === 'dashboard-psicologo.html' ? 'activo' : ''}">
-                                🏠 Mi Panel
+                                <i class="fi fi-bs-home"></i> Mi Panel
                             </a>
                         </li>
                         <li>
                             <a href="chat.html" class="${currentPage === 'chat.html' ? 'activo' : ''}">
-                                💬 Chat
+                                <i class="fi fi-bs-comment"></i> Chat
                             </a>
                         </li>
                         <li>
                             <a href="citas-psicologo.html" class="${currentPage === 'citas-psicologo.html' ? 'activo' : ''}">
-                                📅 Mis Citas
+                                <i class="fi fi-bs-calendar"></i> Mis Citas
                             </a>
                         </li>
                         <li>
                             <a href="pacientes.html" class="${currentPage === 'pacientes.html' ? 'activo' : ''}">
-                                👥 Mis Pacientes
+                                <i class="fi fi-bs-users"></i> Mis Pacientes
                             </a>
                         </li>
                         <li>
                             <a href="perfil.html" class="${currentPage === 'perfil.html' ? 'activo' : ''}">
-                                👤 Perfil
+                                <i class="fi fi-bs-user"></i> Perfil
                             </a>
                         </li>
                         <li>
                             <a href="configuracion.html" class="${currentPage === 'configuracion.html' ? 'activo' : ''}">
-                                ⚙️ Config
+                                <i class="fi fi-bs-settings"></i> Config
                             </a>
                         </li>
                     </ul>
                     <button class="navbar__theme-toggle" id="themeToggle" aria-label="Cambiar tema">
-                        🌙
+                        <i class="fi fi-bs-moon"></i>
                     </button>
                 </nav>
             `;
@@ -76,37 +76,37 @@ document.addEventListener('DOMContentLoaded', () => {
                     <ul class="navbar__menu">
                         <li>
                             <a href="dashboard.html" class="${currentPage === 'dashboard.html' ? 'activo' : ''}">
-                                Dashboard
+                                <i class="fi fi-bs-home"></i> Dashboard
                             </a>
                         </li>
                         <li>
                             <a href="chat.html" class="${currentPage === 'chat.html' ? 'activo' : ''}">
-                                Chat
+                                <i class="fi fi-bs-comment"></i> Chat
                             </a>
                         </li>
                         <li>
                             <a href="psicologos.html" class="${currentPage === 'psicologos.html' ? 'activo' : ''}">
-                                Psicólogos
+                                <i class="fi fi-bs-user-doctor"></i> Psicólogos
                             </a>
                         </li>
                         <li>
                             <a href="seguimiento.html" class="${currentPage === 'seguimiento.html' ? 'activo' : ''}">
-                                Seguimiento
+                                <i class="fi fi-bs-chart-line-up"></i> Seguimiento
                             </a>
                         </li>
                         <li>
                             <a href="citas.html" class="${currentPage === 'citas.html' ? 'activo' : ''}">
-                                Citas
+                                <i class="fi fi-bs-calendar"></i> Citas
                             </a>
                         </li>
                         <li>
                             <a href="comunidad.html" class="${currentPage === 'comunidad.html' ? 'activo' : ''}">
-                                Comunidad
+                                <i class="fi fi-bs-users"></i> Comunidad
                             </a>
                         </li>
                     </ul>
                     <button class="navbar__theme-toggle" id="themeToggle" aria-label="Cambiar tema">
-                        🌙
+                        <i class="fi fi-bs-moon"></i>
                     </button>
                 </nav>
             `;
@@ -116,7 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Insertar el navbar
     navContainer.innerHTML = generarNavbar();
 
-    // Toggle de tema (si existe la funcionalidad)
+    // Toggle de tema
     const themeToggle = document.getElementById('themeToggle');
     if (themeToggle) {
         themeToggle.addEventListener('click', () => {
@@ -124,7 +124,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const currentTheme = html.getAttribute('data-theme');
             const newTheme = currentTheme === 'light' ? 'dark' : 'light';
             html.setAttribute('data-theme', newTheme);
-            themeToggle.textContent = newTheme === 'light' ? '🌙' : '☀️';
+            
+            // Cambiar icono del tema
+            const themeIcon = themeToggle.querySelector('i');
+            if (themeIcon) {
+                themeIcon.className = newTheme === 'light' ? 'fi fi-bs-moon' : 'fi fi-bs-sun';
+            }
+            
             localStorage.setItem('theme', newTheme);
         });
 
@@ -132,7 +138,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const savedTheme = localStorage.getItem('theme');
         if (savedTheme) {
             document.documentElement.setAttribute('data-theme', savedTheme);
-            themeToggle.textContent = savedTheme === 'light' ? '🌙' : '☀️';
+            const themeIcon = themeToggle.querySelector('i');
+            if (themeIcon) {
+                themeIcon.className = savedTheme === 'light' ? 'fi fi-bs-moon' : 'fi fi-bs-sun';
+            }
         }
     }
 });
