@@ -1,90 +1,819 @@
 <!DOCTYPE html>
 <html lang="es" data-theme="light">
-<head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Comunidad · SEMA</title>
-<meta name="description" content="Un espacio seguro donde los jóvenes se apoyan mutuamente.">
-<link rel="icon" type="image/png" href="assets/logo.png">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/styles.css">
-<script defer src="js/app.js"></script>
-<script defer src="js/layout.js"></script>
-</head>
-<body>
-<div id="sema-nav"></div>
 
-<div class="nav-comunidad">
-  <nav class="sidebar">
-    <a href="#">💬 Mis publicaciones</a>
-    <a href="#">🥰 Mis me encanta</a>
-    <a href="#">❤️ Mis favoritos</a>
-  </nav>
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Comunidad · SEMA</title>
+
+    <meta
+        name="description"
+        content="Un espacio seguro donde los jóvenes se apoyan mutuamente."
+    >
+
+    <link rel="icon" type="image/png" href="assets/logo.png">
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <link rel="stylesheet" href="css/styles.css">
+
+    <!-- IMPORTANTE:
+    api.js debe cargarse antes de layout.js
+    porque layout.js utiliza Auth -->
+    <script defer src="js/api.js"></script>
+    <script defer src="js/app.js"></script>
+    <script defer src="js/layout.js"></script>
+
+</head>
+
+<body>
+
+    <!-- NAVBAR PRINCIPAL DE SEMA -->
+    <div id="sema-nav"></div>
+
+
+    <!-- ESTRUCTURA PRINCIPAL -->
+    <div class="dashboard comunidad-layout">
+
+
+        <!-- =========================
+        SIDEBAR
+        ========================== -->
+
+        <aside class="sidebar">
+
+            <h5>Mi espacio</h5>
+
+            <a href="dashboard.html">
+                🏠 Dashboard
+            </a>
+
+            <a href="seguimiento.html">
+                📊 Seguimiento
+            </a>
+
+            <a href="citas.html">
+                📅 Mis citas
+            </a>
+
+            <a href="chat.html">
+                💬 Mensajes
+            </a>
+
+
+            <h5>Explorar</h5>
+
+            <a href="psicologos.html">
+                🧑‍⚕️ Psicólogos
+            </a>
+
+            <a href="comunidad.html" class="activo">
+                🌱 Comunidad
+            </a>
+
+
+            <h5>Cuenta</h5>
+
+            <a href="configuracion.html">
+                ⚙️ Configuración
+            </a>
+
+            <a href="index.html">
+                🚪 Cerrar sesión
+            </a>
+
+        </aside>
+
+
+        <!-- =========================
+        CONTENIDO PRINCIPAL
+        ========================== -->
+
+        <main class="dashboard__main comunidad-main">
+
+
+            <!-- ENCABEZADO -->
+
+            <header class="comunidad-header">
+
+                <div>
+
+                    <span class="chip">
+                        🌱 Comunidad SEMA
+                    </span>
+
+                    <h1>
+                        No estás solo/a
+                    </h1>
+
+                    <p>
+                        Un espacio seguro donde jóvenes comparten,
+                        escuchan y se apoyan.
+                    </p>
+
+                </div>
+
+            </header>
+
+
+            <!-- =========================
+            NAVEGACIÓN DE COMUNIDAD
+            ========================== -->
+
+            <nav class="comunidad-tabs">
+
+                <button
+                    class="comunidad-tab activo"
+                    type="button"
+                    data-seccion="comunidad"
+                >
+                    🌱 Comunidad
+                </button>
+
+
+                <button
+                    class="comunidad-tab"
+                    type="button"
+                    data-seccion="mis-publicaciones"
+                >
+                    📝 Mis publicaciones
+                </button>
+
+
+                <button
+                    class="comunidad-tab"
+                    type="button"
+                    data-seccion="me-gusta"
+                >
+                    💙 Me gusta
+                </button>
+
+
+                <button
+                    class="comunidad-tab"
+                    type="button"
+                    data-seccion="comentados"
+                >
+                    💬 Comenté
+                </button>
+
+
+                <button
+                    class="comunidad-tab"
+                    type="button"
+                    data-seccion="compartidos"
+                >
+                    🔗 Compartí
+                </button>
+
+            </nav>
+
+
+            <!-- =========================
+            CONTENIDO DE COMUNIDAD
+            ========================== -->
+
+            <section
+                id="seccion-comunidad"
+                class="comunidad-contenido"
+            >
+
+
+                <!-- CREAR PUBLICACIÓN -->
+
+                <form
+                    class="tarjeta comunidad-form"
+                    id="form-post"
+                >
+
+                <div class="filtro-categoria">
+    <label for="filtro-categoria">Filtrar publicaciones</label>
+
+    <select id="filtro-categoria">
+        <option value="Todas">🌱 Todas las categorías</option>
+        <option value="Motivación">🌟 Motivación</option>
+        <option value="Reflexión">💬 Reflexión</option>
+        <option value="Estrés Académico">📚 Estrés Académico</option>
+        <option value="Logro Personal">🎉 Logro Personal</option>
+    </select>
 </div>
 
-<section class="seccion contenedor">
-  <div class="seccion__titulo">
-    <span class="chip">Comunidad SEMA</span>
-    <h2>No estás solo/a</h2>
-    <p>Un espacio seguro donde jóvenes comparten y se apoyan.</p>
-  </div>
+                    <div class="form-grupo">
 
-  <form class="tarjeta" id="form-post" style="max-width:700px; margin:0 auto 2rem">
-    <div class="form-grupo">
-      <label for="post-texto">Comparte lo que sientes</label>
-      <textarea id="post-texto" placeholder="Hoy me pasó..." required></textarea>
+                        <label for="post-texto">
+                            Comparte lo que sientes
+                        </label>
+
+                        <textarea
+                            id="post-texto"
+                            placeholder="Hoy me pasó..."
+                            required
+                        ></textarea>
+
+                    </div>
+
+
+                    <!-- CATEGORÍA -->
+
+                    <div class="btn-opciones">
+
+                        <h1>
+                            Categoría
+                        </h1>
+
+                        <select id="post-categoria">
+
+                            <option value="Motivación">
+                                🌟 Motivación
+                            </option>
+
+                            <option value="Reflexión">
+                                💬 Reflexión
+                            </option>
+
+                            <option value="Estrés Académico">
+                                📚 Estrés Académico
+                            </option>
+
+                            <option value="Logro Personal">
+                                🎉 Logro Personal
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <button
+                        type="submit"
+                        class="btn btn-primario"
+                    >
+                        Publicar
+                    </button>
+
+                </form>
+
+
+                <!-- PUBLICACIONES -->
+
+                <div
+                    id="posts"
+                    class="comunidad-posts"
+                ></div>
+
+
+            </section>
+
+        </main>
+
     </div>
 
-    
-      <div class="btn-opciones">
-        <h1 class="post-texto">Categoria</h1>
-        <select id="post-categoria">
-          <option value="Motivación">🌟 Motivación</option>
-          <option value="Reflexión">💬 Reflexión</option>
-          <option value="Estrés Académico">📚 Estrés Académico</option>
-          <option value="Logro Personal">🎉 Logro Personal</option>
-        </select>
-      </div>
-    <button type="submit" class="btn btn-primario">Publicar</button>
-  </form>
 
-  <div id="posts" style="max-width:700px; margin:0 auto"></div>
-</section>
+    <div id="sema-footer"></div>
 
-<div id="sema-footer"></div>
 
-<script>
+    <!-- =========================
+    JAVASCRIPT TEMPORAL
+    ========================== -->
+
+    <script>
+
 let posts = [
-  { autor:'Mario', ini:'M', tiempo:'hace 2h', texto:'Logré terminar mis exámenes finales. Fue duro, pero SEMA me ayudó a mantenerme enfocado. 💪', likes:24, gustado:false },
-  { autor:'Sofía', ini:'S', tiempo:'hace 5h', texto:'Compartir aquí me hace sentir menos sola. Gracias a todos por leer 💙', likes:42, gustado:false },
-  { autor:'Diego', ini:'D', tiempo:'hace 1d', texto:'Empecé a meditar 10 min al día. La diferencia es real.', likes:31, gustado:false }
+
+    {
+        id: 1,
+        autor: 'Mario',
+        ini: 'M',
+        tiempo: 'hace 2h',
+        texto: 'Logré terminar mis exámenes finales. Fue duro, pero SEMA me ayudó a mantenerme enfocado. 💪',
+        likes: 24,
+        gustado: false,
+        comentado: false,
+        compartido: false,
+        comentarios: [],
+        categoria: 'Logro Personal'
+    },
+
+    {
+        id: 2,
+        autor: 'Sofía',
+        ini: 'S',
+        tiempo: 'hace 5h',
+        texto: 'Compartir aquí me hace sentir menos sola. Gracias a todos por leer 💙',
+        likes: 42,
+        gustado: false,
+        comentado: false,
+        compartido: false,
+        comentarios: [],
+        categoria: 'Reflexión'
+    },
+
+    {
+        id: 3,
+        autor: 'Diego',
+        ini: 'D',
+        tiempo: 'hace 1d',
+        texto: 'Empecé a meditar 10 min al día. La diferencia es real.',
+        likes: 31,
+        gustado: false,
+        comentado: false,
+        compartido: false,
+        comentarios: [],
+        categoria: 'Motivación'
+    }
+
 ];
 
-function render() {
-  document.getElementById('posts').innerHTML = posts.map((p,i) => `
-    <article class="post">
-      <div class="avatar">${p.ini}</div>
-      <div style="flex:1">
-        <h4>${p.autor}</h4>
-        <div class="meta">${p.tiempo}</div>
-        <p style="color:var(--texto)">${p.texto}</p>
-        <div class="acciones">
-          <button onclick="darLike(${i})" class="${p.gustado?'gustado':''}">💙 ${p.likes}</button>
-          <button>💬 Comentar</button>
-          <button>🔗 Compartir</button>
-        </div>
-      </div>
-    </article>`).join('');
-}
-function darLike(i) { posts[i].gustado = !posts[i].gustado; posts[i].likes += posts[i].gustado ? 1 : -1; render(); }
 
-document.getElementById('form-post').addEventListener('submit', e => {
-  e.preventDefault();
-  const t = document.getElementById('post-texto').value.trim();
-  if (!t) return;
-  posts.unshift({ autor:'Tú', ini:'T', tiempo:'ahora', texto:t, likes:0, gustado:false });
-  e.target.reset(); render();
-  SEMA.toast('Publicación compartida 💙');
+        /* =========================
+        MOSTRAR PUBLICACIONES
+        ========================== */
+
+function render(lista = posts) {
+
+    const contenedor =
+        document.getElementById('posts');
+
+    if (!lista.length) {
+
+        contenedor.innerHTML = `
+            <div class="tarjeta comunidad-vacio">
+
+                <div class="comunidad-vacio-icono">
+                    🌱
+                </div>
+
+                <h3>
+                    No hay publicaciones aquí todavía
+                </h3>
+
+                <p>
+                    Cuando haya contenido disponible,
+                    aparecerá en esta sección.
+                </p>
+
+            </div>
+        `;
+
+        return;
+    }
+
+
+    contenedor.innerHTML = lista.map(p => `
+
+        <article class="post">
+
+            <div class="avatar">
+                ${p.ini}
+            </div>
+
+            <div style="flex:1">
+
+                <h4>
+                    ${p.autor}
+                </h4>
+
+                <div class="meta">
+                    ${p.tiempo} · ${p.categoria}
+                </div>
+
+                <p style="color:var(--texto)">
+                    ${p.texto}
+                </p>
+
+
+                <div class="acciones">
+
+                    <button
+                        onclick="darLike(${p.id})"
+                        class="${p.gustado ? 'gustado' : ''}"
+                    >
+                        💙 ${p.likes}
+                    </button>
+
+
+                    <button
+                        type="button"
+                        onclick="comentar(${p.id})"
+                    >
+                        💬 Comentar
+                    </button>
+
+
+                    <button
+                        type="button"
+                        onclick="compartir(${p.id})"
+                    >
+                        🔗 Compartir
+                    </button>
+
+                </div>
+
+                ${p.comentarios && p.comentarios.length ? `
+    <div class="comentarios-lista">
+
+        ${p.comentarios.map(c => `
+            <div class="comentario">
+
+                <div class="comentario-avatar">
+                    ${c.autor.charAt(0)}
+                </div>
+
+                <div class="comentario-contenido">
+
+                    <strong>${c.autor}</strong>
+
+                    <span class="comentario-tiempo">
+                        · ${c.tiempo}
+                    </span>
+
+                    <p>
+                        ${c.texto}
+                    </p>
+
+                </div>
+
+            </div>
+        `).join('')}
+
+    </div>
+` : ''}
+
+            </div>
+
+        </article>
+
+    `).join('');
+}
+
+
+        /* =========================
+        LIKE TEMPORAL
+        ========================== */
+
+function darLike(id) {
+
+    const post = posts.find(p => p.id === id);
+
+    if (!post) return;
+
+
+    post.gustado = !post.gustado;
+
+
+    post.likes += post.gustado ? 1 : -1;
+
+
+    render();
+
+}
+
+function comentar(id) {
+
+    const post = posts.find(p => p.id === id);
+
+    if (!post) return;
+
+    const contenedor = document.getElementById('posts');
+
+    const textarea = document.createElement('textarea');
+
+    textarea.placeholder = 'Escribe tu comentario...';
+    textarea.className = 'comentario-input';
+
+    const boton = document.createElement('button');
+
+    boton.type = 'button';
+    boton.className = 'btn btn-primario';
+    boton.textContent = 'Publicar comentario';
+
+    const cancelar = document.createElement('button');
+
+    cancelar.type = 'button';
+    cancelar.className = 'btn btn-secundario';
+    cancelar.textContent = 'Cancelar';
+
+    const formulario = document.createElement('div');
+
+    formulario.className = 'comentario-form';
+
+    formulario.appendChild(textarea);
+
+    const acciones = document.createElement('div');
+
+    acciones.className = 'comentario-acciones';
+
+    acciones.appendChild(boton);
+    acciones.appendChild(cancelar);
+
+    formulario.appendChild(acciones);
+
+    const publicaciones = contenedor.querySelectorAll('.post');
+
+    const indice = posts.indexOf(post);
+
+    if (publicaciones[indice]) {
+
+        publicaciones[indice]
+            .querySelector('.acciones')
+            .after(formulario);
+
+        textarea.focus();
+    }
+
+    boton.addEventListener('click', () => {
+
+        const texto = textarea.value.trim();
+
+        if (!texto) {
+
+            if (window.SEMA) {
+                SEMA.toast('Escribe un comentario antes de publicar.');
+            }
+
+            return;
+        }
+
+        post.comentarios.push({
+            autor: 'Tú',
+            texto: texto,
+            tiempo: 'ahora'
+        });
+
+        post.comentado = true;
+
+        render();
+
+        if (window.SEMA) {
+            SEMA.toast('Comentario publicado 💬');
+        }
+    });
+
+    cancelar.addEventListener('click', () => {
+        formulario.remove();
+    });
+}
+
+function compartir(id) {
+
+    const post = posts.find(p => p.id === id);
+
+    if (!post) return;
+
+
+    post.compartido = true;
+
+
+    render();
+
+
+    if (window.SEMA) {
+
+        SEMA.toast(
+            'Publicación marcada como compartida 🔗'
+        );
+
+    }
+
+}
+
+
+        /* =========================
+        CREAR PUBLICACIÓN TEMPORAL
+        ========================== */
+
+        document
+            .getElementById('form-post')
+            .addEventListener('submit', e => {
+
+                e.preventDefault();
+
+                const texto =
+                    document
+                        .getElementById('post-texto')
+                        .value
+                        .trim();
+
+
+                const categoria =
+                    document
+                        .getElementById('post-categoria')
+                        .value;
+
+
+                if (!texto) return;
+
+
+posts.unshift({
+
+    id: Date.now(),
+
+    autor: 'Tú',
+
+    ini: 'T',
+
+    tiempo: 'ahora',
+
+    texto: texto,
+
+    likes: 0,
+
+    gustado: false,
+
+    comentado: false,
+
+    compartido: false,
+
+    categoria: categoria
+
 });
-document.addEventListener('DOMContentLoaded', render);
-</script>
-</body></html>
+
+
+                e.target.reset();
+
+                render();
+
+
+                if (window.SEMA) {
+
+                    SEMA.toast(
+                        'Publicación compartida 💙'
+                    );
+
+                }
+
+            });
+
+
+        /* =========================
+        TABS DE COMUNIDAD
+        ========================== */
+
+document
+    .querySelectorAll('.comunidad-tab')
+    .forEach(tab => {
+
+        tab.addEventListener('click', () => {
+
+            /*
+             * Quitar estado activo
+             * de todas las pestañas
+             */
+
+            document
+                .querySelectorAll('.comunidad-tab')
+                .forEach(t =>
+                    t.classList.remove('activo')
+                );
+
+
+            /*
+             * Activar la pestaña seleccionada
+             */
+
+            tab.classList.add('activo');
+
+
+            /*
+             * Obtener la sección
+             */
+
+            const seccion =
+                tab.dataset.seccion;
+
+
+            /*
+             * Filtrar publicaciones
+             */
+
+            cambiarSeccion(seccion);
+
+        });
+
+    });
+
+
+    function cambiarSeccion(seccion) {
+
+    let resultado = [];
+
+
+    switch (seccion) {
+
+
+        /* =========================
+        TODAS LAS PUBLICACIONES
+        ========================== */
+
+        case 'comunidad':
+
+            resultado = posts;
+
+            break;
+
+
+        /* =========================
+        MIS PUBLICACIONES
+        ========================== */
+
+        case 'mis-publicaciones':
+
+            resultado = posts.filter(
+                post => post.autor === 'Tú'
+            );
+
+            break;
+
+
+        /* =========================
+        ME GUSTA
+        ========================== */
+
+        case 'me-gusta':
+
+            resultado = posts.filter(
+                post => post.gustado === true
+            );
+
+            break;
+
+
+        /* =========================
+        COMENTÉ
+        ========================== */
+
+        case 'comentados':
+
+            resultado = posts.filter(
+                post => post.comentado === true
+            );
+
+            break;
+
+
+        /* =========================
+        COMPARTÍ
+        ========================== */
+
+        case 'compartidos':
+
+            resultado = posts.filter(
+                post => post.compartido === true
+            );
+
+            break;
+
+
+        /* =========================
+        POR SEGURIDAD
+        ========================== */
+
+        default:
+
+            resultado = posts;
+
+    }
+
+
+    render(resultado);
+
+}
+
+const filtroCategoria = document.getElementById('filtro-categoria');
+
+filtroCategoria.addEventListener('change', () => {
+
+    const categoriaSeleccionada = filtroCategoria.value;
+
+    if (categoriaSeleccionada === 'Todas') {
+        render(posts);
+        return;
+    }
+
+    const publicacionesFiltradas = posts.filter(
+        post => post.categoria === categoriaSeleccionada
+    );
+
+    render(publicacionesFiltradas);
+});
+
+
+        /* =========================
+        INICIAR
+        ========================== */
+
+        document.addEventListener(
+            'DOMContentLoaded',
+            render
+        );
+
+    </script>
+
+</body>
+
+</html>
