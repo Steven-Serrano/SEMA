@@ -7,12 +7,36 @@
 <meta name="description" content="Tu panel personal de bienestar emocional en SEMA." />
 <link rel="icon" type="image/png" href="assets/logo.png" />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+
+<!-- Uicons Bold Straight -->
+<link href="https://cdn.jsdelivr.net/npm/@flaticon/flaticon-uicons@3.3.1/css/bold/straight.css" rel="stylesheet">
+
 <link rel="stylesheet" href="css/styles.css" />
 <script defer src="js/api.js"></script>
 <script defer src="js/app.js"></script>
 <script defer src="js/layout.js"></script>
 <script defer src="js/usuario.js"></script>
 <script defer src="js/dashboard.js"></script>
+
+<style>
+  /* Ajuste general para iconos */
+  .fi {
+    vertical-align: middle;
+    margin-right: 0.5rem;
+    font-size: 1.1em;
+  }
+  .tarjeta__icono .fi {
+    margin-right: 0;
+    font-size: 2rem;
+  }
+  .notification-btn .fi,
+  .user-arrow .fi {
+    margin-right: 0;
+  }
+  .user-arrow .fi {
+    font-size: 0.9em;
+  }
+</style>
 </head>
 <body>
 <div id="sema-nav"></div>
@@ -20,93 +44,56 @@
 <div class="dashboard">
   <aside class="sidebar">
     <h5>Mi espacio</h5>
-    <a href="dashboard.html" class="activo">🏠 Dashboard</a>
-    <a href="seguimiento.html">📊 Seguimiento</a>
-    <a href="citas.html">📅 Mis citas</a>
-    <a href="chat.html">💬 Mensajes</a>
+    <a href="dashboard.html" class="activo"><i class="fi fi-bs-home"></i> Dashboard</a>
+    <a href="seguimiento.html"><i class="fi fi-bs-chart-pie"></i> Seguimiento</a>
+    <a href="citas.html"><i class="fi fi-bs-calendar"></i> Mis citas</a>
+    <a href="chat.html"><i class="fi fi-bs-comment"></i> Mensajes</a>
     <h5>Explorar</h5>
-    <a href="psicologos.html">🧑‍⚕️ Psicólogos</a>
-    <a href="comunidad.html">🌱 Comunidad</a>
+    <a href="psicologos.html"><i class="fi fi-bs-user-doctor"></i> Psicólogos</a>
+    <a href="comunidad.html"><i class="fi fi-bs-seedling"></i> Comunidad</a>
     <h5>Cuenta</h5>
-    <a href="configuracion.html">⚙️ Configuración</a>
-    <a href="index.html">🚪 Cerrar sesión</a>
+    <a href="configuracion.html"><i class="fi fi-bs-settings"></i> Configuración</a>
+    <a href="index.html"><i class="fi fi-bs-exit"></i> Cerrar sesión</a>
   </aside>
 
-<div class="dashboard__main">
+  <div class="dashboard__main">
 
     <header class="dashboard-header">
+      <div class="dashboard-title">
+        <h1 id="saludoUsuario">Hola, Usuario SEMA</h1>
+        <p>¿Cómo te sientes hoy? Registrar tu ánimo toma solo un segundo.</p>
+      </div>
 
-        <div class="dashboard-title">
+      <div class="dashboard-actions">
+        <!-- Notificaciones -->
+        <button class="notification-btn" title="Notificaciones">
+          <i class="fi fi-bs-bell"></i>
+        </button>
 
-            <h1 id="saludoUsuario">
-                Hola, Usuario SEMA
-            </h1>
-
-            <p>
-                ¿Cómo te sientes hoy? Registrar tu ánimo toma solo un segundo.
-            </p>
-
-        </div>
-
-        <div class="dashboard-actions">
-
-            <!-- Notificaciones -->
-            <button class="notification-btn" title="Notificaciones">
-                🔔
-            </button>
-
-            <!-- Usuario -->
-            <div class="user-menu">
-
-                <button id="userMenuBtn" class="user-menu-btn">
-
-                    <img
-                        class="foto-usuario"
-                        src="assets/avatar-default.png"
-                        alt="Foto de perfil">
-
-                    <div class="user-info">
-
-                        <span class="nombre-usuario">
-                            Usuario SEMA
-                        </span>
-
-                        <small class="correo-usuario">
-                            usuario@sema.com
-                        </small>
-
-                    </div>
-
-                    <span class="user-arrow">
-                        ▼
-                    </span>
-
-                </button>
-
-                <div class="user-dropdown" id="userDropdown">
-
-                    <a href="perfil.html">
-                        👤 Mi perfil
-                    </a>
-
-                    <a href="configuracion.html">
-                        ⚙️ Configuración
-                    </a>
-
-                    <hr>
-
-                    <a href="index.html">
-                        🚪 Cerrar sesión
-                    </a>
-
-                </div>
-
+        <!-- Usuario -->
+        <div class="user-menu">
+          <button id="userMenuBtn" class="user-menu-btn">
+            <img class="foto-usuario" src="assets/avatar-default.png" alt="Foto de perfil">
+            <div class="user-info">
+              <span class="nombre-usuario">Usuario SEMA</span>
+              <small class="correo-usuario">usuario@sema.com</small>
             </div>
+            <span class="user-arrow">
+              <i class="fi fi-bs-angle-down"></i>
+            </span>
+          </button>
 
+          <div class="user-dropdown" id="userDropdown">
+            <a href="perfil.html"><i class="fi fi-bs-user"></i> Mi perfil</a>
+            <a href="configuracion.html"><i class="fi fi-bs-settings"></i> Configuración</a>
+            <hr>
+            <a href="index.html"><i class="fi fi-bs-exit"></i> Cerrar sesión</a>
+          </div>
         </div>
-
+      </div>
     </header>
 
+    <!-- TERMÓMETRO DE EMOCIONES (CON EMOJIS ORIGINALES) -->
     <section class="tarjeta aparecer-2" style="margin-top:1.5rem">
       <h3>Mi ánimo hoy</h3>
       <div class="animo-selector" id="animo-selector">
@@ -120,19 +107,19 @@
 
     <div class="grid grid-3 aparecer-3" style="margin-top:1.5rem">
       <div class="tarjeta">
-        <div class="tarjeta__icono">🎯</div>
+        <div class="tarjeta__icono"><i class="fi fi-bs-target"></i></div>
         <h3>Meditación diaria</h3>
         <p>4 de 7 días esta semana</p>
         <div class="progreso"><div class="progreso__barra" style="width:57%"></div></div>
       </div>
       <div class="tarjeta">
-        <div class="tarjeta__icono">📝</div>
+        <div class="tarjeta__icono"><i class="fi fi-bs-edit-alt"></i></div>
         <h3>Diario emocional</h3>
         <p>5 de 7 entradas</p>
         <div class="progreso"><div class="progreso__barra" style="width:71%"></div></div>
       </div>
       <div class="tarjeta">
-        <div class="tarjeta__icono">💤</div>
+        <div class="tarjeta__icono"><i class="fi fi-bs-moon"></i></div>
         <h3>Sueño saludable</h3>
         <p>6 de 7 noches</p>
         <div class="progreso"><div class="progreso__barra" style="width:86%"></div></div>
@@ -152,14 +139,16 @@
       <div class="tarjeta">
         <h3>Notificaciones</h3>
         <ul style="list-style:none; padding:0; margin:0">
-          <li style="padding:.6rem 0; border-bottom:1px solid var(--borde)">💬 Nuevo mensaje del Dr. Ramírez</li>
-          <li style="padding:.6rem 0; border-bottom:1px solid var(--borde)">🌱 Publicación popular en Comunidad</li>
-          <li style="padding:.6rem 0">📅 Recordatorio: cita mañana 15:00</li>
+          <li style="padding:.6rem 0; border-bottom:1px solid var(--borde)"><i class="fi fi-bs-comment"></i> Nuevo mensaje del Dr. Ramírez</li>
+          <li style="padding:.6rem 0; border-bottom:1px solid var(--borde)"><i class="fi fi-bs-seedling"></i> Publicación popular en Comunidad</li>
+          <li style="padding:.6rem 0"><i class="fi fi-bs-calendar"></i> Recordatorio: cita mañana 15:00</li>
         </ul>
       </div>
     </div>
+
   </div>
 </div>
 
 <div id="sema-footer"></div>
-</body></html>
+</body>
+</html>

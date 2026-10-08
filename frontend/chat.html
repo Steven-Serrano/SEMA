@@ -7,6 +7,10 @@
   <meta name="description" content="Mensajería segura con tu psicólogo.">
   <link rel="icon" type="image/png" href="assets/logo.png">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Uicons Bold Straight -->
+  <link href="https://cdn.jsdelivr.net/npm/@flaticon/flaticon-uicons@3.3.1/css/bold/straight.css" rel="stylesheet">
+  
   <link rel="stylesheet" href="css/styles.css">
   
   <!-- Scripts en orden correcto -->
@@ -14,6 +18,7 @@
   <script defer src="js/app.js"></script>
   <script defer src="js/layout.js"></script>
   <script defer src="js/chat.js"></script>
+
 </head>
 <body>
 
@@ -26,7 +31,7 @@
          ========================================== -->
     <aside class="chat-sidebar">
       <div class="chat-sidebar__header">
-        <h3>Mis conversaciones</h3>
+        <h3><i class="fi fi-bs-comments"></i> Mis conversaciones</h3>
       </div>
       <div id="lista-chats" class="chat-list">
         <p style="padding: 1rem; color: var(--texto-secundario, #64748b);">
@@ -43,7 +48,9 @@
       <!-- Header del chat activo -->
       <header class="chat-header" id="chat-header">
         <div class="chat-header__info" id="chat-header-info">
-          <div class="avatar-grande" id="chat-avatar">💬</div>
+          <div class="avatar-grande" id="chat-avatar">
+            <i class="fi fi-bs-comment"></i>
+          </div>
           <div>
             <h3 id="chat-nombre">Selecciona una conversación</h3>
             <small id="chat-estado" style="color: var(--texto-secundario, #64748b);">
@@ -55,8 +62,9 @@
 
       <!-- Área de mensajes -->
       <div class="chat-mensajes" id="chat-mensajes">
-        <div style="text-align: center; padding: 2rem; color: var(--texto-secundario);">
-          <p> Selecciona una conversación para comenzar</p>
+        <div class="chat-empty-state" style="text-align: center; padding: 3rem 2rem; color: var(--texto-secundario);">
+          <i class="fi fi-bs-comments"></i>
+          <p style="font-size: 1.1rem; margin: 0;">Selecciona una conversación para comenzar</p>
         </div>
       </div>
 
@@ -70,7 +78,7 @@
           disabled
         >
         <button type="submit" class="btn btn-primario" id="btn-enviar" disabled>
-          Enviar
+          <i class="fi fi-bs-paper-plane"></i> Enviar
         </button>
       </form>
 

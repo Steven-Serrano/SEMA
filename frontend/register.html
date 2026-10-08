@@ -5,11 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Crear cuenta · SEMA</title>
   <link rel="icon" type="image/png" href="assets/logo.png">
+  
+  <!-- Fuentes -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome (CDN confiable) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
   <link rel="stylesheet" href="css/styles.css">
   <script defer src="js/api.js"></script>
   <script defer src="js/app.js"></script>
   <script defer src="js/register.js"></script>
+
 </head>
 <body>
 
@@ -17,14 +24,20 @@
   <div class="login__left">
     <div class="login__content">
       <img src="assets/logo.png" class="login__logo" alt="SEMA">
-      <span class="chip">💙 Comunicación que Sana</span>
+      
+      <span class="chip">
+        <i class="fa-solid fa-heart" style="color: var(--azul, #2563eb);"></i> 
+        Comunicación que Sana
+      </span>
+      
       <h1>Únete a SEMA</h1>
       <p>Crea tu cuenta y comienza tu camino hacia el bienestar emocional.</p>
+      
       <div class="login__features">
-        <div>💬 Comunidad segura</div>
-        <div>🧑⚕️ Psicólogos verificados</div>
-        <div>📊 Seguimiento emocional</div>
-        <div>🔒 Privacidad protegida</div>
+        <div><i class="fa-solid fa-comment-dots"></i> Comunidad segura</div>
+        <div><i class="fa-solid fa-user-doctor"></i> Psicólogos verificados</div>
+        <div><i class="fa-solid fa-chart-simple"></i> Seguimiento emocional</div>
+        <div><i class="fa-solid fa-lock"></i> Privacidad protegida</div>
       </div>
     </div>
   </div>
@@ -35,7 +48,9 @@
       <p>Completa la información para registrarte.</p>
       
       <form id="registerForm">
-        <h3 style="margin-top: 1.5rem; margin-bottom: 1rem; color: var(--primario);">📋 Información personal</h3>
+        <h3 style="margin-top: 1.5rem; margin-bottom: 1rem; color: var(--primario);">
+          <i class="fa-solid fa-clipboard-list"></i> Información personal
+        </h3>
         
         <div class="grid grid-2">
           <div class="form-grupo">
@@ -74,7 +89,9 @@
           </div>
         </div>
 
-        <h3 style="margin-top: 1.5rem; margin-bottom: 1rem; color: var(--primario);"> Información SENA</h3>
+        <h3 style="margin-top: 1.5rem; margin-bottom: 1rem; color: var(--primario);">
+          <i class="fa-solid fa-graduation-cap"></i> Información SENA
+        </h3>
         
         <div class="grid grid-2">
           <div class="form-grupo">
@@ -87,7 +104,9 @@
           </div>
         </div>
 
-        <h3 style="margin-top: 1.5rem; margin-bottom: 1rem; color: var(--primario);">🔒 Seguridad</h3>
+        <h3 style="margin-top: 1.5rem; margin-bottom: 1rem; color: var(--primario);">
+          <i class="fa-solid fa-shield-halved"></i> Seguridad
+        </h3>
         
         <div class="grid grid-2">
           <div class="form-grupo">
@@ -101,7 +120,7 @@
         </div>
 
         <div style="margin: 1.5rem 0;">
-          <label>
+          <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
             <input type="checkbox" required> 
             Acepto los términos y condiciones.
           </label>
@@ -113,11 +132,15 @@
       </form>
 
       <div class="login__divider"><span>o</span></div>
+      
       <a class="btn btn-secundario login__register" href="login.html">
         Ya tengo una cuenta
       </a>
+      
       <div class="login__back">
-        <a href="index.html">← Volver al inicio</a>
+        <a href="index.html">
+          <i class="fa-solid fa-arrow-left" style="font-size: 0.9em;"></i> Volver al inicio
+        </a>
       </div>
     </div>
   </div>

@@ -6,13 +6,36 @@
   <title>Mis Pacientes · SEMA</title>
   <meta name="description" content="Lista de pacientes del psicólogo.">
   <link rel="icon" type="image/png" href="assets/logo.png">
+  
+  <!-- Fuentes -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Uicons Bold Straight -->
+  <link href="https://cdn.jsdelivr.net/npm/@flaticon/flaticon-uicons@3.3.1/css/bold/straight.css" rel="stylesheet">
+  
   <link rel="stylesheet" href="css/styles.css">
   
   <script defer src="js/api.js"></script>
   <script defer src="js/app.js"></script>
   <script defer src="js/layout.js"></script>
   <script defer src="js/pacientes.js"></script>
+
+  <style>
+    /* Ajuste para iconos en enlaces, botones y textos */
+    .fi {
+      vertical-align: middle;
+      margin-right: 0.5rem;
+      font-size: 1.1em;
+    }
+    .notification-btn .fi {
+      margin-right: 0;
+      font-size: 1.25rem;
+    }
+    .user-arrow .fi {
+      margin-right: 0;
+      font-size: 0.9em;
+    }
+  </style>
 </head>
 <body>
 
@@ -23,15 +46,29 @@
     <!-- SIDEBAR -->
     <aside class="sidebar">
       <h5>Panel Profesional</h5>
-      <a href="dashboard-psicologo.html">🏠 Mi Panel</a>
-      <a href="chat.html">💬 Mensajes</a>
-      <a href="citas-psicologo.html">📅 Mis Citas</a>
-      <a href="pacientes.html" class="activo">👥 Mis Pacientes</a>
+      <a href="dashboard-psicologo.html">
+        <i class="fi fi-bs-home"></i> Mi Panel
+      </a>
+      <a href="chat.html">
+        <i class="fi fi-bs-comment"></i> Mensajes
+      </a>
+      <a href="citas-psicologo.html">
+        <i class="fi fi-bs-calendar"></i> Mis Citas
+      </a>
+      <a href="pacientes.html" class="activo">
+        <i class="fi fi-bs-users"></i> Mis Pacientes
+      </a>
       
       <h5>Cuenta</h5>
-      <a href="perfil.html">👤 Mi Perfil</a>
-      <a href="configuracion.html">⚙️ Configuración</a>
-      <a href="index.html" class="logout-link"> Cerrar sesión</a>
+      <a href="perfil.html">
+        <i class="fi fi-bs-user"></i> Mi Perfil
+      </a>
+      <a href="configuracion.html">
+        <i class="fi fi-bs-settings"></i> Configuración
+      </a>
+      <a href="index.html" class="logout-link">
+        <i class="fi fi-bs-exit"></i> Cerrar sesión
+      </a>
     </aside>
 
     <!-- CONTENIDO PRINCIPAL -->
@@ -44,7 +81,9 @@
         </div>
 
         <div class="dashboard-actions">
-          <button class="notification-btn" title="Notificaciones">🔔</button>
+          <button class="notification-btn" title="Notificaciones">
+            <i class="fi fi-bs-bell"></i>
+          </button>
           
           <div class="user-menu">
             <button id="userMenuBtn" class="user-menu-btn">
@@ -53,13 +92,21 @@
                 <span class="nombre-usuario">Cargando...</span>
                 <small class="correo-usuario">...</small>
               </div>
-              <span class="user-arrow">▼</span>
+              <span class="user-arrow">
+                <i class="fi fi-bs-angle-down"></i>
+              </span>
             </button>
             <div class="user-dropdown" id="userDropdown">
-              <a href="perfil.html">👤 Mi perfil</a>
-              <a href="configuracion.html">⚙️ Configuración</a>
+              <a href="perfil.html">
+                <i class="fi fi-bs-user"></i> Mi perfil
+              </a>
+              <a href="configuracion.html">
+                <i class="fi fi-bs-settings"></i> Configuración
+              </a>
               <hr>
-              <a href="index.html">🚪 Cerrar sesión</a>
+              <a href="index.html">
+                <i class="fi fi-bs-exit"></i> Cerrar sesión
+              </a>
             </div>
           </div>
         </div>
@@ -67,14 +114,15 @@
 
       <!-- BUSCADOR -->
       <section class="tarjeta" style="margin-top: 1.5rem;">
-        <div class="form-grupo" style="max-width: 500px;">
-          <input type="search" id="buscador-pacientes" placeholder="🔎 Buscar por nombre o email..." style="width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--borde); border-radius: 8px; background: var(--fondo); color: var(--texto);">
+        <div class="form-grupo" style="max-width: 500px; position: relative;">
+          <i class="fi fi-bs-search" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--texto-secundario); margin-right: 0;"></i>
+          <input type="search" id="buscador-pacientes" placeholder="Buscar por nombre o email..." style="width: 100%; padding: 0.75rem 1rem 0.75rem 2.5rem; border: 1px solid var(--borde); border-radius: 8px; background: var(--fondo); color: var(--texto);">
         </div>
       </section>
 
       <!-- LISTA DE PACIENTES -->
       <section class="tarjeta" style="margin-top: 1.5rem;">
-        <h3>Pacientes activos</h3>
+        <h3><i class="fi fi-bs-users"></i> Pacientes activos</h3>
         <div id="lista-pacientes" style="margin-top: 1rem;">
           <p style="color: var(--texto-secundario);">Cargando pacientes...</p>
         </div>

@@ -5,13 +5,34 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Panel de Administración · SEMA</title>
   <link rel="icon" type="image/png" href="assets/logo.png">
+  
+  <!-- Fuentes -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Uicons Bold Straight -->
+  <link href="https://cdn.jsdelivr.net/npm/@flaticon/flaticon-uicons@3.3.1/css/bold/straight.css" rel="stylesheet">
+  
   <link rel="stylesheet" href="css/styles.css">
   
   <script defer src="js/api.js"></script>
   <script defer src="js/app.js"></script>
   <script defer src="js/layout.js"></script>
   <script defer src="js/dashboard-admin.js"></script>
+
+  <style>
+    /* Ajuste general para iconos */
+    .fi {
+      vertical-align: middle;
+      margin-right: 0.5rem;
+      font-size: 1.1em;
+    }
+    /* Iconos grandes para las tarjetas de estadísticas */
+    .tarjeta__icono .fi {
+      margin-right: 0;
+      font-size: 2rem;
+      color: var(--color-primario, #2563eb);
+    }
+  </style>
 </head>
 <body>
 
@@ -20,11 +41,21 @@
   <div class="dashboard">
     <aside class="sidebar">
       <h5>Panel Admin</h5>
-      <a href="dashboard-admin.html" class="activo">📊 Dashboard</a>
-      <a href="#usuarios">👥 Usuarios</a>
-      <a href="#psicologos">🧑‍⚕️ Psicólogos</a>
-      <a href="configuracion.html">⚙️ Configuración</a>
-      <a href="index.html" class="logout-link">🚪 Cerrar sesión</a>
+      <a href="dashboard-admin.html" class="activo">
+        <i class="fi fi-bs-chart-pie"></i> Dashboard
+      </a>
+      <a href="#usuarios">
+        <i class="fi fi-bs-users"></i> Usuarios
+      </a>
+      <a href="#psicologos">
+        <i class="fi fi-bs-user-doctor"></i> Psicólogos
+      </a>
+      <a href="configuracion.html">
+        <i class="fi fi-bs-settings"></i> Configuración
+      </a>
+      <a href="index.html" class="logout-link">
+        <i class="fi fi-bs-exit"></i> Cerrar sesión
+      </a>
     </aside>
 
     <main class="dashboard__main">
@@ -38,22 +69,30 @@
       <!-- ESTADÍSTICAS -->
       <div class="grid grid-4" style="margin-top: 1.5rem;">
         <div class="tarjeta stat-card">
-          <div class="tarjeta__icono">👥</div>
+          <div class="tarjeta__icono">
+            <i class="fi fi-bs-users"></i>
+          </div>
           <h2 id="stat-usuarios">0</h2>
           <p>Estudiantes</p>
         </div>
         <div class="tarjeta stat-card">
-          <div class="tarjeta__icono">🧑‍⚕️</div>
+          <div class="tarjeta__icono">
+            <i class="fi fi-bs-user-doctor"></i>
+          </div>
           <h2 id="stat-psicologos">0</h2>
           <p>Psicólogos</p>
         </div>
         <div class="tarjeta stat-card">
-          <div class="tarjeta__icono">📅</div>
+          <div class="tarjeta__icono">
+            <i class="fi fi-bs-calendar"></i>
+          </div>
           <h2 id="stat-citas">0</h2>
           <p>Citas totales</p>
         </div>
         <div class="tarjeta stat-card">
-          <div class="tarjeta__icono">💬</div>
+          <div class="tarjeta__icono">
+            <i class="fi fi-bs-comments"></i>
+          </div>
           <h2 id="stat-chats">0</h2>
           <p>Chats activos</p>
         </div>
@@ -61,7 +100,7 @@
 
       <!-- PSICÓLOGOS PENDIENTES -->
       <section class="tarjeta" style="margin-top: 1.5rem;">
-        <h3>‍⚕️ Psicólogos pendientes de aprobación</h3>
+        <h3><i class="fi fi-bs-user-clock"></i> Psicólogos pendientes de aprobación</h3>
         <div id="lista-psicologos-pendientes" style="margin-top: 1rem;">
           <p style="color: var(--texto-secundario);">Cargando...</p>
         </div>
@@ -69,9 +108,10 @@
 
       <!-- LISTA DE USUARIOS -->
       <section class="tarjeta" style="margin-top: 1.5rem;">
-        <h3>👥 Gestión de Usuarios</h3>
-        <div style="margin: 1rem 0;">
-          <input type="search" id="buscador-usuarios" placeholder="🔎 Buscar por nombre o email..." style="width: 100%; padding: 0.75rem; border: 1px solid var(--borde); border-radius: 8px; background: var(--fondo); color: var(--texto);">
+        <h3><i class="fi fi-bs-users"></i> Gestión de Usuarios</h3>
+        <div style="margin: 1rem 0; max-width: 500px; position: relative;">
+          <i class="fi fi-bs-search" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--texto-secundario); margin-right: 0;"></i>
+          <input type="search" id="buscador-usuarios" placeholder="Buscar por nombre o email..." style="width: 100%; padding: 0.75rem 1rem 0.75rem 2.5rem; border: 1px solid var(--borde); border-radius: 8px; background: var(--fondo); color: var(--texto);">
         </div>
         <div id="lista-usuarios" style="margin-top: 1rem;">
           <p style="color: var(--texto-secundario);">Cargando usuarios...</p>

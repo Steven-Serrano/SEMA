@@ -1,14 +1,31 @@
 <!DOCTYPE html>
 <html lang="es" data-theme="light">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Seguimiento · SEMA</title>
 <meta name="description" content="Visualiza tu progreso emocional semanal.">
 <link rel="icon" type="image/png" href="assets/logo.png">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+
+<!-- Font Awesome (Más confiable que Uicons) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
 <link rel="stylesheet" href="css/styles.css">
 <script defer src="js/app.js"></script>
 <script defer src="js/layout.js"></script>
+
+<style>
+  .fa-solid {
+    vertical-align: middle;
+    margin-right: 0.5rem;
+    font-size: 1.1em;
+  }
+  .tarjeta__icono .fa-solid {
+    margin-right: 0;
+    font-size: 2rem;
+  }
+</style>
 </head>
 <body>
 <div id="sema-nav"></div>
@@ -21,9 +38,21 @@
   </div>
 
   <div class="grid grid-3" style="margin-bottom:2rem">
-    <div class="tarjeta"><div class="tarjeta__icono">😊</div><h3>Ánimo promedio</h3><p style="font-size:1.6rem; font-weight:700; color:var(--verde); margin:0">Bien</p></div>
-    <div class="tarjeta"><div class="tarjeta__icono">🔥</div><h3>Racha actual</h3><p style="font-size:1.6rem; font-weight:700; color:var(--azul); margin:0">5 días</p></div>
-    <div class="tarjeta"><div class="tarjeta__icono">📈</div><h3>Mejoría</h3><p style="font-size:1.6rem; font-weight:700; color:var(--verde); margin:0">+18%</p></div>
+    <div class="tarjeta">
+      <div class="tarjeta__icono"><i class="fa-solid fa-face-smile"></i></div>
+      <h3>Ánimo promedio</h3>
+      <p style="font-size:1.6rem; font-weight:700; color:var(--verde); margin:0">Bien</p>
+    </div>
+    <div class="tarjeta">
+      <div class="tarjeta__icono"><i class="fa-solid fa-fire"></i></div>
+      <h3>Racha actual</h3>
+      <p style="font-size:1.6rem; font-weight:700; color:var(--azul); margin:0">5 días</p>
+    </div>
+    <div class="tarjeta">
+      <div class="tarjeta__icono"><i class="fa-solid fa-chart-line"></i></div>
+      <h3>Mejoría</h3>
+      <p style="font-size:1.6rem; font-weight:700; color:var(--verde); margin:0">+18%</p>
+    </div>
   </div>
 
   <div class="tarjeta">
@@ -38,7 +67,7 @@
     <div style="display:flex; flex-wrap:wrap; gap:.5rem; margin-top:.8rem">
       <span class="chip">😊 Feliz · 34%</span>
       <span class="chip">😌 Calma · 22%</span>
-      <span class="chip">😰 Ansioso · 18%</span>
+      <span class="chip"> Ansioso · 18%</span>
       <span class="chip">😔 Triste · 14%</span>
       <span class="chip">😴 Cansado · 12%</span>
     </div>
@@ -52,6 +81,7 @@ const datos = [
   { d:'Lun', v:60, e:'🙂' },{ d:'Mar', v:80, e:'😄' },{ d:'Mié', v:45, e:'😐' },
   { d:'Jue', v:70, e:'🙂' },{ d:'Vie', v:90, e:'😄' },{ d:'Sáb', v:75, e:'🙂' },{ d:'Dom', v:85, e:'😄' }
 ];
+
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('bars').innerHTML = datos.map((x,i) => `
     <div class="bar" style="height:${x.v}%; animation-delay:${i*.08}s" title="${x.d}: ${x.v}%">
@@ -59,4 +89,5 @@ document.addEventListener('DOMContentLoaded', () => {
     </div>`).join('');
 });
 </script>
-</body></html>
+</body>
+</html>

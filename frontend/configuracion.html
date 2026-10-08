@@ -5,13 +5,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Configuración · SEMA</title>
   <link rel="icon" type="image/png" href="assets/logo.png">
+  
+  <!-- Fuentes -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Uicons Bold Straight -->
+  <link href="https://cdn.jsdelivr.net/npm/@flaticon/flaticon-uicons@3.3.1/css/bold/straight.css" rel="stylesheet">
+  
   <link rel="stylesheet" href="css/styles.css">
   
   <script defer src="js/api.js"></script>
   <script defer src="js/app.js"></script>
   <script defer src="js/layout.js"></script>
   <script defer src="js/configuracion.js"></script>
+
+  <style>
+    /* Ajuste para iconos en enlaces y textos */
+    .fi {
+      vertical-align: middle;
+      margin-right: 0.5rem;
+      font-size: 1.1em;
+    }
+  </style>
 </head>
 <body>
 
@@ -20,14 +35,29 @@
   <div class="dashboard">
     <aside class="sidebar">
       <h5>Mi espacio</h5>
-      <a href="dashboard.html">🏠 Dashboard</a>
-      <a href="perfil.html">👤 Mi Perfil</a>
-      <a href="seguimiento.html">📊 Seguimiento</a>
-      <a href="citas.html">📅 Mis citas</a>
-      <a href="chat.html"> Mensajes</a>
+      <a href="dashboard.html">
+        <i class="fi fi-bs-home"></i> Dashboard
+      </a>
+      <a href="perfil.html">
+        <i class="fi fi-bs-user"></i> Mi Perfil
+      </a>
+      <a href="seguimiento.html">
+        <i class="fi fi-bs-chart-line-up"></i> Seguimiento
+      </a>
+      <a href="citas.html">
+        <i class="fi fi-bs-calendar"></i> Mis citas
+      </a>
+      <a href="chat.html">
+        <i class="fi fi-bs-comment"></i> Mensajes
+      </a>
+      
       <h5>Cuenta</h5>
-      <a href="configuracion.html" class="activo">⚙️ Configuración</a>
-      <a href="index.html" class="logout-link">🚪 Cerrar sesión</a>
+      <a href="configuracion.html" class="activo">
+        <i class="fi fi-bs-settings"></i> Configuración
+      </a>
+      <a href="index.html" class="logout-link">
+        <i class="fi fi-bs-exit"></i> Cerrar sesión
+      </a>
     </aside>
 
     <main class="dashboard__main">
@@ -42,7 +72,7 @@
         
         <!-- SECCIÓN 1: INFORMACIÓN PERSONAL -->
         <section class="tarjeta">
-          <h3>📋 Información personal</h3>
+          <h3><i class="fi fi-bs-clipboard"></i> Información personal</h3>
           
           <div class="grid grid-2" style="margin-top: 1rem;">
             <div class="form-grupo">
@@ -93,30 +123,31 @@
           </div>
 
           <button class="btn btn-primario" id="guardarPerfil" style="margin-top: 1.5rem;">
-            Guardar información
+            <i class="fi fi-bs-check"></i> Guardar información
           </button>
         </section>
+
         <!-- SECCIÓN 2: FOTO DE PERFIL -->
-<section class="tarjeta" style="margin-top: 1.5rem;">
-  <h3>🖼️ Foto de perfil</h3>
-  <div style="display: flex; align-items: center; gap: 1.5rem; margin-top: 1rem;">
-    <img id="previewFoto" src="assets/avatar-default.png" alt="Foto" class="foto-usuario" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primario);">
-    <div style="flex: 1;">
-      <input type="file" id="fotoPerfilInput" accept="image/*" style="display: none;">
-      <button type="button" class="btn btn-secundario" onclick="document.getElementById('fotoPerfilInput').click()">
-        📷 Seleccionar imagen
-      </button>
-      <small style="color: var(--texto-secundario); display: block; margin-top: 0.5rem;">JPG, PNG, WebP (Máx. 5MB)</small>
-    </div>
-  </div>
-  <button class="btn btn-primario" id="guardarFoto" style="margin-top: 1rem;">
-    Subir foto de perfil
-  </button>
-</section>
+        <section class="tarjeta" style="margin-top: 1.5rem;">
+          <h3><i class="fi fi-bs-picture"></i> Foto de perfil</h3>
+          <div style="display: flex; align-items: center; gap: 1.5rem; margin-top: 1rem;">
+            <img id="previewFoto" src="assets/avatar-default.png" alt="Foto" class="foto-usuario" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid var(--color-primario, #2563eb);">
+            <div style="flex: 1;">
+              <input type="file" id="fotoPerfilInput" accept="image/*" style="display: none;">
+              <button type="button" class="btn btn-secundario" onclick="document.getElementById('fotoPerfilInput').click()">
+                <i class="fi fi-bs-camera"></i> Seleccionar imagen
+              </button>
+              <small style="color: var(--texto-secundario); display: block; margin-top: 0.5rem;">JPG, PNG, WebP (Máx. 5MB)</small>
+            </div>
+          </div>
+          <button class="btn btn-primario" id="guardarFoto" style="margin-top: 1rem;">
+            <i class="fi fi-bs-upload"></i> Subir foto de perfil
+          </button>
+        </section>
 
         <!-- SECCIÓN 3: CONTRASEÑA -->
         <section class="tarjeta" style="margin-top: 1.5rem;">
-          <h3>🔒 Seguridad</h3>
+          <h3><i class="fi fi-bs-lock"></i> Seguridad</h3>
           <p style="color: var(--texto-secundario); margin-bottom: 1rem;">Cambia tu contraseña periódicamente para mantener tu cuenta segura.</p>
           
           <div class="grid grid-2" style="margin-top: 1rem;">
@@ -137,7 +168,7 @@
           </div>
 
           <button class="btn btn-secundario" id="guardarPassword" style="margin-top: 1.5rem;">
-            Actualizar contraseña
+            <i class="fi fi-bs-key"></i> Actualizar contraseña
           </button>
         </section>
 

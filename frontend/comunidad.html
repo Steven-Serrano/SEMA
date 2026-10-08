@@ -1,843 +1,394 @@
 <!DOCTYPE html>
 <html lang="es" data-theme="light">
-
 <head>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
     <title>Comunidad · SEMA</title>
-
-    <meta
-        name="description"
-        content="Un espacio seguro donde los jóvenes se apoyan mutuamente."
-    >
-
+    <meta name="description" content="Un espacio seguro donde los jóvenes se apoyan mutuamente.">
     <link rel="icon" type="image/png" href="assets/logo.png">
-
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap"
-        rel="stylesheet"
-    >
-
-<!-- ICONOS FLATICON / UICONS -->
-<link rel="stylesheet" href="https://cdn-uicons.flaticon.com/3.0.0/uicons-regular-rounded/css/uicons-regular-rounded.css">
-<link rel="stylesheet" href="https://cdn-uicons.flaticon.com/3.0.0/uicons-solid-rounded/css/uicons-solid-rounded.css">
-
+    
+    <!-- Fuentes -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Uicons Bold Straight (Unificado con el resto del proyecto) -->
+    <link href="https://cdn.jsdelivr.net/npm/@flaticon/flaticon-uicons@3.3.1/css/bold/straight.css" rel="stylesheet">
+    
     <link rel="stylesheet" href="css/styles.css">
 
-    <!-- IMPORTANTE:
-    api.js debe cargarse antes de layout.js
-    porque layout.js utiliza Auth -->
+    <!-- IMPORTANTE: api.js debe cargarse antes de layout.js porque layout.js utiliza Auth -->
     <script defer src="js/api.js"></script>
     <script defer src="js/app.js"></script>
     <script defer src="js/layout.js"></script>
 
 </head>
-
 <body>
 
     <!-- NAVBAR PRINCIPAL DE SEMA -->
     <div id="sema-nav"></div>
 
-
     <!-- ESTRUCTURA PRINCIPAL -->
     <div class="dashboard comunidad-layout">
 
-
         <!-- =========================
-        SIDEBAR
-        ========================== -->
-
+             SIDEBAR
+             ========================== -->
         <aside class="sidebar">
-
             <h5>Mi espacio</h5>
-
-<a href="dashboard.html">
-    <!-- ICONO: Dashboard -->
-    <i class="fi fi-rr-home"></i>
-    Dashboard
-</a>
-
-<a href="seguimiento.html">
-    <!-- ICONO: Seguimiento -->
-    <i class="fi fi-rr-chart-histogram"></i>
-    Seguimiento
-</a>
-
-<a href="citas.html">
-    <!-- ICONO: Mis citas -->
-    <i class="fi fi-rr-calendar"></i>
-    Mis citas
-</a>
-
-<a href="chat.html">
-    <!-- ICONO: Mensajes -->
-    <i class="fi fi-rr-comment"></i>
-    Mensajes
-</a>
-
-<a href="psicologos.html">
-    <!-- ICONO: Psicólogos -->
-    <i class="fi fi-rr-user-md"></i>
-    Psicólogos
-</a>
-
-<a href="comunidad.html" class="activo">
-    <!-- ICONO: Comunidad -->
-    <i class="fi fi-sr-marker"></i>
-    Comunidad
-</a>
-
-<a href="configuracion.html">
-    <!-- ICONO: Configuración -->
-    <i class="fi fi-rr-settings"></i>
-    Configuración
-</a>
-
-<a href="index.html">
-    <!-- ICONO: Cerrar sesión -->
-    <i class="fi fi-rr-exit"></i>
-    Cerrar sesión
-</a>
-
+            <a href="dashboard.html">
+                <i class="fi fi-bs-home"></i> Dashboard
+            </a>
+            <a href="seguimiento.html">
+                <i class="fi fi-bs-chart-line-up"></i> Seguimiento
+            </a>
+            <a href="citas.html">
+                <i class="fi fi-bs-calendar"></i> Mis citas
+            </a>
+            <a href="chat.html">
+                <i class="fi fi-bs-comment"></i> Mensajes
+            </a>
+            <a href="psicologos.html">
+                <i class="fi fi-bs-user-doctor"></i> Psicólogos
+            </a>
+            <a href="comunidad.html" class="activo">
+                <i class="fi fi-bs-users"></i> Comunidad
+            </a>
+            <a href="configuracion.html">
+                <i class="fi fi-bs-settings"></i> Configuración
+            </a>
+            <a href="index.html">
+                <i class="fi fi-bs-exit"></i> Cerrar sesión
+            </a>
         </aside>
 
-
         <!-- =========================
-        CONTENIDO PRINCIPAL
-        ========================== -->
-
+             CONTENIDO PRINCIPAL
+             ========================== -->
         <main class="dashboard__main comunidad-main">
 
-
             <!-- ENCABEZADO -->
-
             <header class="comunidad-header">
-
                 <div>
-
                     <span class="chip">
-                        🌱 Comunidad SEMA
+                        <i class="fi fi-bs-seedling"></i> Comunidad SEMA
                     </span>
-
-                    <h1>
-                        No estás solo/a
-                    </h1>
-
-                    <p>
-                        Un espacio seguro donde jóvenes comparten,
-                        escuchan y se apoyan.
-                    </p>
-
+                    <h1>No estás solo/a</h1>
+                    <p>Un espacio seguro donde jóvenes comparten, escuchan y se apoyan.</p>
                 </div>
-
             </header>
 
-
             <!-- =========================
-            NAVEGACIÓN DE COMUNIDAD
-            ========================== -->
-
+                 NAVEGACIÓN DE COMUNIDAD
+                 ========================== -->
             <nav class="comunidad-tabs">
-
-<button
-    class="comunidad-tab activo"
-    type="button"
-    data-seccion="comunidad"
->
-    <!-- ICONO: Comunidad -->
-    <i class="fi fi-rr-globe"></i>
-    Comunidad
-</button>
-
-
-<button
-    class="comunidad-tab"
-    type="button"
-    data-seccion="mis-publicaciones"
->
-    <!-- ICONO: Mis publicaciones -->
-    <i class="fi fi-rr-bookmark"></i>
-    Mis publicaciones
-</button>
-
-
-<button
-    class="comunidad-tab"
-    type="button"
-    data-seccion="me-gusta"
->
-    <!-- ICONO: Me gusta -->
-    <i class="fi fi-rr-heart"></i>
-    Me gusta
-</button>
-
-
-<button
-    class="comunidad-tab"
-    type="button"
-    data-seccion="comentados"
->
-    <!-- ICONO: Comenté -->
-    <i class="fi fi-rr-comment"></i>
-    Comenté
-</button>
-
-
-<button
-    class="comunidad-tab"
-    type="button"
-    data-seccion="compartidos"
->
-    <!-- ICONO: Compartí -->
-    <i class="fi fi-rr-share"></i>
-    Compartí
-</button>
-
+                <button class="comunidad-tab activo" type="button" data-seccion="comunidad">
+                    <i class="fi fi-bs-globe"></i> Comunidad
+                </button>
+                <button class="comunidad-tab" type="button" data-seccion="mis-publicaciones">
+                    <i class="fi fi-bs-bookmark"></i> Mis publicaciones
+                </button>
+                <button class="comunidad-tab" type="button" data-seccion="me-gusta">
+                    <i class="fi fi-bs-heart"></i> Me gusta
+                </button>
+                <button class="comunidad-tab" type="button" data-seccion="comentados">
+                    <i class="fi fi-bs-comment"></i> Comenté
+                </button>
+                <button class="comunidad-tab" type="button" data-seccion="compartidos">
+                    <i class="fi fi-bs-share"></i> Compartí
+                </button>
             </nav>
 
-
             <!-- =========================
-            CONTENIDO DE COMUNIDAD
-            ========================== -->
-
-            <section
-                id="seccion-comunidad"
-                class="comunidad-contenido"
-            >
-
+                 CONTENIDO DE COMUNIDAD
+                 ========================== -->
+            <section id="seccion-comunidad" class="comunidad-contenido">
 
                 <!-- CREAR PUBLICACIÓN -->
-
-                <form
-                    class="tarjeta comunidad-form"
-                    id="form-post"
-                >
-
-                <div class="filtro-categoria">
-    <label for="filtro-categoria">Filtrar publicaciones</label>
-
-    <select id="filtro-categoria">
-        <option value="Todas">🌱 Todas las categorías</option>
-        <option value="Motivación">🌟 Motivación</option>
-        <option value="Reflexión">💬 Reflexión</option>
-        <option value="Estrés Académico">📚 Estrés Académico</option>
-        <option value="Logro Personal">🎉 Logro Personal</option>
-    </select>
-</div>
+                <form class="tarjeta comunidad-form" id="form-post">
+                    <div class="filtro-categoria">
+                        <label for="filtro-categoria">Filtrar publicaciones</label>
+                        <select id="filtro-categoria">
+                            <option value="Todas">Todas las categorías</option>
+                            <option value="Motivación">Motivación</option>
+                            <option value="Reflexión">Reflexión</option>
+                            <option value="Estrés Académico">Estrés Académico</option>
+                            <option value="Logro Personal">Logro Personal</option>
+                        </select>
+                    </div>
 
                     <div class="form-grupo">
-
-                        <label for="post-texto">
-                            Comparte lo que sientes
-                        </label>
-
-                        <textarea
-                            id="post-texto"
-                            placeholder="Hoy me pasó..."
-                            required
-                        ></textarea>
-
+                        <label for="post-texto">Comparte lo que sientes</label>
+                        <textarea id="post-texto" placeholder="Hoy me pasó..." required></textarea>
                     </div>
-
 
                     <!-- CATEGORÍA -->
-
                     <div class="btn-opciones">
-
-                        <h1>
-                            Categoría
-                        </h1>
-
+                        <h1>Categoría</h1>
                         <select id="post-categoria">
-
-                            <option value="Motivación">
-                                🌟 Motivación
-                            </option>
-
-                            <option value="Reflexión">
-                                💬 Reflexión
-                            </option>
-
-                            <option value="Estrés Académico">
-                                📚 Estrés Académico
-                            </option>
-
-                            <option value="Logro Personal">
-                                🎉 Logro Personal
-                            </option>
-
+                            <option value="Motivación">Motivación</option>
+                            <option value="Reflexión">Reflexión</option>
+                            <option value="Estrés Académico">Estrés Académico</option>
+                            <option value="Logro Personal">Logro Personal</option>
                         </select>
-
                     </div>
 
-
-                    <button
-                        type="submit"
-                        class="btn btn-primario"
-                    >
-                        Publicar
+                    <button type="submit" class="btn btn-primario">
+                        <i class="fi fi-bs-paper-plane"></i> Publicar
                     </button>
-
                 </form>
 
-
                 <!-- PUBLICACIONES -->
-
-                <div
-                    id="posts"
-                    class="comunidad-posts"
-                ></div>
-
+                <div id="posts" class="comunidad-posts"></div>
 
             </section>
-
         </main>
-
     </div>
-
 
     <div id="sema-footer"></div>
 
-
     <!-- =========================
-    JAVASCRIPT TEMPORAL
-    ========================== -->
-
+         JAVASCRIPT TEMPORAL
+         ========================== -->
     <script>
-
-let posts = [
-
-    {
-        id: 1,
-        autor: 'Mario',
-        ini: 'M',
-        tiempo: 'hace 2h',
-        texto: 'Logré terminar mis exámenes finales. Fue duro, pero SEMA me ayudó a mantenerme enfocado. 💪',
-        likes: 24,
-        gustado: false,
-        comentado: false,
-        compartido: false,
-        comentarios: [],
-        categoria: 'Logro Personal'
-    },
-
-    {
-        id: 2,
-        autor: 'Sofía',
-        ini: 'S',
-        tiempo: 'hace 5h',
-        texto: 'Compartir aquí me hace sentir menos sola. Gracias a todos por leer 💙',
-        likes: 42,
-        gustado: false,
-        comentado: false,
-        compartido: false,
-        comentarios: [],
-        categoria: 'Reflexión'
-    },
-
-    {
-        id: 3,
-        autor: 'Diego',
-        ini: 'D',
-        tiempo: 'hace 1d',
-        texto: 'Empecé a meditar 10 min al día. La diferencia es real.',
-        likes: 31,
-        gustado: false,
-        comentado: false,
-        compartido: false,
-        comentarios: [],
-        categoria: 'Motivación'
-    }
-
-];
-
+        let posts = [
+            {
+                id: 1,
+                autor: 'Mario',
+                ini: 'M',
+                tiempo: 'hace 2h',
+                texto: 'Logré terminar mis exámenes finales. Fue duro, pero SEMA me ayudó a mantenerme enfocado.',
+                likes: 24,
+                gustado: false,
+                comentado: false,
+                compartido: false,
+                comentarios: [],
+                categoria: 'Logro Personal'
+            },
+            {
+                id: 2,
+                autor: 'Sofía',
+                ini: 'S',
+                tiempo: 'hace 5h',
+                texto: 'Compartir aquí me hace sentir menos sola. Gracias a todos por leer.',
+                likes: 42,
+                gustado: false,
+                comentado: false,
+                compartido: false,
+                comentarios: [],
+                categoria: 'Reflexión'
+            },
+            {
+                id: 3,
+                autor: 'Diego',
+                ini: 'D',
+                tiempo: 'hace 1d',
+                texto: 'Empecé a meditar 10 min al día. La diferencia es real.',
+                likes: 31,
+                gustado: false,
+                comentado: false,
+                compartido: false,
+                comentarios: [],
+                categoria: 'Motivación'
+            }
+        ];
 
         /* =========================
-        MOSTRAR PUBLICACIONES
-        ========================== */
-
-function render(lista = posts) {
-
-    const contenedor =
-        document.getElementById('posts');
-
-    if (!lista.length) {
-
-        contenedor.innerHTML = `
-            <div class="tarjeta comunidad-vacio">
-
-                <div class="comunidad-vacio-icono">
-                    🌱
-                </div>
-
-                <h3>
-                    No hay publicaciones aquí todavía
-                </h3>
-
-                <p>
-                    Cuando haya contenido disponible,
-                    aparecerá en esta sección.
-                </p>
-
-            </div>
-        `;
-
-        return;
-    }
-
-
-    contenedor.innerHTML = lista.map(p => `
-
-        <article class="post">
-
-            <div class="avatar">
-                ${p.ini}
-            </div>
-
-            <div style="flex:1">
-
-                <h4>
-                    ${p.autor}
-                </h4>
-
-                <div class="meta">
-                    ${p.tiempo} · ${p.categoria}
-                </div>
-
-                <p style="color:var(--texto)">
-                    ${p.texto}
-                </p>
-
-
-                <div class="acciones">
-
-                    <button
-                        onclick="darLike(${p.id})"
-                        class="${p.gustado ? 'gustado' : ''}"
-                    >
-                        💙 ${p.likes}
-                    </button>
-
-
-                    <button
-                        type="button"
-                        onclick="comentar(${p.id})"
-                    >
-                        💬 Comentar
-                    </button>
-
-
-                    <button
-                        type="button"
-                        onclick="compartir(${p.id})"
-                    >
-                        🔗 Compartir
-                    </button>
-
-                </div>
-
-                ${p.comentarios && p.comentarios.length ? `
-    <div class="comentarios-lista">
-
-        ${p.comentarios.map(c => `
-            <div class="comentario">
-
-                <div class="comentario-avatar">
-                    ${c.autor.charAt(0)}
-                </div>
-
-                <div class="comentario-contenido">
-
-                    <strong>${c.autor}</strong>
-
-                    <span class="comentario-tiempo">
-                        · ${c.tiempo}
-                    </span>
-
-                    <p>
-                        ${c.texto}
-                    </p>
-
-                </div>
-
-            </div>
-        `).join('')}
-
-    </div>
-` : ''}
-
-            </div>
-
-        </article>
-
-    `).join('');
-}
-
-
-        /* =========================
-        LIKE TEMPORAL
-        ========================== */
-
-function darLike(id) {
-
-    const post = posts.find(p => p.id === id);
-
-    if (!post) return;
-
-
-    post.gustado = !post.gustado;
-
-
-    post.likes += post.gustado ? 1 : -1;
-
-
-    render();
-
-}
-
-function comentar(id) {
-
-    const post = posts.find(p => p.id === id);
-
-    if (!post) return;
-
-    const contenedor = document.getElementById('posts');
-
-    const textarea = document.createElement('textarea');
-
-    textarea.placeholder = 'Escribe tu comentario...';
-    textarea.className = 'comentario-input';
-
-    const boton = document.createElement('button');
-
-    boton.type = 'button';
-    boton.className = 'btn btn-primario';
-    boton.textContent = 'Publicar comentario';
-
-    const cancelar = document.createElement('button');
-
-    cancelar.type = 'button';
-    cancelar.className = 'btn btn-secundario';
-    cancelar.textContent = 'Cancelar';
-
-    const formulario = document.createElement('div');
-
-    formulario.className = 'comentario-form';
-
-    formulario.appendChild(textarea);
-
-    const acciones = document.createElement('div');
-
-    acciones.className = 'comentario-acciones';
-
-    acciones.appendChild(boton);
-    acciones.appendChild(cancelar);
-
-    formulario.appendChild(acciones);
-
-    const publicaciones = contenedor.querySelectorAll('.post');
-
-    const indice = posts.indexOf(post);
-
-    if (publicaciones[indice]) {
-
-        publicaciones[indice]
-            .querySelector('.acciones')
-            .after(formulario);
-
-        textarea.focus();
-    }
-
-    boton.addEventListener('click', () => {
-
-        const texto = textarea.value.trim();
-
-        if (!texto) {
-
-            if (window.SEMA) {
-                SEMA.toast('Escribe un comentario antes de publicar.');
+           MOSTRAR PUBLICACIONES
+           ========================== */
+        function render(lista = posts) {
+            const contenedor = document.getElementById('posts');
+
+            if (!lista.length) {
+                contenedor.innerHTML = `
+                    <div class="tarjeta comunidad-vacio">
+                        <div class="comunidad-vacio-icono">
+                            <i class="fi fi-bs-seedling"></i>
+                        </div>
+                        <h3>No hay publicaciones aquí todavía</h3>
+                        <p>Cuando haya contenido disponible, aparecerá en esta sección.</p>
+                    </div>
+                `;
+                return;
             }
 
-            return;
+            contenedor.innerHTML = lista.map(p => `
+                <article class="post">
+                    <div class="avatar">${p.ini}</div>
+                    <div style="flex:1">
+                        <h4>${p.autor}</h4>
+                        <div class="meta">${p.tiempo} · ${p.categoria}</div>
+                        <p style="color:var(--texto)">${p.texto}</p>
+
+                        <div class="acciones">
+                            <button onclick="darLike(${p.id})" class="${p.gustado ? 'gustado' : ''}">
+                                <i class="fi fi-bs-heart"></i> ${p.likes}
+                            </button>
+                            <button type="button" onclick="comentar(${p.id})">
+                                <i class="fi fi-bs-comment"></i> Comentar
+                            </button>
+                            <button type="button" onclick="compartir(${p.id})">
+                                <i class="fi fi-bs-share"></i> Compartir
+                            </button>
+                        </div>
+
+                        ${p.comentarios && p.comentarios.length ? `
+                            <div class="comentarios-lista">
+                                ${p.comentarios.map(c => `
+                                    <div class="comentario">
+                                        <div class="comentario-avatar">${c.autor.charAt(0)}</div>
+                                        <div class="comentario-contenido">
+                                            <strong>${c.autor}</strong>
+                                            <span class="comentario-tiempo">· ${c.tiempo}</span>
+                                            <p>${c.texto}</p>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        ` : ''}
+                    </div>
+                </article>
+            `).join('');
         }
-
-        post.comentarios.push({
-            autor: 'Tú',
-            texto: texto,
-            tiempo: 'ahora'
-        });
-
-        post.comentado = true;
-
-        render();
-
-        if (window.SEMA) {
-            SEMA.toast('Comentario publicado 💬');
-        }
-    });
-
-    cancelar.addEventListener('click', () => {
-        formulario.remove();
-    });
-}
-
-function compartir(id) {
-
-    const post = posts.find(p => p.id === id);
-
-    if (!post) return;
-
-
-    post.compartido = true;
-
-
-    render();
-
-
-    if (window.SEMA) {
-
-        SEMA.toast(
-            'Publicación marcada como compartida 🔗'
-        );
-
-    }
-
-}
-
 
         /* =========================
-        CREAR PUBLICACIÓN TEMPORAL
-        ========================== */
+           LIKE TEMPORAL
+           ========================== */
+        function darLike(id) {
+            const post = posts.find(p => p.id === id);
+            if (!post) return;
+            post.gustado = !post.gustado;
+            post.likes += post.gustado ? 1 : -1;
+            render();
+        }
 
-        document
-            .getElementById('form-post')
-            .addEventListener('submit', e => {
+        function comentar(id) {
+            const post = posts.find(p => p.id === id);
+            if (!post) return;
 
-                e.preventDefault();
+            const contenedor = document.getElementById('posts');
+            const textarea = document.createElement('textarea');
+            textarea.placeholder = 'Escribe tu comentario...';
+            textarea.className = 'comentario-input';
 
-                const texto =
-                    document
-                        .getElementById('post-texto')
-                        .value
-                        .trim();
+            const boton = document.createElement('button');
+            boton.type = 'button';
+            boton.className = 'btn btn-primario';
+            boton.innerHTML = '<i class="fi fi-bs-check"></i> Publicar comentario';
 
+            const cancelar = document.createElement('button');
+            cancelar.type = 'button';
+            cancelar.className = 'btn btn-secundario';
+            cancelar.textContent = 'Cancelar';
 
-                const categoria =
-                    document
-                        .getElementById('post-categoria')
-                        .value;
+            const formulario = document.createElement('div');
+            formulario.className = 'comentario-form';
+            formulario.appendChild(textarea);
 
+            const acciones = document.createElement('div');
+            acciones.className = 'comentario-acciones';
+            acciones.appendChild(boton);
+            acciones.appendChild(cancelar);
+            formulario.appendChild(acciones);
 
-                if (!texto) return;
+            const publicaciones = contenedor.querySelectorAll('.post');
+            const indice = posts.indexOf(post);
 
+            if (publicaciones[indice]) {
+                publicaciones[indice].querySelector('.acciones').after(formulario);
+                textarea.focus();
+            }
 
-posts.unshift({
-
-    id: Date.now(),
-
-    autor: 'Tú',
-
-    ini: 'T',
-
-    tiempo: 'ahora',
-
-    texto: texto,
-
-    likes: 0,
-
-    gustado: false,
-
-    comentado: false,
-
-    compartido: false,
-
-    categoria: categoria
-
-});
-
-
-                e.target.reset();
-
-                render();
-
-
-                if (window.SEMA) {
-
-                    SEMA.toast(
-                        'Publicación compartida 💙'
-                    );
-
+            boton.addEventListener('click', () => {
+                const texto = textarea.value.trim();
+                if (!texto) {
+                    if (window.SEMA) SEMA.toast('Escribe un comentario antes de publicar.');
+                    return;
                 }
-
+                post.comentarios.push({ autor: 'Tú', texto: texto, tiempo: 'ahora' });
+                post.comentado = true;
+                render();
+                if (window.SEMA) SEMA.toast('Comentario publicado');
             });
 
+            cancelar.addEventListener('click', () => {
+                formulario.remove();
+            });
+        }
+
+        function compartir(id) {
+            const post = posts.find(p => p.id === id);
+            if (!post) return;
+            post.compartido = true;
+            render();
+            if (window.SEMA) SEMA.toast('Publicación marcada como compartida');
+        }
 
         /* =========================
-        TABS DE COMUNIDAD
-        ========================== */
+           CREAR PUBLICACIÓN TEMPORAL
+           ========================== */
+        document.getElementById('form-post').addEventListener('submit', e => {
+            e.preventDefault();
+            const texto = document.getElementById('post-texto').value.trim();
+            const categoria = document.getElementById('post-categoria').value;
 
-document
-    .querySelectorAll('.comunidad-tab')
-    .forEach(tab => {
+            if (!texto) return;
 
-        tab.addEventListener('click', () => {
+            posts.unshift({
+                id: Date.now(),
+                autor: 'Tú',
+                ini: 'T',
+                tiempo: 'ahora',
+                texto: texto,
+                likes: 0,
+                gustado: false,
+                comentado: false,
+                compartido: false,
+                categoria: categoria
+            });
 
-            /*
-             * Quitar estado activo
-             * de todas las pestañas
-             */
-
-            document
-                .querySelectorAll('.comunidad-tab')
-                .forEach(t =>
-                    t.classList.remove('activo')
-                );
-
-
-            /*
-             * Activar la pestaña seleccionada
-             */
-
-            tab.classList.add('activo');
-
-
-            /*
-             * Obtener la sección
-             */
-
-            const seccion =
-                tab.dataset.seccion;
-
-
-            /*
-             * Filtrar publicaciones
-             */
-
-            cambiarSeccion(seccion);
-
+            e.target.reset();
+            render();
+            if (window.SEMA) SEMA.toast('Publicación compartida');
         });
 
-    });
+        /* =========================
+           TABS DE COMUNIDAD
+           ========================== */
+        document.querySelectorAll('.comunidad-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.comunidad-tab').forEach(t => t.classList.remove('activo'));
+                tab.classList.add('activo');
+                cambiarSeccion(tab.dataset.seccion);
+            });
+        });
 
+        function cambiarSeccion(seccion) {
+            let resultado = [];
+            switch (seccion) {
+                case 'comunidad': resultado = posts; break;
+                case 'mis-publicaciones': resultado = posts.filter(post => post.autor === 'Tú'); break;
+                case 'me-gusta': resultado = posts.filter(post => post.gustado === true); break;
+                case 'comentados': resultado = posts.filter(post => post.comentado === true); break;
+                case 'compartidos': resultado = posts.filter(post => post.compartido === true); break;
+                default: resultado = posts;
+            }
+            render(resultado);
+        }
 
-    function cambiarSeccion(seccion) {
-
-    let resultado = [];
-
-
-    switch (seccion) {
-
+        const filtroCategoria = document.getElementById('filtro-categoria');
+        filtroCategoria.addEventListener('change', () => {
+            const categoriaSeleccionada = filtroCategoria.value;
+            if (categoriaSeleccionada === 'Todas') {
+                render(posts);
+                return;
+            }
+            const publicacionesFiltradas = posts.filter(post => post.categoria === categoriaSeleccionada);
+            render(publicacionesFiltradas);
+        });
 
         /* =========================
-        TODAS LAS PUBLICACIONES
-        ========================== */
-
-        case 'comunidad':
-
-            resultado = posts;
-
-            break;
-
-
-        /* =========================
-        MIS PUBLICACIONES
-        ========================== */
-
-        case 'mis-publicaciones':
-
-            resultado = posts.filter(
-                post => post.autor === 'Tú'
-            );
-
-            break;
-
-
-        /* =========================
-        ME GUSTA
-        ========================== */
-
-        case 'me-gusta':
-
-            resultado = posts.filter(
-                post => post.gustado === true
-            );
-
-            break;
-
-
-        /* =========================
-        COMENTÉ
-        ========================== */
-
-        case 'comentados':
-
-            resultado = posts.filter(
-                post => post.comentado === true
-            );
-
-            break;
-
-
-        /* =========================
-        COMPARTÍ
-        ========================== */
-
-        case 'compartidos':
-
-            resultado = posts.filter(
-                post => post.compartido === true
-            );
-
-            break;
-
-
-        /* =========================
-        POR SEGURIDAD
-        ========================== */
-
-        default:
-
-            resultado = posts;
-
-    }
-
-
-    render(resultado);
-
-}
-
-const filtroCategoria = document.getElementById('filtro-categoria');
-
-filtroCategoria.addEventListener('change', () => {
-
-    const categoriaSeleccionada = filtroCategoria.value;
-
-    if (categoriaSeleccionada === 'Todas') {
-        render(posts);
-        return;
-    }
-
-    const publicacionesFiltradas = posts.filter(
-        post => post.categoria === categoriaSeleccionada
-    );
-
-    render(publicacionesFiltradas);
-});
-
-
-        /* =========================
-        INICIAR
-        ========================== */
-
-        document.addEventListener(
-            'DOMContentLoaded',
-            render
-        );
-
+           INICIAR
+           ========================== */
+        document.addEventListener('DOMContentLoaded', render);
     </script>
-
 </body>
-
 </html>

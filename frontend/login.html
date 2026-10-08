@@ -8,129 +8,96 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+
+<!-- Font Awesome (CDN confiable) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
 <link rel="stylesheet" href="css/styles.css">
 <link rel="stylesheet" href="css/login.css">
 <script defer src="js/api.js"></script>
 <script defer src="js/app.js"></script>
 <script defer src="js/login.js"></script>
+
 </head>
 <body>
 
 <section class="login">
 
-<div class="login__left">
+  <div class="login__left">
     <div class="login__content">
-        <img src="assets/logo.png" alt="SEMA" class="login__logo">
+      <img src="assets/logo.png" alt="SEMA" class="login__logo">
 
-        <span class="chip">💙 Comunicación que Sana</span>
+      <span class="chip">
+        <i class="fa-solid fa-heart" style="color: var(--azul, #2563eb);"></i> 
+        Comunicación que Sana
+      </span>
 
-        <h1>Bienvenido a SEMA</h1>
+      <h1>Bienvenido a SEMA</h1>
 
-        <p>
-            Accede a tu cuenta para continuar con tu seguimiento emocional,
-            conversar con profesionales y cuidar tu bienestar.
-        </p>
+      <p>
+        Accede a tu cuenta para continuar con tu seguimiento emocional,
+        conversar con profesionales y cuidar tu bienestar.
+      </p>
 
-        <div class="login__features">
-            <div>🔒 Privacidad garantizada</div>
-            <div>🧑‍⚕️ Psicólogos verificados</div>
-            <div>💬 Chat seguro</div>
-            <div>📊 Seguimiento emocional</div>
-        </div>
+      <div class="login__features">
+        <div><i class="fa-solid fa-lock"></i> Privacidad garantizada</div>
+        <div><i class="fa-solid fa-user-doctor"></i> Psicólogos verificados</div>
+        <div><i class="fa-solid fa-comment-dots"></i> Chat seguro</div>
+        <div><i class="fa-solid fa-chart-simple"></i> Seguimiento emocional</div>
+      </div>
     </div>
-</div>
+  </div>
 
-<div class="login__right">
+  <div class="login__right">
+    <div class="login__card">
+      <h2>Iniciar sesión</h2>
+      <p>Nos alegra tenerte de vuelta.</p>
+      
+      <form id="loginForm">
+        <div class="form-grupo">
+          <label>Correo electrónico</label>
+          <input type="email" id="email" placeholder="correo@ejemplo.com" required>
+        </div>
 
-<div class="login__card">
-<h2>Iniciar sesión</h2>
-<p>
-Nos alegra tenerte de vuelta.
-</p>
-<form id="loginForm">
-<div class="form-grupo">
-<label>Correo electrónico</label>
-<input
-type="email"
-id="email"
-placeholder="correo@ejemplo.com"
-required>
-</div>
+        <div class="form-grupo">
+          <label>Contraseña</label>
+          <div class="password-box">
+            <input type="password" id="password" placeholder="Ingresa tu contraseña" required>
+            <button type="button" id="togglePassword" aria-label="Mostrar u ocultar contraseña">
+              <i class="fa-solid fa-eye"></i>
+            </button>
+          </div>
+        </div>
 
-<div class="form-grupo">
-<label>Contraseña</label>
+        <div class="login__options">
+          <label>
+            <input type="checkbox"> Recordarme
+          </label>
+          <a href="recuperar.html" class="login__forgot-password">
+            ¿Olvidaste tu contraseña?
+          </a>
+        </div>
 
-<div class="password-box">
+        <button class="btn btn-primario login__btn" type="submit">
+          Iniciar sesión
+        </button>
+      </form>
 
-<input
-type="password"
-id="password"
-placeholder="Ingresa tu contraseña"
-required>
+      <div class="login__divider">
+        <span>o</span>
+      </div>
 
-<button
-type="button"
-id="togglePassword">
-👁
-</button>
+      <a href="register.html" class="btn btn-secundario login__register">
+        Crear una cuenta
+      </a>
 
-</div>
-
-</div>
-
-<div class="login__options">
-
-<label>
-
-<input type="checkbox">
-
-Recordarme
-
-</label>
-
-<a href="recuperar.html" class="login__forgot-password">
-¿Olvidaste tu contraseña?
-</a>
-
-</div>
-
-<button
-class="btn btn-primario login__btn"
-type="submit">
-
-Iniciar sesión
-
-</button>
-
-</form>
-
-<div class="login__divider">
-
-<span>o</span>
-
-</div>
-
-<a
-href="register.html"
-class="btn btn-secundario login__register">
-
-Crear una cuenta
-
-</a>
-
-<div class="login__back">
-
-<a href="index.html">
-
-← Volver al inicio
-
-</a>
-
-</div>
-
-</div>
-
-</div>
+      <div class="login__back">
+        <a href="index.html">
+          <i class="fa-solid fa-arrow-left" style="font-size: 0.9em;"></i> Volver al inicio
+        </a>
+      </div>
+    </div>
+  </div>
 
 </section>
 
