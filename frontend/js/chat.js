@@ -1,13 +1,5 @@
-/* ============================================================
-   SEMA - CHAT (Compatible con Usuario y Psicólogo)
-   ============================================================ */
-
-document.addEventListener('DOMContentLoaded', async () => {
-    
-    // ==========================================
-    // 1. VERIFICAR AUTENTICACIÓN
-    // ==========================================
-    if (!Auth || !Auth.getToken()) {
+﻿document.addEventListener('DOMContentLoaded', async () => {
+    if (typeof Auth === 'undefined' || !Auth.getToken()) {
         window.location.href = "login.html";
         return;
     }
@@ -26,60 +18,32 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     let chatActivoId = null;
     let intervaloRecarga = null;
+    let mensajesRenderizados = new Set();
 
-    // ==========================================
-    // 2. CARGAR LISTA DE CHATS
-    // ==========================================
     async function cargarListaChats() {
         try {
+            listaChats.innerHTML = `<div class="text-center text-suave" style="padding: 1.5rem;"><i class="fi fi-bs-hourglass-end block mb-1" style="font-size: 1.5rem;"></i><p>Cargando...</p></div>`;
             const chats = await fetchAuth('/chats');
             
             if (!chats || chats.length === 0) {
-                listaChats.innerHTML = `
-                    <div style="padding: 1.5rem; text-align: center; color: var(--texto-secundario, #64748b);">
-                        <p style="font-size: 2rem; margin-bottom: 0.5rem;">💬</p>
-                        <p>No tienes conversaciones activas.</p>
-                        <p style="font-size: 0.85rem; margin-top: 0.5rem;">
-                            ${esPsicologo 
-                                ? 'Los estudiantes con los que tengas citas aparecerán aquí.' 
-                                : 'Agenda una cita con un psicólogo para iniciar un chat.'}
-                        </p>
-                    </div>
-                `;
+                listaChats.innerHTML = `<div class="text-center text-suave" style="padding: 1.5rem;"><i class="fi fi-bs-comments block mb-1" style="font-size: 2rem;"></i><p>Sin conversaciones</p></div>`;
                 return;
             }
 
             listaChats.innerHTML = chats.map(chat => {
-                // ✅ DETECTAR QUIÉN ES EL "OTRO" EN LA CONVERSACIÓN
-                let nombre, especialidad, iniciales;
-                
-                if (esPsicologo) {
-                    // Si soy psicólogo, el "otro" es el estudiante (usuarioId)
-                    nombre = chat.usuarioId?.nombre || 'Estudiante';
-                    especialidad = 'Estudiante';
-                } else {
-                    // Si soy estudiante, el "otro" es el psicólogo (psicologoId)
-                    nombre = chat.psicologoId?.nombre || 'Psicólogo';
-                    especialidad = chat.psicologoId?.especialidad || '';
-                }
-                
-                iniciales = nombre.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
-                const activo = chat._id === chatActivoId ? 'chat-item--activo' : '';
+                let nombre = esPsicologo ? (chat.usuarioId?.nombre || 'Estudiante') : (chat.psicologoId?.nombre || 'Psicólogo');
+                let especialidad = esPsicologo ? 'Estudiante' : (chat.psicologoId?.especialidad || 'Psicología');
+                let iniciales = nombre.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+                let activo = chat._id === chatActivoId ? 'chat-item--activo' : '';
                 
                 return `
                     <div class="chat-item ${activo}" data-chat-id="${chat._id}">
-                        <div class="avatar-grande" style="width: 45px; height: 45px; font-size: 0.9rem;">
-                            ${iniciales}
-                        </div>
-                        <div class="chat-item__info">
-                            <h4>${nombre}</h4>
-                            <small>${especialidad}</small>
-                        </div>
+                        <div class="chat-item__avatar"><div class="avatar-grande">${iniciales}</div></div>
+                        <div class="chat-item__info"><h4>${nombre}</h4><small>${especialidad}</small></div>
                     </div>
                 `;
             }).join('');
 
-            // Agregar event listeners a cada chat
             document.querySelectorAll('.chat-item').forEach(item => {
                 item.addEventListener('click', () => {
                     const chatId = item.dataset.chatId;
@@ -89,134 +53,117 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
 
         } catch (error) {
-            listaChats.innerHTML = `
-                <p style="padding: 1rem; color: var(--error, #ef4444);">
-                    Error al cargar los chats.
-                </p>
-            `;
-            console.error('Error cargando chats:', error);
+            listaChats.innerHTML = `<p class="text-center mt-1" style="color: var(--error);">Error al cargar.</p>`;
         }
     }
 
-    // ==========================================
-    // 3. SELECCIONAR UN CHAT Y CARGAR MENSAJES
-    // ==========================================
     async function seleccionarChat(chatId, chatData) {
+        if (intervaloRecarga) clearInterval(intervaloRecarga);
         chatActivoId = chatId;
-        
-        // ✅ DETECTAR QUIÉN ES EL "OTRO"
-        let nombre, especialidad, iniciales;
-        
-        if (esPsicologo) {
-            nombre = chatData.usuarioId?.nombre || 'Estudiante';
-            especialidad = 'Estudiante';
-        } else {
-            nombre = chatData.psicologoId?.nombre || 'Psicólogo';
-            especialidad = chatData.psicologoId?.especialidad || '';
-        }
-        
-        iniciales = nombre.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+        mensajesRenderizados.clear();
+        chatMensajes.innerHTML = '';
+
+        let nombre = esPsicologo ? (chatData.usuarioId?.nombre || 'Estudiante') : (chatData.psicologoId?.nombre || 'Psicólogo');
+        let especialidad = esPsicologo ? 'Estudiante' : (chatData.psicologoId?.especialidad || 'Psicología');
         
         chatNombre.textContent = nombre;
         chatEstado.textContent = `En línea · ${especialidad}`;
-        chatAvatar.textContent = iniciales;
-        
-        // Habilitar formulario
+        chatAvatar.textContent = nombre.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+
         chatInput.disabled = false;
         btnEnviar.disabled = false;
         chatInput.focus();
-        
-        // Marcar chat activo en la lista
+
         document.querySelectorAll('.chat-item').forEach(item => {
-            item.classList.remove('chat-item--activo');
-            if (item.dataset.chatId === chatId) {
-                item.classList.add('chat-item--activo');
-            }
+            item.classList.toggle('chat-item--activo', item.dataset.chatId === chatId);
         });
-        
-        // Cargar mensajes
+
         await cargarMensajes(chatId);
-        
-        // Iniciar recarga automática cada 4 segundos
-        if (intervaloRecarga) clearInterval(intervaloRecarga);
-        intervaloRecarga = setInterval(() => cargarMensajes(chatId), 4000);
+        intervaloRecarga = setInterval(() => cargarMensajes(chatId, true), 4000);
     }
 
-    // ==========================================
-    // 4. CARGAR MENSAJES DEL CHAT ACTIVO
-    // ==========================================
-    async function cargarMensajes(chatId) {
+    async function cargarMensajes(chatId, soloNuevos = false) {
         try {
             const mensajes = await fetchAuth(`/mensajes/${chatId}`);
-            
-            chatMensajes.innerHTML = mensajes.map(msg => {
-                // ✅ DETECTAR SI EL MENSAJE ES MÍO (según el rol)
-                let esMio;
-                if (esPsicologo) {
-                    esMio = msg.emisorModel === 'Psicologo';
-                } else {
-                    esMio = msg.emisorModel === 'Usuario';
-                }
-                
-                const hora = new Date(msg.fecha).toLocaleTimeString([], { 
-                    hour: '2-digit', 
-                    minute: '2-digit' 
-                });
-                
-                return `
-                    <div class="msg ${esMio ? 'msg--yo' : 'msg--otro'}">
-                        <div class="msg__contenido">${msg.contenido}</div>
-                        <div class="msg__hora">${hora}</div>
-                    </div>
-                `;
-            }).join('');
-            
-            // Auto-scroll al final
-            chatMensajes.scrollTop = chatMensajes.scrollHeight;
-            
-        } catch (error) {
-            console.error('Error cargando mensajes:', error);
-        }
+            let hayNuevos = false;
+            const estaCercaDelFinal = chatMensajes.scrollHeight - chatMensajes.scrollTop - chatMensajes.clientHeight < 150;
+
+            mensajes.forEach(msg => {
+                if (mensajesRenderizados.has(msg._id)) return;
+                const esMio = esPsicologo ? msg.emisorModel === 'Psicologo' : msg.emisorModel === 'Usuario';
+                const hora = new Date(msg.fecha).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+                const msgDiv = document.createElement('div');
+                msgDiv.className = `msg ${esMio ? 'msg--yo' : 'msg--otro'}`;
+                msgDiv.dataset.msgId = msg._id;
+                msgDiv.innerHTML = `<div class="msg__contenido">${msg.contenido}</div><div class="msg__hora">${hora}</div>`;
+
+                chatMensajes.appendChild(msgDiv);
+                mensajesRenderizados.add(msg._id);
+                hayNuevos = true;
+            });
+
+            if (!soloNuevos || (hayNuevos && estaCercaDelFinal)) {
+                chatMensajes.scrollTop = chatMensajes.scrollHeight;
+            }
+        } catch (error) { console.error('Error cargando mensajes:', error); }
     }
 
-    // ==========================================
-    // 5. ENVIAR MENSAJE
-    // ==========================================
     if (chatForm) {
         chatForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            
             const contenido = chatInput.value.trim();
             if (!contenido || !chatActivoId) return;
             
-            chatInput.disabled = true;
-            btnEnviar.disabled = true;
-            btnEnviar.textContent = 'Enviando...';
-            
+            const textoOriginal = btnEnviar.innerHTML;
+            chatInput.disabled = true; btnEnviar.disabled = true;
+            btnEnviar.innerHTML = '<i class="fi fi-bs-spinner animate-spin"></i>';
+
             try {
                 await fetchAuth(`/mensajes/${chatActivoId}`, {
                     method: 'POST',
                     body: JSON.stringify({ contenido })
                 });
-                
                 chatInput.value = '';
-                await cargarMensajes(chatActivoId);
-                
+                chatMensajes.scrollTop = chatMensajes.scrollHeight;
+                await cargarMensajes(chatActivoId, false); 
             } catch (error) {
-                if (typeof mostrarToast === 'function') {
-                    mostrarToast('❌ Error al enviar: ' + error.message);
-                }
+                if (typeof mostrarToast === 'function') mostrarToast('❌ Error al enviar');
             } finally {
-                chatInput.disabled = false;
-                btnEnviar.disabled = false;
-                btnEnviar.textContent = 'Enviar';
+                chatInput.disabled = false; btnEnviar.disabled = false;
+                btnEnviar.innerHTML = textoOriginal;
                 chatInput.focus();
             }
         });
     }
 
-    // ==========================================
-    // 6. INICIALIZAR
-    // ==========================================
+    window.addEventListener('beforeunload', () => {
+        if (intervaloRecarga) clearInterval(intervaloRecarga);
+    });
+
+    // --- LÓGICA PARA NUEVO CHAT Y BOTÓN DE PÁNICO ---
     await cargarListaChats();
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const nuevoChatId = urlParams.get('nuevoChat');
+    const esPanico = urlParams.get('panico');
+
+    if (nuevoChatId) {
+        try {
+            const res = await fetchAuth('/chats', {
+                method: 'POST',
+                body: JSON.stringify({ usuarioId: nuevoChatId })
+            });
+            await cargarListaChats();
+            seleccionarChat(res._id, res);
+        } catch (e) {
+            if (typeof mostrarToast === 'function') mostrarToast('No se pudo iniciar el chat.');
+        }
+    } else if (esPanico) {
+        if (typeof mostrarToast === 'function') mostrarToast('Buscando un psicólogo disponible...');
+        setTimeout(() => {
+            const primerChat = document.querySelector('.chat-item');
+            if (primerChat) primerChat.click();
+        }, 1000);
+    }
 });

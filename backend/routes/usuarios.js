@@ -33,6 +33,18 @@ router.get('/perfil', verificarToken, async (req, res) => {
   }
 });
 
+// GET /api/usuarios/pacientes - Obtener solo los estudiantes (para el psicólogo)
+router.get('/pacientes', verificarToken, async (req, res) => {
+  try {
+    const pacientes = await Usuario.find({ rol: 'usuario' })
+      .select('-password')
+      .sort({ createdAt: -1 }); // Los más recientes primero
+    res.json(pacientes);
+  } catch (err) {
+    res.status(500).json({ error: 'Error al obtener pacientes' });
+  }
+});
+
 // PUT /api/usuarios/perfil - Actualizar información completa
 router.put('/perfil', verificarToken, async (req, res) => {
   try {

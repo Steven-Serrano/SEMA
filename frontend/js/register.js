@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("registerForm");
-  const submitButton = document.querySelector(".login__btn");
+  const submitButton = document.getElementById("btnRegister");
 
   // Animación de inputs
   document.querySelectorAll("input, select").forEach(campo => {
@@ -24,14 +24,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const numeroFicha = document.getElementById("numeroFicha").value.trim();
     const programaFormacion = document.getElementById("programaFormacion").value.trim();
 
-    // Validaciones
-    if (!nombre) return mostrarToast("Ingresa tu nombre");
-    if (!documento) return mostrarToast("Ingresa tu documento");
-    if (!correo || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo)) return mostrarToast("Correo no válido");
-    if (!numeroFicha) return mostrarToast("Ingresa tu número de ficha");
-    if (!programaFormacion) return mostrarToast("Ingresa tu programa de formación");
-    if (password.length < 6) return mostrarToast("Mínimo 6 caracteres");
-    if (password !== confirmPassword) return mostrarToast("Las contraseñas no coinciden");
+    // Validaciones con Focus
+    if (!nombre) { document.getElementById("nombre").focus(); return mostrarToast("Ingresa tu nombre"); }
+    if (!documento) { document.getElementById("documento").focus(); return mostrarToast("Ingresa tu documento"); }
+    if (!correo || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo)) { document.getElementById("correo").focus(); return mostrarToast("Correo no válido"); }
+    if (!numeroFicha) { document.getElementById("numeroFicha").focus(); return mostrarToast("Ingresa tu número de ficha"); }
+    if (!programaFormacion) { document.getElementById("programaFormacion").focus(); return mostrarToast("Ingresa tu programa de formación"); }
+    if (password.length < 6) { document.getElementById("password").focus(); return mostrarToast("La contraseña debe tener mínimo 6 caracteres"); }
+    if (password !== confirmPassword) { document.getElementById("confirmPassword").focus(); return mostrarToast("Las contraseñas no coinciden"); }
 
     // Calcular edad
     const edad = fecha ? new Date().getFullYear() - new Date(fecha).getFullYear() : null;
@@ -65,6 +65,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     } catch (error) {
       mostrarToast("❌ " + error.message);
+    } finally {
+      // Esto asegura que el botón se restaure incluso si hay un error
       submitButton.disabled = false;
       submitButton.innerHTML = 'Crear cuenta';
     }

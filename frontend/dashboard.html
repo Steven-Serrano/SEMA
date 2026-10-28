@@ -1,76 +1,37 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es" data-theme="light">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Dashboard · SEMA</title>
-<meta name="description" content="Tu panel personal de bienestar emocional en SEMA." />
-<link rel="icon" type="image/png" href="assets/logo.png" />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
-
-<!-- Uicons Bold Straight -->
-<link href="https://cdn.jsdelivr.net/npm/@flaticon/flaticon-uicons@3.3.1/css/bold/straight.css" rel="stylesheet">
-
-<link rel="stylesheet" href="css/styles.css" />
-<script defer src="js/api.js"></script>
-<script defer src="js/app.js"></script>
-<script defer src="js/layout.js"></script>
-<script defer src="js/usuario.js"></script>
-<script defer src="js/dashboard.js"></script>
-
-<style>
-  /* Ajuste general para iconos */
-  .fi {
-    vertical-align: middle;
-    margin-right: 0.5rem;
-    font-size: 1.1em;
-  }
-  .tarjeta__icono .fi {
-    margin-right: 0;
-    font-size: 2rem;
-  }
-  .notification-btn .fi,
-  .user-arrow .fi {
-    margin-right: 0;
-  }
-  .user-arrow .fi {
-    font-size: 0.9em;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dashboard · SEMA</title>
+  <link rel="icon" type="image/png" href="assets/logo.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/@flaticon/flaticon-uicons@3.3.1/css/bold/straight.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css" />
+  
+  <script defer src="js/api.js"></script>
+  <script defer src="js/app.js"></script>
+  <script defer src="js/layout.js"></script>
+  <script defer src="js/dashboard.js"></script>
 </head>
 <body>
 <div id="sema-nav"></div>
 
 <div class="dashboard">
-  <aside class="sidebar">
-    <h5>Mi espacio</h5>
-    <a href="dashboard.html" class="activo"><i class="fi fi-bs-home"></i> Dashboard</a>
-    <a href="seguimiento.html"><i class="fi fi-bs-chart-pie"></i> Seguimiento</a>
-    <a href="citas.html"><i class="fi fi-bs-calendar"></i> Mis citas</a>
-    <a href="chat.html"><i class="fi fi-bs-comment"></i> Mensajes</a>
-    <h5>Explorar</h5>
-    <a href="psicologos.html"><i class="fi fi-bs-user-doctor"></i> Psicólogos</a>
-    <a href="comunidad.html"><i class="fi fi-bs-seedling"></i> Comunidad</a>
-    <h5>Cuenta</h5>
-    <a href="configuracion.html"><i class="fi fi-bs-settings"></i> Configuración</a>
-    <a href="index.html"><i class="fi fi-bs-exit"></i> Cerrar sesión</a>
-  </aside>
+  <aside class="sidebar" id="sema-sidebar"></aside>
 
   <div class="dashboard__main">
-
     <header class="dashboard-header">
       <div class="dashboard-title">
-        <h1 id="saludoUsuario">Hola, Usuario SEMA</h1>
+        <h1 id="saludoUsuario">Hola, Usuario</h1>
         <p>¿Cómo te sientes hoy? Registrar tu ánimo toma solo un segundo.</p>
       </div>
 
       <div class="dashboard-actions">
-        <!-- Notificaciones -->
         <button class="notification-btn" title="Notificaciones">
           <i class="fi fi-bs-bell"></i>
         </button>
 
-        <!-- Usuario -->
         <div class="user-menu">
           <button id="userMenuBtn" class="user-menu-btn">
             <img class="foto-usuario" src="assets/avatar-default.png" alt="Foto de perfil">
@@ -78,76 +39,89 @@
               <span class="nombre-usuario">Usuario SEMA</span>
               <small class="correo-usuario">usuario@sema.com</small>
             </div>
-            <span class="user-arrow">
-              <i class="fi fi-bs-angle-down"></i>
-            </span>
+            <span class="user-arrow"><i class="fi fi-bs-angle-down"></i></span>
           </button>
 
           <div class="user-dropdown" id="userDropdown">
             <a href="perfil.html"><i class="fi fi-bs-user"></i> Mi perfil</a>
             <a href="configuracion.html"><i class="fi fi-bs-settings"></i> Configuración</a>
             <hr>
-            <a href="index.html"><i class="fi fi-bs-exit"></i> Cerrar sesión</a>
+            <a href="index.html" class="logout-link"><i class="fi fi-bs-exit"></i> Cerrar sesión</a>
           </div>
         </div>
       </div>
     </header>
 
-    <!-- TERMÓMETRO DE EMOCIONES (CON EMOJIS ORIGINALES) -->
-    <section class="tarjeta aparecer-2" style="margin-top:1.5rem">
+      <!-- TERMÓMETRO -->
+    <section class="tarjeta aparecer-2 mt-1-5">
       <h3>Mi ánimo hoy</h3>
+      <p class="text-suave text-sm mb-1">¿Cómo te sientes en este momento?</p>
+      
       <div class="animo-selector" id="animo-selector">
-        <button class="animo-btn" data-animo="Muy bien" aria-label="Muy bien">😄</button>
-        <button class="animo-btn" data-animo="Bien" aria-label="Bien">🙂</button>
-        <button class="animo-btn" data-animo="Neutro" aria-label="Neutro">😐</button>
-        <button class="animo-btn" data-animo="Triste" aria-label="Triste">😔</button>
-        <button class="animo-btn" data-animo="Ansioso" aria-label="Ansioso">😰</button>
+        <button class="animo-btn" data-animo="Muy bien" title="Muy bien">😄</button>
+        <button class="animo-btn" data-animo="Bien" title="Bien">🙂</button>
+        <button class="animo-btn" data-animo="Neutro" title="Neutro">😐</button>
+        <button class="animo-btn" data-animo="Triste" title="Triste">😔</button>
+        <button class="animo-btn" data-animo="Ansioso" title="Ansioso">😰</button>
       </div>
     </section>
 
-    <div class="grid grid-3 aparecer-3" style="margin-top:1.5rem">
-      <div class="tarjeta">
-        <div class="tarjeta__icono"><i class="fi fi-bs-target"></i></div>
-        <h3>Meditación diaria</h3>
-        <p>4 de 7 días esta semana</p>
-        <div class="progreso"><div class="progreso__barra" style="width:57%"></div></div>
+    <!-- TARJETAS DE HÁBITOS (Limpias sin progreso) -->
+    <div class="grid grid-3 aparecer-3 mt-1-5">
+      <div class="tarjeta flex-col-between" style="text-align: center; padding: 2rem 1rem;">
+        <div>
+          <div class="tarjeta__icono" style="margin: 0 auto 1rem; width: 60px; height: 60px; font-size: 1.8rem;"><i class="fi fi-bs-target"></i></div>
+          <h3>Meditación diaria</h3>
+          <p class="text-suave text-sm mt-0-5 mb-1">Tómate un momento para respirar.</p>
+        </div>
+        <a href="meditacion.html" class="btn btn-secundario" style="width: 100%;">Ir a meditar</a>
       </div>
-      <div class="tarjeta">
-        <div class="tarjeta__icono"><i class="fi fi-bs-edit-alt"></i></div>
-        <h3>Diario emocional</h3>
-        <p>5 de 7 entradas</p>
-        <div class="progreso"><div class="progreso__barra" style="width:71%"></div></div>
+      
+      <div class="tarjeta flex-col-between" style="text-align: center; padding: 2rem 1rem;">
+        <div>
+          <div class="tarjeta__icono" style="margin: 0 auto 1rem; width: 60px; height: 60px; font-size: 1.8rem;"><i class="fi fi-bs-edit-alt"></i></div>
+          <h3>Diario emocional</h3>
+          <p class="text-suave text-sm mt-0-5 mb-1">Escribe cómo te sientes.</p>
+        </div>
+        <a href="diario.html" class="btn btn-secundario" style="width: 100%;">Escribir entrada</a>
       </div>
-      <div class="tarjeta">
-        <div class="tarjeta__icono"><i class="fi fi-bs-moon"></i></div>
-        <h3>Sueño saludable</h3>
-        <p>6 de 7 noches</p>
-        <div class="progreso"><div class="progreso__barra" style="width:86%"></div></div>
+
+      <div class="tarjeta flex-col-between" style="text-align: center; padding: 2rem 1rem;">
+        <div>
+          <div class="tarjeta__icono" style="margin: 0 auto 1rem; width: 60px; height: 60px; font-size: 1.8rem;"><i class="fi fi-bs-moon"></i></div>
+          <h3>Sueño saludable</h3>
+          <p class="text-suave text-sm mt-0-5 mb-1">Registra tus horas de descanso.</p>
+        </div>
+        <a href="sueno.html" class="btn btn-secundario" style="width: 100%;">Ver mi sueño</a>
       </div>
     </div>
 
-    <div class="grid grid-2" style="margin-top:1.5rem">
+    <!-- CITAS Y NOTIFICACIONES -->
+    <div class="grid grid-2 mt-1-5">
       <div class="tarjeta">
         <h3>Próxima cita</h3>
-        <div class="cita-item" style="margin-top:.8rem">
+        <div class="cita-item mt-0-8">
           <div class="cita-fecha"><div class="dia">18</div><div class="mes">Jul</div></div>
           <div class="cita-info"><h4>Dra. Laura Méndez</h4><p>Sesión online · 15:00</p></div>
           <span class="badge badge-verde">Confirmada</span>
         </div>
-        <a href="citas.html" class="btn btn-secundario" style="margin-top:.5rem">Ver todas</a>
+        <a href="citas.html" class="btn btn-secundario mt-0-5">Ver todas</a>
       </div>
+
       <div class="tarjeta">
         <h3>Notificaciones</h3>
-        <ul style="list-style:none; padding:0; margin:0">
-          <li style="padding:.6rem 0; border-bottom:1px solid var(--borde)"><i class="fi fi-bs-comment"></i> Nuevo mensaje del Dr. Ramírez</li>
-          <li style="padding:.6rem 0; border-bottom:1px solid var(--borde)"><i class="fi fi-bs-seedling"></i> Publicación popular en Comunidad</li>
-          <li style="padding:.6rem 0"><i class="fi fi-bs-calendar"></i> Recordatorio: cita mañana 15:00</li>
+        <ul class="lista-notificaciones" id="lista-notificaciones">
+          <li class="text-center" style="padding:1rem; color:var(--texto-suave); font-size:.9rem">Cargando notificaciones...</li>
         </ul>
       </div>
     </div>
-
   </div>
 </div>
+
+<!-- BOTÓN DE PÁNICO -->
+<a href="chat.html?panico=true" class="btn-panico" title="Atención Urgente">
+  <span style="font-size: 1.3rem; font-weight: bold;">SOS</span>
+</a>
 
 <div id="sema-footer"></div>
 </body>

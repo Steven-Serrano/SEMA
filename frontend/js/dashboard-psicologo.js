@@ -1,5 +1,5 @@
 /* ============================================================
-   SEMA - DASHBOARD PSICÓLOGO
+   SEMA - DASHBOARD PSICÓLOGO (Actualizado: Todos los pacientes)
    ============================================================ */
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // ==========================================
     // 1. VERIFICAR AUTENTICACIÓN Y ROL
     // ==========================================
-    if (!Auth || !Auth.getToken()) {
+    if (typeof Auth === 'undefined' || !Auth.getToken()) {
         window.location.href = "login.html";
         return;
     }
@@ -37,32 +37,49 @@ document.addEventListener('DOMContentLoaded', async () => {
     // ==========================================
     async function cargarEstadisticas() {
         try {
-            // Cargar chats (pacientes)
-            const chats = await fetchAuth('/chats');
-            document.getElementById('stat-pacientes').textContent = chats.length;
+            // Intentamos obtener todos los pacientes
+            let totalPacientes = 0;
+            try {
+                const pacientes = await fetchAuth('/usuarios/pacientes');
+                totalPacientes = pacientes.length;
+            } catch (e) {
+                // Fallback: Si falla /pacientes, contamos los chats
+                const chats = await fetchAuth('/chats');
+                totalPacientes = chats.length;
+            }
+            document.getElementById('stat-pacientes').textContent = totalPacientes;
 
             // Cargar citas
             const citas = await fetchAuth('/citas');
-            const hoy = new Date().toISOString().split('T')[0];
-            const citasHoy = citas.filter(c => c.fecha.startsWith(hoy));
+            const hoyStr = new Date().toISOString().split('T')[0];
+            
+            const citasHoy = citas.filter(c => {
+                const fechaCita = new Date(c.fecha).toISOString().split('T')[0];
+                return fechaCita === hoyStr && c.estado !== 'cancelada';
+            });
             document.getElementById('stat-citas-hoy').textContent = citasHoy.length;
 
             // Citas este mes
             const mesActual = new Date().getMonth();
-            const citasMes = citas.filter(c => new Date(c.fecha).getMonth() === mesActual);
+            const citasMes = citas.filter(c => 
+                new Date(c.fecha).getMonth() === mesActual && c.estado !== 'cancelada'
+            );
             document.getElementById('stat-citas-mes').textContent = citasMes.length;
 
-            // Mensajes (aproximado: contar mensajes en todos los chats)
+            // Mensajes recibidos (Optimizado con Promise.all)
             let totalMensajes = 0;
-            for (const chat of chats) {
-                try {
-                    const mensajes = await fetchAuth(`/mensajes/${chat._id}`);
-                    // Contar solo mensajes del usuario (estudiante)
-                    const mensajesRecibidos = mensajes.filter(m => m.emisorModel === 'Usuario');
-                    totalMensajes += mensajesRecibidos.length;
-                } catch (err) {
-                    console.warn('Error cargando mensajes:', err);
-                }
+            const chats = await fetchAuth('/chats').catch(() => []);
+            
+            if (chats.length > 0) {
+                // Limitamos a los primeros 10 para no colapsar el servidor
+                const promesasMensajes = chats.slice(0, 10).map(chat => 
+                    fetchAuth(`/mensajes/${chat._id}`).catch(() => [])
+                );
+                const resultados = await Promise.all(promesasMensajes);
+                
+                resultados.forEach(mensajes => {
+                    totalMensajes += mensajes.filter(m => m.emisorModel === 'Usuario').length;
+                });
             }
             document.getElementById('stat-mensajes').textContent = totalMensajes;
 
@@ -85,13 +102,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             const contenedor = document.getElementById('lista-citas-psicologo');
             
             if (proximas.length === 0) {
-                contenedor.innerHTML = '<p style="color: var(--texto-secundario);">No tienes citas programadas.</p>';
+                contenedor.innerHTML = '<p class="text-suave">No tienes citas programadas.</p>';
                 return;
             }
 
             contenedor.innerHTML = proximas.map(cita => {
                 const fechaObj = new Date(cita.fecha);
-                const dia = fechaObj.getDate();
+                const dia = fechaObj.getUTCDate();
                 const mes = fechaObj.toLocaleString('es', { month: 'short' }).replace('.', '');
                 const nombrePaciente = cita.usuarioId?.nombre || 'Paciente';
                 
@@ -122,37 +139,56 @@ document.addEventListener('DOMContentLoaded', async () => {
     // ==========================================
     async function cargarPacientes() {
         try {
-            const chats = await fetchAuth('/chats');
             const contenedor = document.getElementById('lista-pacientes');
+            
+            // 1. Intentar traer a TODOS los pacientes
+            let usuarios = [];
+            try {
+                usuarios = await fetchAuth('/usuarios/pacientes'); 
+            } catch (error) {
+                // Si el backend no tiene la ruta /pacientes, usamos los chats
+                console.warn('Ruta /pacientes no encontrada, usando chats...');
+                const chats = await fetchAuth('/chats');
+                usuarios = chats.map(c => c.usuarioId).filter(Boolean);
+            }
 
-            if (chats.length === 0) {
-                contenedor.innerHTML = '<p style="color: var(--texto-secundario);">Aún no tienes pacientes.</p>';
+            // 2. Traer los chats para saber si ya hay conversación
+            const chats = await fetchAuth('/chats').catch(() => []);
+
+            if (usuarios.length === 0) {
+                contenedor.innerHTML = '<p class="text-suave">Aún no tienes pacientes.</p>';
                 return;
             }
 
-            contenedor.innerHTML = chats.slice(0, 5).map(chat => {
-                const nombre = chat.usuarioId?.nombre || 'Paciente';
-                const email = chat.usuarioId?.email || '';
+            // 3. Renderizar los primeros 5
+            contenedor.innerHTML = usuarios.slice(0, 5).map(u => {
+                const nombre = u.nombre || 'Paciente';
+                const email = u.email || '';
                 const iniciales = nombre.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
                 
+                // Buscar si este usuario ya tiene un chat
+                const chatExistente = chats.find(c => c.usuarioId?._id === u._id);
+                
+                // Si hay chat, botón de ir al chat. Si no, botón para iniciarlo
+                const botonChat = chatExistente 
+                    ? `<a href="chat.html?chat=${chatExistente._id}" class="btn btn-secundario btn-sm"><i class="fi fi-bs-comment"></i> Chat</a>`
+                    : `<a href="chat.html?nuevoChat=${u._id}" class="btn btn-secundario btn-sm"><i class="fi fi-bs-comment"></i> Iniciar</a>`;
+
                 return `
-                    <div class="paciente-item" style="display: flex; align-items: center; gap: 1rem; padding: 1rem; border-bottom: 1px solid var(--borde);">
-                        <div class="avatar-grande" style="width: 45px; height: 45px; font-size: 0.9rem;">
-                            ${iniciales}
+                    <div class="paciente-item">
+                        <div class="avatar-grande">${iniciales}</div>
+                        <div class="flex-1">
+                            <h4>${nombre}</h4>
+                            <small class="text-suave">${email}</small>
                         </div>
-                        <div style="flex: 1;">
-                            <h4 style="margin: 0 0 0.25rem 0;">${nombre}</h4>
-                            <small style="color: var(--texto-secundario);">${email}</small>
-                        </div>
-                        <a href="chat.html?chat=${chat._id}" class="btn btn-secundario" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
-                            💬 Chat
-                        </a>
+                        ${botonChat}
                     </div>
                 `;
             }).join('');
 
         } catch (error) {
             console.error('Error cargando pacientes:', error);
+            document.getElementById('lista-pacientes').innerHTML = '<p class="text-suave">Error al cargar pacientes.</p>';
         }
     }
 
@@ -190,9 +226,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     // ==========================================
-    // 8. INICIALIZAR
+    // 8. INICIALIZAR (Cargar todo en paralelo)
     // ==========================================
-    await cargarEstadisticas();
-    await cargarCitas();
-    await cargarPacientes();
+    await Promise.all([
+        cargarEstadisticas(),
+        cargarCitas(),
+        cargarPacientes()
+    ]);
 });

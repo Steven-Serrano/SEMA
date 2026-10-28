@@ -1,93 +1,99 @@
 <!DOCTYPE html>
 <html lang="es" data-theme="light">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Seguimiento · SEMA</title>
-<meta name="description" content="Visualiza tu progreso emocional semanal.">
-<link rel="icon" type="image/png" href="assets/logo.png">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
-
-<!-- Font Awesome (Más confiable que Uicons) -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
-<link rel="stylesheet" href="css/styles.css">
-<script defer src="js/app.js"></script>
-<script defer src="js/layout.js"></script>
-
-<style>
-  .fa-solid {
-    vertical-align: middle;
-    margin-right: 0.5rem;
-    font-size: 1.1em;
-  }
-  .tarjeta__icono .fa-solid {
-    margin-right: 0;
-    font-size: 2rem;
-  }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mi Seguimiento · SEMA</title>
+  <link rel="icon" type="image/png" href="assets/logo.png">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/@flaticon/flaticon-uicons@3.3.1/css/bold/straight.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  
+  <script defer src="js/api.js"></script>
+  <script defer src="js/app.js"></script>
+  <script defer src="js/layout.js"></script>
+  <script defer src="js/seguimiento.js"></script>
 </head>
 <body>
-<div id="sema-nav"></div>
 
-<section class="seccion contenedor">
-  <div class="seccion__titulo">
-    <span class="chip">Tu progreso</span>
-    <h2>Seguimiento emocional</h2>
-    <p>Cómo ha evolucionado tu bienestar en los últimos 7 días.</p>
+  <div id="sema-nav"></div>
+
+  <div class="dashboard">
+    <aside class="sidebar" id="sema-sidebar"></aside>
+
+    <main class="dashboard__main">
+      
+      <header class="dashboard-header">
+        <div class="dashboard-title">
+          <h1>Mi Seguimiento</h1>
+          <p>Mira todo lo que has logrado y cómo te has sentido.</p>
+        </div>
+        <a href="dashboard.html" class="btn btn-secundario"><i class="fi fi-bs-arrow-left"></i> Volver al Dashboard</a>
+      </header>
+
+            <!-- TARJETA DE RESUMEN GENERAL -->
+      <div class="tarjeta resumen-general aparecer-1 mb-1-5" id="tarjeta-resumen">
+        <div class="resumen-icono" id="resumen-icono">⏳</div>
+        <div class="resumen-texto">
+          <h2 id="resumen-titulo">Analizando tu progreso...</h2>
+          <p id="resumen-descripcion">Recopilando tus datos para darte un resumen.</p>
+        </div>
+      </div>
+
+      <!-- RESUMEN DEL MES -->
+      <h2 class="mt-1-5 mb-1" style="font-size: 1.5rem;">
+        <i class="fi fi-bs-calendar" style="color: var(--azul);"></i> Resumen de <span id="nombre-mes" style="text-transform: capitalize;">este mes</span>
+      </h2>
+      
+      <div class="grid grid-3 aparecer-1">
+        <div class="tarjeta stat-card" style="padding: 2rem 1rem;">
+          <div class="tarjeta__icono" style="margin: 0 auto 1rem; background: var(--gradiente);"><i class="fi fi-bs-target"></i></div>
+          <h2 id="total-meditacion" style="font-size: 3rem; margin: 0;">0</h2>
+          <p class="text-suave">Meditaciones</p>
+        </div>
+        <div class="tarjeta stat-card" style="padding: 2rem 1rem;">
+          <div class="tarjeta__icono" style="margin: 0 auto 1rem; background: var(--gradiente);"><i class="fi fi-bs-edit-alt"></i></div>
+          <h2 id="total-diario" style="font-size: 3rem; margin: 0;">0</h2>
+          <p class="text-suave">Entradas del diario</p>
+        </div>
+        <div class="tarjeta stat-card" style="padding: 2rem 1rem;">
+          <div class="tarjeta__icono" style="margin: 0 auto 1rem; background: var(--gradiente);"><i class="fi fi-bs-moon"></i></div>
+          <h2 id="total-sueno" style="font-size: 3rem; margin: 0;">0</h2>
+          <p class="text-suave">Noches registradas</p>
+        </div>
+      </div>
+
+      <!-- GRÁFICO DE EMOCIONES -->
+      <h2 class="mt-2 mb-1" style="font-size: 1.5rem;"><i class="fi fi-bs-chart-pie" style="color: var(--azul);"></i> Mi balance emocional</h2>
+      
+      <div class="grid grid-2 aparecer-2 mb-1-5">
+        <div class="tarjeta">
+          <h3>Emociones más frecuentes</h3>
+          <p class="text-suave text-sm mb-1">Basado en todos tus registros</p>
+          <div id="grafico-emociones" class="bars" style="height: 180px; margin-top: 2rem;">
+            <p class="text-suave text-center" style="width:100%;">Cargando datos...</p>
+          </div>
+        </div>
+        <div class="tarjeta">
+          <h3>Últimos registros</h3>
+          <div id="lista-emociones" style="max-height: 250px; overflow-y: auto;">
+            <p class="text-suave text-center">Cargando...</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- CALENDARIO DE SUEÑO -->
+      <h2 class="mt-2 mb-1" style="font-size: 1.5rem;"><i class="fi fi-bs-moon" style="color: var(--azul);"></i> Calendario de Sueño</h2>
+      
+      <div class="tarjeta aparecer-3" style="padding: 2rem;">
+        <div id="calendario-sueno" class="calendario-wrapper">
+          <p class="text-suave text-center">Cargando calendario...</p>
+        </div>
+      </div>
+
+    </main>
   </div>
 
-  <div class="grid grid-3" style="margin-bottom:2rem">
-    <div class="tarjeta">
-      <div class="tarjeta__icono"><i class="fa-solid fa-face-smile"></i></div>
-      <h3>Ánimo promedio</h3>
-      <p style="font-size:1.6rem; font-weight:700; color:var(--verde); margin:0">Bien</p>
-    </div>
-    <div class="tarjeta">
-      <div class="tarjeta__icono"><i class="fa-solid fa-fire"></i></div>
-      <h3>Racha actual</h3>
-      <p style="font-size:1.6rem; font-weight:700; color:var(--azul); margin:0">5 días</p>
-    </div>
-    <div class="tarjeta">
-      <div class="tarjeta__icono"><i class="fa-solid fa-chart-line"></i></div>
-      <h3>Mejoría</h3>
-      <p style="font-size:1.6rem; font-weight:700; color:var(--verde); margin:0">+18%</p>
-    </div>
-  </div>
-
-  <div class="tarjeta">
-    <h3>Ánimo por día — Última semana</h3>
-    <div class="chart-wrap">
-      <div class="bars" id="bars"></div>
-    </div>
-  </div>
-
-  <div class="tarjeta" style="margin-top:1.5rem">
-    <h3>Emociones frecuentes</h3>
-    <div style="display:flex; flex-wrap:wrap; gap:.5rem; margin-top:.8rem">
-      <span class="chip">😊 Feliz · 34%</span>
-      <span class="chip">😌 Calma · 22%</span>
-      <span class="chip"> Ansioso · 18%</span>
-      <span class="chip">😔 Triste · 14%</span>
-      <span class="chip">😴 Cansado · 12%</span>
-    </div>
-  </div>
-</section>
-
-<div id="sema-footer"></div>
-
-<script>
-const datos = [
-  { d:'Lun', v:60, e:'🙂' },{ d:'Mar', v:80, e:'😄' },{ d:'Mié', v:45, e:'😐' },
-  { d:'Jue', v:70, e:'🙂' },{ d:'Vie', v:90, e:'😄' },{ d:'Sáb', v:75, e:'🙂' },{ d:'Dom', v:85, e:'😄' }
-];
-
-document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('bars').innerHTML = datos.map((x,i) => `
-    <div class="bar" style="height:${x.v}%; animation-delay:${i*.08}s" title="${x.d}: ${x.v}%">
-      <em>${x.e}</em><span>${x.d}</span>
-    </div>`).join('');
-});
-</script>
+  <div id="sema-footer"></div>
 </body>
 </html>

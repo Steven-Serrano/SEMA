@@ -3,82 +3,67 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Citas · SEMA</title>
-  <meta name="description" content="Agenda y gestiona tus citas con profesionales.">
+  <title>Chat · SEMA</title>
+  <meta name="description" content="Mensajería segura con tu psicólogo.">
   <link rel="icon" type="image/png" href="assets/logo.png">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/@flaticon/flaticon-uicons@3.3.1/css/bold/straight.css" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
   
-  <!-- Scripts en el orden correcto (api.js primero) -->
   <script defer src="js/api.js"></script>
   <script defer src="js/app.js"></script>
   <script defer src="js/layout.js"></script>
-  <script defer src="js/citas.js"></script>
+  <script defer src="js/chat.js"></script>
 </head>
 <body>
 
   <div id="sema-nav"></div>
 
-  <section class="seccion contenedor">
-    <div class="seccion__titulo">
-      <span class="chip">Agenda</span>
-      <h2>Mis citas</h2>
-      <p>Gestiona tus próximas sesiones.</p>
-    </div>
+  <div class="chat-layout">
+    
+    <!-- SIDEBAR IZQUIERDO: Lista de chats -->
+    <aside class="chat-sidebar">
+      <div class="chat-sidebar__header">
+        <h3><i class="fi fi-bs-comments"></i> Mis conversaciones</h3>
+      </div>
+      <div id="lista-chats" class="chat-list">
+        <p style="padding: 1rem; color: var(--texto-suave);">Cargando chats...</p>
+      </div>
+    </aside>
 
-    <div class="grid grid-2">
+    <!-- PANEL DERECHO: Chat activo -->
+    <main class="chat-main">
       
-      <!-- 1. LISTA DE CITAS (Se llena automáticamente con JavaScript) -->
-      <div>
-        <h3>Próximas citas</h3>
-        <div id="lista-citas" style="margin-top: 1rem;">
-          <p style="color: var(--texto-secundario, #64748b);">Cargando citas...</p>
+      <header class="chat-header" id="chat-header">
+        <div class="chat-header__info" id="chat-header-info">
+          <div class="avatar-grande" id="chat-avatar">
+            <i class="fi fi-bs-comment"></i>
+          </div>
+          <div>
+            <h3 id="chat-nombre">Selecciona una conversación</h3>
+            <small id="chat-estado" style="color: var(--texto-suave);">
+              Elige un chat de la lista
+            </small>
+          </div>
+        </div>
+      </header>
+
+      <div class="chat-mensajes" id="chat-mensajes">
+        <div class="chat-empty-state">
+          <i class="fi fi-bs-comments" style="font-size: 3rem; color: var(--borde); margin-bottom: 1rem;"></i>
+          <p>Selecciona una conversación para comenzar</p>
         </div>
       </div>
 
-      <!-- 2. FORMULARIO PARA AGENDAR NUEVA CITA -->
-      <div>
-        <h3>Reservar nueva cita</h3>
-        <form class="tarjeta" id="form-cita">
-          <div class="form-grupo">
-            <label for="psi">Profesional</label>
-            <!-- El JavaScript llenará esto con los psicólogos reales de la base de datos -->
-            <select id="psi" required>
-              <option value="">Cargando psicólogos...</option>
-            </select>
-          </div>
-          
-          <div class="form-grupo">
-            <label for="fecha">Fecha</label>
-            <input type="date" id="fecha" required>
-          </div>
-          
-          <div class="form-grupo">
-            <label for="hora">Hora</label>
-            <select id="hora" required>
-              <option value="">Selecciona...</option>
-              <option>09:00</option>
-              <option>10:00</option>
-              <option>11:00</option>
-              <option>15:00</option>
-              <option>16:00</option>
-              <option>17:00</option>
-            </select>
-          </div>
-          
-          <div class="form-grupo">
-            <label for="motivo">Motivo (opcional)</label>
-            <textarea id="motivo" rows="3" placeholder="Cuéntanos brevemente el motivo de tu consulta..."></textarea>
-          </div>
-          
-          <button type="submit" class="btn btn-primario" id="btn-enviar-cita">
-            Confirmar cita
-          </button>
-        </form>
-      </div>
+      <form class="chat-form" id="chat-form">
+        <input type="text" id="chat-input" placeholder="Escribe un mensaje..." autocomplete="off" disabled>
+        <button type="submit" class="btn btn-primario" id="btn-enviar" disabled>
+          <i class="fi fi-bs-paper-plane"></i> Enviar
+        </button>
+      </form>
 
-    </div>
-  </section>
+    </main>
+  </div>
 
   <div id="sema-footer"></div>
 

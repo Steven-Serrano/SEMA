@@ -1,40 +1,13 @@
-/* ============================================================
-   SEMA - DASHBOARD ESTUDIANTE (CORREGIDO)
-   ============================================================ */
-
-document.addEventListener('DOMContentLoaded', async () => {
-
-    // ==========================================
-    // VERIFICAR SI ES ADMINISTRADOR
-    // ==========================================
-    const user = Auth ? Auth.getUser() : null;
-
-    if (user && user.rol === 'administrador') {
-        window.location.href = "dashboard-admin.html";
-        return;
-    }
-
-    // ==========================================
-    // 1. VERIFICAR AUTENTICACIÓN
-    // ==========================================
-    if (!Auth || !Auth.getToken()) {
+﻿document.addEventListener('DOMContentLoaded', async () => {
+    if (typeof Auth === 'undefined' || !Auth.getToken()) {
         window.location.href = "login.html";
         return;
     }
 
-    // Si es psicólogo, redirigir a su dashboard
-    if (user && user.rol === 'psicologo') {
-        window.location.href = "dashboard-psicologo.html";
-        return;
-    }
+    const user = Auth.getUser();
+    if (!user) return;
 
-    console.log('Usuario en dashboard:', user); // Debug
-
-    // ==========================================
-    // 2. ACTUALIZAR TODOS LOS CAMPOS DE USUARIO
-    // ==========================================
-    
-    // A) Saludo grande ("Hola, [nombre]")
+    // 1. ACTUALIZAR DATOS DEL USUARIO
     const saludo = document.getElementById('saludoUsuario');
     if (saludo) {
         const hora = new Date().getHours();
@@ -42,26 +15,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (hora >= 12 && hora < 19) saludoTexto = 'Buenas tardes';
         else if (hora >= 19) saludoTexto = 'Buenas noches';
         
-        saludo.textContent = `${saludoTexto}, ${user.nombre || 'Usuario'} 👋`;
+        saludo.textContent = `${saludoTexto}, ${user.nombre || 'Usuario'}`;
     }
 
-    // B) Menú de usuario (esquina superior derecha)
     const nombreUsuario = document.querySelector('.nombre-usuario');
     const correoUsuario = document.querySelector('.correo-usuario');
-    
-    if (nombreUsuario) {
-        nombreUsuario.textContent = user.nombre || 'Usuario SEMA';
-    }
-    if (correoUsuario) {
-        correoUsuario.textContent = user.email || 'usuario@sema.com';
-    }
+    if (nombreUsuario) nombreUsuario.textContent = user.nombre || 'Usuario SEMA';
+    if (correoUsuario) correoUsuario.textContent = user.email || 'usuario@sema.com';
 
-    console.log('Nombre actualizado:', nombreUsuario?.textContent);
-    console.log('Correo actualizado:', correoUsuario?.textContent);
-
-    // ==========================================
-    // 3. CARGAR PRÓXIMA CITA REAL
-    // ==========================================
+    // 2. CARGAR PRÓXIMA CITA
     try {
         const citas = await fetchAuth('/citas');
         const proximas = citas.filter(c => c.estado !== 'cancelada' && c.estado !== 'completada');
@@ -69,112 +31,114 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (proximas.length > 0) {
             const cita = proximas[0];
             const fechaObj = new Date(cita.fecha);
-            const dia = fechaObj.getDate();
+            const dia = fechaObj.getUTCDate();
             const mes = fechaObj.toLocaleString('es', { month: 'short' }).replace('.', '');
             const nombrePsicologo = cita.psicologoId?.nombre || 'Psicólogo';
             
             const citaItem = document.querySelector('.cita-item');
             if (citaItem) {
-                const fechaDiv = citaItem.querySelector('.cita-fecha');
-                const infoDiv = citaItem.querySelector('.cita-info');
+                citaItem.querySelector('.cita-fecha').innerHTML = `<div class="dia">${dia}</div><div class="mes">${mes}</div>`;
+                citaItem.querySelector('.cita-info').innerHTML = `<h4>${nombrePsicologo}</h4><p>${cita.hora} · Sesión online</p>`;
                 const badge = citaItem.querySelector('.badge');
-                
-                if (fechaDiv) {
-                    fechaDiv.innerHTML = `<div class="dia">${dia}</div><div class="mes">${mes}</div>`;
-                }
-                if (infoDiv) {
-                    infoDiv.innerHTML = `<h4>${nombrePsicologo}</h4><p>${cita.hora} · Sesión online</p>`;
-                }
-                if (badge) {
-                    badge.textContent = cita.estado.charAt(0).toUpperCase() + cita.estado.slice(1);
-                    badge.className = `badge badge-${cita.estado === 'confirmada' ? 'verde' : 'azul'}`;
-                }
+                badge.textContent = cita.estado.charAt(0).toUpperCase() + cita.estado.slice(1);
+                badge.className = `badge badge-${cita.estado === 'confirmada' ? 'verde' : 'azul'}`;
             }
         }
     } catch (error) {
         console.warn('No se pudieron cargar las citas:', error.message);
     }
 
-    // ==========================================
-    // 4. CARGAR NOTIFICACIONES REALES
-    // ==========================================
+    // 3. CARGAR NOTIFICACIONES
     try {
         const notificaciones = await fetchAuth('/notificaciones');
-        const listaNotif = document.querySelector('.tarjeta ul');
+        const listaNotif = document.getElementById('lista-notificaciones');
         
-        if (listaNotif && notificaciones.length > 0) {
-            listaNotif.innerHTML = notificaciones.slice(0, 3).map(n => `
-                <li style="padding:.6rem 0; border-bottom:1px solid var(--borde)">
-                    ${n.leida ? '✅' : '🔴'} ${n.titulo}
-                    <br><small>${n.mensaje}</small>
-                </li>
-            `).join('');
+        if (listaNotif) {
+            if (notificaciones.length > 0) {
+                listaNotif.innerHTML = notificaciones.slice(0, 3).map(n => `
+                    <li class="notif-item" id="notif-${n._id}">
+                        <div class="notif-content">
+                            <i class="fi fi-bs-bell"></i> 
+                            <span>${n.titulo}</span>
+                            <small style="display:block; color:var(--texto-suave); font-size:0.8rem;">${n.mensaje}</small>
+                        </div>
+                        <button class="notif-delete" data-id="${n._id}" title="Eliminar">
+                            <i class="fi fi-bs-trash"></i>
+                        </button>
+                    </li>
+                `).join('');
+            } else {
+                listaNotif.innerHTML = '<li class="text-center" style="padding:1rem; color:var(--texto-suave); font-size:.9rem">No tienes notificaciones pendientes ✨</li>';
+            }
         }
     } catch (error) {
         console.warn('No se pudieron cargar las notificaciones:', error.message);
     }
 
-    // ==========================================
-    // 5. SELECTOR DE ÁNIMO - GUARDAR EN BACKEND
-    // ==========================================
-    const animoSelector = document.getElementById('animo-selector');
-    if (animoSelector) {
-        animoSelector.addEventListener('click', async (e) => {
-            if (e.target.classList.contains('animo-btn')) {
-                const estado = e.target.dataset.animo;
-                
-                document.querySelectorAll('.animo-btn').forEach(btn => {
-                    btn.classList.remove('activo');
-                });
-                
-                e.target.classList.add('activo');
+    // 3.1 BORRAR NOTIFICACIONES
+    const listaNotif = document.getElementById('lista-notificaciones');
+    if (listaNotif) {
+        listaNotif.addEventListener('click', async (e) => {
+            const btnDelete = e.target.closest('.notif-delete');
+            if (!btnDelete) return;
 
-                try {
-                    await fetchAuth('/estados-emocionales', {
-                        method: 'POST',
-                        body: JSON.stringify({
-                            estado: estado,
-                            descripcion: `Registro desde dashboard`
-                        })
-                    });
-                    
-                    if (typeof mostrarToast === 'function') {
-                        mostrarToast(`✅ Ánimo "${estado}" registrado`);
+            const idNotificacion = btnDelete.dataset.id;
+            const item = btnDelete.closest('.notif-item');
+            
+            item.style.opacity = '0';
+            item.style.transform = 'translateX(20px)';
+            
+            try {
+                await fetchAuth(`/notificaciones/${idNotificacion}`, { method: 'DELETE' });
+                setTimeout(() => {
+                    item.remove();
+                    if (listaNotif.children.length === 0) {
+                        listaNotif.innerHTML = '<li class="text-center" style="padding:1rem; color:var(--texto-suave); font-size:.9rem">No tienes notificaciones pendientes ✨</li>';
                     }
-                } catch (error) {
-                    if (typeof mostrarToast === 'function') {
-                        mostrarToast('Error al registrar: ' + error.message);
-                    }
-                }
+                }, 300);
+                mostrarToast('Notificación eliminada');
+            } catch (error) {
+                item.style.opacity = '1';
+                item.style.transform = 'translateX(0)';
+                mostrarToast('Error al eliminar');
             }
         });
     }
 
-    // ==========================================
-    // 6. MENÚ DESPLEGABLE DE USUARIO (CORREGIDO)
-    // ==========================================
+    // 4. SELECTOR DE ÁNIMO
+
+    const animoSelector = document.getElementById('animo-selector');
+    if (animoSelector) {
+        animoSelector.addEventListener('click', async (e) => {
+            const btn = e.target.closest('.animo-btn'); // <-- Asegúrate que sea .animo-btn
+            if (!btn) return;
+
+            const estado = btn.dataset.animo;
+            document.querySelectorAll('.animo-btn').forEach(b => b.classList.remove('activo'));
+            btn.classList.add('activo');
+
+            try {
+                await fetchAuth('/estados-emocionales', {
+                    method: 'POST',
+                    body: JSON.stringify({ estado: estado, descripcion: 'Registro desde dashboard' })
+                });
+                mostrarToast(`✅ Ánimo "${estado}" registrado`);
+            } catch (error) {
+                mostrarToast('❌ Error al registrar el ánimo');
+            }
+        });
+    }
+
+    // 5. MENÚ DESPLEGABLE
     const userMenuBtn = document.getElementById('userMenuBtn');
     const userDropdown = document.getElementById('userDropdown');
-    
-    console.log('Botón menú:', userMenuBtn);
-    console.log('Dropdown:', userDropdown);
     
     if (userMenuBtn && userDropdown) {
         userMenuBtn.addEventListener('click', (e) => {
             e.preventDefault();
             e.stopPropagation();
-            
-            const estaActivo = userDropdown.classList.contains('activo');
-            
-            if (estaActivo) {
-                userDropdown.classList.remove('activo');
-                userMenuBtn.classList.remove('activo');
-            } else {
-                userDropdown.classList.add('activo');
-                userMenuBtn.classList.add('activo');
-            }
-            
-            console.log('Menú:', !estaActivo ? 'ABIERTO' : 'CERRADO');
+            userDropdown.classList.toggle('activo');
+            userMenuBtn.classList.toggle('activo');
         });
 
         document.addEventListener('click', (e) => {
@@ -183,14 +147,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                 userMenuBtn.classList.remove('activo');
             }
         });
-    } else {
-        console.error('No se encontraron los elementos del menú desplegable');
     }
 
-    // ==========================================
-    // 7. CERRAR SESIÓN
-    // ==========================================
-    document.querySelectorAll('a[href="index.html"]').forEach(link => {
+    // 6. CERRAR SESIÓN
+    document.querySelectorAll('.logout-link').forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
             Auth.clear();
@@ -198,3 +158,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     });
 });
+
+function mostrarToast(texto) {
+    let toast = document.querySelector(".toast");
+    if (!toast) {
+        toast = document.createElement("div");
+        toast.className = "toast";
+        document.body.appendChild(toast);
+    }
+    toast.textContent = texto;
+    toast.classList.add("activo");
+    setTimeout(() => toast.classList.remove("activo"), 3000);
+}

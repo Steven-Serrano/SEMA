@@ -1,183 +1,147 @@
-/* ============================================================
-   SEMA - CONFIGURACIÓN (Completa)
-   ============================================================ */
-
 document.addEventListener('DOMContentLoaded', async () => {
-    if (!Auth || !Auth.getToken()) {
+    if (typeof Auth === 'undefined' || !Auth.getToken()) {
         window.location.href = "login.html";
         return;
     }
 
     const user = Auth.getUser();
-    const previewFoto = document.getElementById('previewFoto');
-    const inputFoto = document.getElementById('fotoPerfil');
+    // 🔑 RUTA DINÁMICA SEGÚN EL ROL
+    const rutaApi = user.rol === 'psicologo' ? '/psicologos/perfil' : '/usuarios/perfil';
 
-    // ==========================================
-    // 1. CARGAR DATOS ACTUALES
-    // ==========================================
+    const previewFoto = document.getElementById('previewFoto');
+    const inputFoto = document.getElementById('fotoPerfilInput');
+
+    // 1. CARGAR DATOS
     async function cargarDatos() {
         try {
-            const perfil = await fetchAuth('/usuarios/perfil');
+            const perfil = await fetchAuth(rutaApi);
             
-            // Llenar todos los campos
             document.getElementById('nombre').value = perfil.nombre || '';
             document.getElementById('documento').value = perfil.documento || '';
-            document.getElementById('correo').value = perfil.email || '';
+            document.getElementById('correo').value = perfil.email || perfil.correo || '';
             document.getElementById('telefono').value = perfil.telefono || '';
             document.getElementById('ciudad').value = perfil.ciudad || '';
             document.getElementById('fechaNacimiento').value = perfil.fechaNacimiento ? new Date(perfil.fechaNacimiento).toISOString().split('T')[0] : '';
             document.getElementById('genero').value = perfil.genero || '';
             document.getElementById('biografia').value = perfil.biografia || '';
-            document.getElementById('fotoPerfil').value = perfil.fotoPerfil || '';
             
-            if (perfil.fotoPerfil) {
-                previewFoto.src = perfil.fotoPerfil;
-            }
+            if (perfil.fotoPerfil) previewFoto.src = perfil.fotoPerfil;
         } catch (error) {
             console.error('Error cargando perfil:', error);
-            mostrarToast(' Error al cargar los datos');
+            mostrarToast('❌ Error al cargar los datos');
         }
     }
 
-    // Preview de foto
+    // 2. GUARDAR INFO
+    document.getElementById('guardarPerfil').addEventListener('click', async function() {
+        const datos = {
+            nombre: document.getElementById('nombre').value.trim(),
+            documento: document.getElementById('documento').value.trim(),
+            email: document.getElementById('correo').value.trim(),
+            telefono: document.getElementById('telefono').value.trim(),
+            ciudad: document.getElementById('ciudad').value.trim(),
+            fechaNacimiento: document.getElementById('fechaNacimiento').value,
+            genero: document.getElementById('genero').value,
+            biografia: document.getElementById('biografia').value.trim()
+        };
+
+        if (!datos.nombre || !datos.email) return mostrarToast('⚠️ Nombre y correo obligatorios');
+
+        this.disabled = true;
+        this.innerHTML = '<span class="spinner"></span> Guardando...';
+
+        try {
+            await fetchAuth(rutaApi, { method: 'PUT', body: JSON.stringify(datos) });
+            const userActual = Auth.getUser();
+            userActual.nombre = datos.nombre;
+            userActual.email = datos.email;
+            Auth.setUser(userActual);
+            mostrarToast('✅ Información actualizada');
+        } catch (error) {
+            mostrarToast('❌ ' + error.message);
+        } finally {
+            this.disabled = false;
+            this.innerHTML = '<i class="fi fi-bs-check"></i> Guardar información';
+        }
+    });
+
+    // 3. FOTO
     if (inputFoto) {
-        inputFoto.addEventListener('input', (e) => {
-            previewFoto.src = e.target.value || 'assets/avatar-default.png';
+        inputFoto.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (ev) => previewFoto.src = ev.target.result;
+                reader.readAsDataURL(file);
+            }
         });
     }
 
-    // ==========================================
-    // 2. GUARDAR INFORMACIÓN PERSONAL
-    // ==========================================
-    const btnGuardarPerfil = document.getElementById('guardarPerfil');
-    if (btnGuardarPerfil) {
-        btnGuardarPerfil.addEventListener('click', async () => {
-            const datos = {
-                nombre: document.getElementById('nombre').value.trim(),
-                documento: document.getElementById('documento').value.trim(),
-                email: document.getElementById('correo').value.trim(),
-                telefono: document.getElementById('telefono').value.trim(),
-                ciudad: document.getElementById('ciudad').value.trim(),
-                fechaNacimiento: document.getElementById('fechaNacimiento').value,
-                genero: document.getElementById('genero').value,
-                biografia: document.getElementById('biografia').value.trim()
-            };
+    document.getElementById('guardarFoto').addEventListener('click', async function() {
+        const file = inputFoto.files[0];
+        if (!file) return mostrarToast('⚠️ Selecciona una imagen');
+        if (file.size > 5 * 1024 * 1024) return mostrarToast('⚠️ Máximo 5MB');
 
-            if (!datos.nombre || !datos.email) {
-                mostrarToast('⚠️ Nombre y correo son obligatorios');
-                return;
-            }
+        const formData = new FormData();
+        formData.append('foto', file);
 
-            btnGuardarPerfil.disabled = true;
-            btnGuardarPerfil.innerHTML = '<span class="spinner"></span> Guardando...';
+        this.disabled = true;
+        this.innerHTML = '<span class="spinner"></span>';
 
-            try {
-                await fetchAuth('/usuarios/perfil', {
-                    method: 'PUT',
-                    body: JSON.stringify(datos)
-                });
-
-                // Actualizar localStorage
+        try {
+            const rutaFoto = user.rol === 'psicologo' ? '/psicologos/subir-foto' : '/usuarios/subir-foto';
+            const response = await fetch(`${API_URL}${rutaFoto}`, {
+                method: 'PUT',
+                headers: { 'Authorization': `Bearer ${Auth.getToken()}` },
+                body: formData
+            });
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.error);
+            
+            mostrarToast('✅ Foto actualizada');
+            if (data.fotoPerfil) {
                 const userActual = Auth.getUser();
-                userActual.nombre = datos.nombre;
-                userActual.email = datos.email;
+                userActual.fotoPerfil = data.fotoPerfil;
                 Auth.setUser(userActual);
-
-                mostrarToast('✅ Información actualizada correctamente');
-
-            } catch (error) {
-                mostrarToast('❌ Error: ' + error.message);
-            } finally {
-                btnGuardarPerfil.disabled = false;
-                btnGuardarPerfil.innerHTML = 'Guardar información';
             }
-        });
-    }
+        } catch (error) {
+            mostrarToast('❌ ' + error.message);
+        } finally {
+            this.disabled = false;
+            this.innerHTML = '<i class="fi fi-bs-upload"></i> Subir';
+        }
+    });
 
-    // ==========================================
-    // 3. GUARDAR FOTO DE PERFIL
-    // ==========================================
-    const btnGuardarFoto = document.getElementById('guardarFoto');
-    if (btnGuardarFoto) {
-        btnGuardarFoto.addEventListener('click', async () => {
-            const fotoURL = inputFoto.value.trim();
+    // 4. CONTRASEÑA
+    document.getElementById('guardarPassword').addEventListener('click', async function() {
+        const actual = document.getElementById('passwordActual').value;
+        const nueva = document.getElementById('passwordNueva').value;
+        const confirmar = document.getElementById('passwordConfirmar').value;
 
-            btnGuardarFoto.disabled = true;
-            btnGuardarFoto.innerHTML = '<span class="spinner"></span> Actualizando...';
+        if (!actual || !nueva || !confirmar) return mostrarToast('⚠️ Completa todos los campos');
+        if (nueva.length < 6) return mostrarToast('⚠️ Mínimo 6 caracteres');
+        if (nueva !== confirmar) return mostrarToast('⚠️ Las contraseñas no coinciden');
 
-            try {
-                await fetchAuth('/usuarios/perfil', {
-                    method: 'PUT',
-                    body: JSON.stringify({ fotoPerfil: fotoURL })
-                });
+        this.disabled = true;
+        this.innerHTML = '<span class="spinner"></span> Actualizando...';
 
-                // Actualizar localStorage
-                const userActual = Auth.getUser();
-                userActual.fotoPerfil = fotoURL;
-                Auth.setUser(userActual);
-
-                mostrarToast('✅ Foto actualizada correctamente');
-                setTimeout(() => window.location.reload(), 1000);
-
-            } catch (error) {
-                mostrarToast('❌ Error: ' + error.message);
-            } finally {
-                btnGuardarFoto.disabled = false;
-                btnGuardarFoto.innerHTML = 'Actualizar foto';
-            }
-        });
-    }
-
-    // ==========================================
-    // 4. CAMBIAR CONTRASEÑA
-    // ==========================================
-    const btnGuardarPassword = document.getElementById('guardarPassword');
-    if (btnGuardarPassword) {
-        btnGuardarPassword.addEventListener('click', async () => {
-            const actual = document.getElementById('passwordActual').value;
-            const nueva = document.getElementById('passwordNueva').value;
-            const confirmar = document.getElementById('passwordConfirmar').value;
-
-            if (!actual || !nueva || !confirmar) {
-                mostrarToast('⚠️ Completa todos los campos');
-                return;
-            }
-            if (nueva.length < 6) {
-                mostrarToast('⚠️ Mínimo 6 caracteres');
-                return;
-            }
-            if (nueva !== confirmar) {
-                mostrarToast('⚠️ Las contraseñas no coinciden');
-                return;
-            }
-
-            btnGuardarPassword.disabled = true;
-            btnGuardarPassword.innerHTML = '<span class="spinner"></span> Actualizando...';
-
-            try {
-                await fetchAuth('/usuarios/cambiar-password', {
-                    method: 'PUT',
-                    body: JSON.stringify({
-                        passwordActual: actual,
-                        passwordNueva: nueva
-                    })
-                });
-
-                mostrarToast('✅ Contraseña actualizada correctamente');
-                
-                // Limpiar campos
-                document.getElementById('passwordActual').value = '';
-                document.getElementById('passwordNueva').value = '';
-                document.getElementById('passwordConfirmar').value = '';
-
-            } catch (error) {
-                mostrarToast(' Error: ' + error.message);
-            } finally {
-                btnGuardarPassword.disabled = false;
-                btnGuardarPassword.innerHTML = 'Actualizar contraseña';
-            }
-        });
-    }
+        try {
+            const rutaPass = user.rol === 'psicologo' ? '/psicologos/cambiar-password' : '/usuarios/cambiar-password';
+            await fetchAuth(rutaPass, {
+                method: 'PUT',
+                body: JSON.stringify({ passwordActual: actual, passwordNueva: nueva })
+            });
+            mostrarToast('✅ Contraseña actualizada');
+            document.getElementById('passwordActual').value = '';
+            document.getElementById('passwordNueva').value = '';
+            document.getElementById('passwordConfirmar').value = '';
+        } catch (error) {
+            mostrarToast('❌ ' + error.message);
+        } finally {
+            this.disabled = false;
+            this.innerHTML = '<i class="fi fi-bs-key"></i> Actualizar contraseña';
+        }
+    });
 
     await cargarDatos();
 });
@@ -193,60 +157,3 @@ function mostrarToast(texto) {
     toast.classList.add("activo");
     setTimeout(() => toast.classList.remove("activo"), 3000);
 }
-
-// Subir foto
-const fotoInput = document.getElementById('fotoPerfilInput');
-const btnGuardarFoto = document.getElementById('guardarFoto');
-
-if (fotoInput) {
-  fotoInput.addEventListener('change', (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        previewFoto.src = e.target.result;
-      };
-      reader.readAsDataURL(file);
-    }
-  });
-}
-
-if (btnGuardarFoto) {
-  btnGuardarFoto.addEventListener('click', async () => {
-    const file = fotoInput.files[0];
-    if (!file) {
-      mostrarToast('⚠️ Selecciona una imagen primero');
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append('foto', file);
-
-    btnGuardarFoto.disabled = true;
-    btnGuardarFoto.innerHTML = '<span class="spinner"></span> Subiendo...';
-
-    try {
-      const response = await fetch('http://localhost:3000/api/usuarios/subir-foto', {
-        method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${Auth.getToken()}`
-        },
-        body: formData
-      });
-
-      const data = await response.json();
-      
-      if (response.ok) {
-        mostrarToast('✅ Foto subida correctamente');
-        setTimeout(() => window.location.reload(), 1000);
-      } else {
-        mostrarToast('❌ ' + data.error);
-      }
-    } catch (error) {
-      mostrarToast(' Error al subir la foto');
-    } finally {
-      btnGuardarFoto.disabled = false;
-      btnGuardarFoto.innerHTML = 'Subir foto de perfil';
-    }
-  });
-}   

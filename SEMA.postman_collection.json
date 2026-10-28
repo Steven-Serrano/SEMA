@@ -1,0 +1,609 @@
+{
+  "info": {
+    "_postman_id": "sema-api-collection",
+    "name": "SEMA - API Collection",
+    "description": "Colección completa de endpoints del proyecto SEMA (Comunicación que Sana)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000/api",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "00 - Auth (Usuarios)",
+      "item": [
+        {
+          "name": "Registrar Usuario",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Jonier Gutierrez\",\n  \"documento\": \"1000000001\",\n  \"email\": \"test1@sema.com\",\n  \"password\": \"123456\",\n  \"telefono\": \"3001112233\",\n  \"ciudad\": \"Bogotá\",\n  \"fechaNacimiento\": \"2004-05-15\",\n  \"genero\": \"Masculino\",\n  \"numeroFicha\": \"3229944\",\n  \"programaFormacion\": \"ADSO\",\n  \"edad\": 20,\n  \"rol\": \"usuario\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/registro",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "registro"]
+            }
+          }
+        },
+        {
+          "name": "Login Usuario",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"honguito.none@gmail.com\",\n  \"password\": \"1234567\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "01 - Auth Psicólogos",
+      "item": [
+        {
+          "name": "Login Psicólogo",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"ana.lopez@sema.com\",\n  \"password\": \"psico123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth-psicologo/login",
+              "host": ["{{base_url}}"],
+              "path": ["auth-psicologo", "login"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "02 - Usuarios",
+      "item": [
+        {
+          "name": "Obtener Perfil",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/usuarios/perfil",
+              "host": ["{{base_url}}"],
+              "path": ["usuarios", "perfil"]
+            }
+          }
+        },
+        {
+          "name": "Actualizar Perfil",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Jonier Gutierrez\",\n  \"telefono\": \"3001112233\",\n  \"ciudad\": \"Bogotá\",\n  \"biografia\": \"Estudiante de ADSO\",\n  \"genero\": \"Masculino\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/usuarios/perfil",
+              "host": ["{{base_url}}"],
+              "path": ["usuarios", "perfil"]
+            }
+          }
+        },
+        {
+          "name": "Cambiar Contraseña",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"passwordActual\": \"1234567\",\n  \"passwordNueva\": \"nueva123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/usuarios/cambiar-password",
+              "host": ["{{base_url}}"],
+              "path": ["usuarios", "cambiar-password"]
+            }
+          }
+        },
+        {
+          "name": "Listar Todos los Usuarios",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/usuarios",
+              "host": ["{{base_url}}"],
+              "path": ["usuarios"]
+            }
+          }
+        },
+        {
+          "name": "Obtener Usuario por ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/usuarios/:id",
+              "host": ["{{base_url}}"],
+              "path": ["usuarios", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "ID_DEL_USUARIO"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "03 - Psicólogos",
+      "item": [
+        {
+          "name": "Listar Psicólogos",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/psicologos",
+              "host": ["{{base_url}}"],
+              "path": ["psicologos"]
+            }
+          }
+        },
+        {
+          "name": "Crear Psicólogo (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Dra. Ana López\",\n  \"email\": \"ana.lopez@sema.com\",\n  \"password\": \"psico123\",\n  \"especialidad\": \"Ansiedad y Estrés\",\n  \"telefono\": \"3109998877\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/psicologos",
+              "host": ["{{base_url}}"],
+              "path": ["psicologos"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "04 - Citas",
+      "item": [
+        {
+          "name": "Listar Mis Citas",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/citas",
+              "host": ["{{base_url}}"],
+              "path": ["citas"]
+            }
+          }
+        },
+        {
+          "name": "Agendar Nueva Cita",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"psicologoId\": \"ID_DEL_PSICOLOGO\",\n  \"fecha\": \"2026-10-20\",\n  \"hora\": \"10:00\",\n  \"motivo\": \"Consulta de seguimiento\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/citas",
+              "host": ["{{base_url}}"],
+              "path": ["citas"]
+            }
+          }
+        },
+        {
+          "name": "Cambiar Estado de Cita",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estado\": \"confirmada\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/citas/:id/estado",
+              "host": ["{{base_url}}"],
+              "path": ["citas", ":id", "estado"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "ID_DE_LA_CITA"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "05 - Chats",
+      "item": [
+        {
+          "name": "Listar Mis Chats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/chats",
+              "host": ["{{base_url}}"],
+              "path": ["chats"]
+            }
+          }
+        },
+        {
+          "name": "Crear Chat con Psicólogo",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"psicologoId\": \"ID_DEL_PSICOLOGO\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/chats",
+              "host": ["{{base_url}}"],
+              "path": ["chats"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "06 - Mensajes",
+      "item": [
+        {
+          "name": "Obtener Mensajes de un Chat",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/mensajes/:chatId",
+              "host": ["{{base_url}}"],
+              "path": ["mensajes", ":chatId"],
+              "variable": [
+                {
+                  "key": "chatId",
+                  "value": "ID_DEL_CHAT"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Enviar Mensaje",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"contenido\": \"Hola, ¿cómo estás?\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/mensajes/:chatId",
+              "host": ["{{base_url}}"],
+              "path": ["mensajes", ":chatId"],
+              "variable": [
+                {
+                  "key": "chatId",
+                  "value": "ID_DEL_CHAT"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "07 - Estados Emocionales",
+      "item": [
+        {
+          "name": "Listar Mis Estados",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/estados-emocionales",
+              "host": ["{{base_url}}"],
+              "path": ["estados-emocionales"]
+            }
+          }
+        },
+        {
+          "name": "Registrar Estado Emocional",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estado\": \"Feliz\",\n  \"descripcion\": \"Me siento muy bien hoy\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/estados-emocionales",
+              "host": ["{{base_url}}"],
+              "path": ["estados-emocionales"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "08 - Notificaciones",
+      "item": [
+        {
+          "name": "Listar Mis Notificaciones",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/notificaciones",
+              "host": ["{{base_url}}"],
+              "path": ["notificaciones"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "09 - Admin",
+      "item": [
+        {
+          "name": "Estadísticas Globales",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/estadisticas",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "estadisticas"]
+            }
+          }
+        },
+        {
+          "name": "Listar Todos los Usuarios",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/usuarios",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "usuarios"]
+            }
+          }
+        },
+        {
+          "name": "Eliminar Usuario",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/usuarios/:id",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "usuarios", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "ID_DEL_USUARIO"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Psicólogos Pendientes",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/psicologos-pendientes",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "psicologos-pendientes"]
+            }
+          }
+        },
+        {
+          "name": "Aprobar Psicólogo",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/psicologos/:id/aprobar",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "psicologos", ":id", "aprobar"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "ID_DEL_PSICOLOGO"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -4,13 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Mis Citas · SEMA</title>
-  <meta name="description" content="Gestiona tus citas como psicólogo.">
   <link rel="icon" type="image/png" href="assets/logo.png">
   
-  <!-- Fuentes -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
-  
-  <!-- Uicons Bold Straight -->
   <link href="https://cdn.jsdelivr.net/npm/@flaticon/flaticon-uicons@3.3.1/css/bold/straight.css" rel="stylesheet">
   
   <link rel="stylesheet" href="css/styles.css">
@@ -19,7 +15,6 @@
   <script defer src="js/app.js"></script>
   <script defer src="js/layout.js"></script>
   <script defer src="js/citas-psicologo.js"></script>
-
 </head>
 <body>
 
@@ -27,35 +22,18 @@
 
   <div class="dashboard">
     
-    <!-- SIDEBAR -->
     <aside class="sidebar">
       <h5>Panel Profesional</h5>
-      <a href="dashboard-psicologo.html">
-        <i class="fi fi-bs-home"></i> Mi Panel
-      </a>
-      <a href="chat.html">
-        <i class="fi fi-bs-comment"></i> Mensajes
-      </a>
-      <a href="citas-psicologo.html" class="activo">
-        <i class="fi fi-bs-calendar"></i> Mis Citas
-      </a>
-      <a href="pacientes.html">
-        <i class="fi fi-bs-users"></i> Mis Pacientes
-      </a>
-      
+      <a href="dashboard-psicologo.html"><i class="fi fi-bs-home"></i> Mi Panel</a>
+      <a href="chat.html"><i class="fi fi-bs-comment"></i> Mensajes</a>
+      <a href="citas-psicologo.html" class="activo"><i class="fi fi-bs-calendar"></i> Mis Citas</a>
+      <a href="pacientes.html"><i class="fi fi-bs-users"></i> Mis Pacientes</a>
       <h5>Cuenta</h5>
-      <a href="perfil.html">
-        <i class="fi fi-bs-user"></i> Mi Perfil
-      </a>
-      <a href="configuracion.html">
-        <i class="fi fi-bs-settings"></i> Configuración
-      </a>
-      <a href="index.html" class="logout-link">
-        <i class="fi fi-bs-exit"></i> Cerrar sesión
-      </a>
+      <a href="perfil.html"><i class="fi fi-bs-user"></i> Mi Perfil</a>
+      <a href="configuracion.html"><i class="fi fi-bs-settings"></i> Configuración</a>
+      <a href="index.html" class="logout-link"><i class="fi fi-bs-exit"></i> Cerrar sesión</a>
     </aside>
 
-    <!-- CONTENIDO PRINCIPAL -->
     <main class="dashboard__main">
       
       <header class="dashboard-header">
@@ -63,12 +41,8 @@
           <h1>Mis Citas Agendadas</h1>
           <p>Administra las citas que te han asignado los estudiantes.</p>
         </div>
-
         <div class="dashboard-actions">
-          <button class="notification-btn" title="Notificaciones">
-            <i class="fi fi-bs-bell"></i>
-          </button>
-          
+          <button class="notification-btn" title="Notificaciones"><i class="fi fi-bs-bell"></i></button>
           <div class="user-menu">
             <button id="userMenuBtn" class="user-menu-btn">
               <img class="foto-usuario" src="assets/avatar-default.png" alt="Foto">
@@ -76,29 +50,21 @@
                 <span class="nombre-usuario">Cargando...</span>
                 <small class="correo-usuario">...</small>
               </div>
-              <span class="user-arrow">
-                <i class="fi fi-bs-angle-down"></i>
-              </span>
+              <span class="user-arrow"><i class="fi fi-bs-angle-down"></i></span>
             </button>
             <div class="user-dropdown" id="userDropdown">
-              <a href="perfil.html">
-                <i class="fi fi-bs-user"></i> Mi perfil
-              </a>
-              <a href="configuracion.html">
-                <i class="fi fi-bs-settings"></i> Configuración
-              </a>
+              <a href="perfil.html"><i class="fi fi-bs-user"></i> Mi perfil</a>
+              <a href="configuracion.html"><i class="fi fi-bs-settings"></i> Configuración</a>
               <hr>
-              <a href="index.html">
-                <i class="fi fi-bs-exit"></i> Cerrar sesión
-              </a>
+              <a href="index.html"><i class="fi fi-bs-exit"></i> Cerrar sesión</a>
             </div>
           </div>
         </div>
       </header>
 
       <!-- FILTROS -->
-      <section class="tarjeta" style="margin-top: 1.5rem;">
-        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+      <section class="tarjeta mt-1-5">
+        <div class="flex flex-wrap gap-1">
           <button class="btn btn-primario filtro-btn activo" data-filtro="todas">Todas</button>
           <button class="btn btn-secundario filtro-btn" data-filtro="pendiente">Pendientes</button>
           <button class="btn btn-secundario filtro-btn" data-filtro="confirmada">Confirmadas</button>
@@ -108,10 +74,10 @@
       </section>
 
       <!-- LISTA DE CITAS -->
-      <section class="tarjeta" style="margin-top: 1.5rem;">
+      <section class="tarjeta mt-1-5">
         <h3><i class="fi fi-bs-calendar-check"></i> Lista de citas</h3>
-        <div id="lista-citas-psicologo" style="margin-top: 1rem;">
-          <p style="color: var(--texto-secundario);">Cargando citas...</p>
+        <div id="lista-citas-psicologo" class="mt-1">
+          <p class="text-suave">Cargando citas...</p>
         </div>
       </section>
 
@@ -119,6 +85,5 @@
   </div>
 
   <div id="sema-footer"></div>
-
 </body>
 </html>

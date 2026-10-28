@@ -1,0 +1,44 @@
+﻿<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <title>Diario Emocional · SEMA</title>
+  <link href="https://cdn.jsdelivr.net/npm/@flaticon/flaticon-uicons@3.3.1/css/bold/straight.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <script defer src="js/api.js"></script>
+  <script defer src="js/app.js"></script>
+  <script defer src="js/layout.js"></script>
+  <script defer src="js/diario.js"></script>
+</head>
+<body>
+  <div id="sema-nav"></div>
+  <div class="dashboard">
+    <aside class="sidebar" id="sema-sidebar"></aside>
+    <div class="dashboard__main">
+      <header class="dashboard-header">
+        <div class="dashboard-title">
+          <h1>Mi Diario Emocional</h1>
+          <p>Escribe cómo te sientes y consulta tus entradas pasadas.</p>
+        </div>
+        <a href="dashboard.html" class="btn btn-secundario"><i class="fi fi-bs-arrow-left"></i> Volver</a>
+      </header>
+
+      <div class="grid grid-2" style="gap: 1.5rem; align-items: start;">
+        <section class="tarjeta">
+          <h3>Nueva entrada</h3>
+          <textarea id="textoDiario" class="form-grupo mt-1" style="width:100%; min-height:150px;" placeholder="Escribe libremente aquí..."></textarea>
+          <button class="btn btn-primario mt-1" id="btnGuardar" style="width: 100%;">Guardar entrada</button>
+        </section>
+
+        <section class="tarjeta">
+          <h3>Entradas anteriores</h3>
+          <div id="listaDiario" class="mt-1">
+            <p class="text-suave">Cargando...</p>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+  <div id="sema-footer"></div>
+</body>
+</html>

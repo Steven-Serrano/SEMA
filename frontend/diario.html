@@ -1,0 +1,55 @@
+﻿<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <title>Diario Emocional · SEMA</title>
+  <link href="https://cdn.jsdelivr.net/npm/@flaticon/flaticon-uicons@3.3.1/css/bold/straight.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <script defer src="js/api.js"></script>
+  <script defer src="js/app.js"></script>
+  <script defer src="js/layout.js"></script>
+  <script defer src="js/diario.js"></script>
+</head>
+<body>
+  <div id="sema-nav"></div>
+  <div class="dashboard">
+    <aside class="sidebar" id="sema-sidebar"></aside>
+    
+    <div class="dashboard__main">
+      <header class="dashboard-header">
+        <div class="dashboard-title">
+          <h1>Mi Diario Emocional</h1>
+          <p>Desahógate, escribe tus metas o plasma cómo te sientes hoy.</p>
+        </div>
+        <a href="dashboard.html" class="btn btn-secundario"><i class="fi fi-bs-arrow-left"></i> Volver</a>
+      </header>
+
+      <div class="grid grid-2" style="align-items: start; gap: 2rem;">
+        
+        <!-- COLUMNA IZQUIERDA: NUEVA ENTRADA -->
+        <div class="tarjeta aparecer">
+          <h3 style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
+            <i class="fi fi-bs-edit" style="color: var(--azul);"></i> Nueva entrada
+          </h3>
+          <textarea id="textoDiario" class="diario-textarea" placeholder="Querido diario... ¿cómo te sientes hoy?"></textarea>
+          <button class="btn btn-primario mt-1" id="btnGuardar" style="width: 100%; padding: 1rem; font-size: 1.1rem;">
+            <i class="fi fi-bs-paper-plane"></i> Guardar entrada
+          </button>
+        </div>
+
+        <!-- COLUMNA DERECHA: HISTORIAL -->
+        <div class="tarjeta aparecer-2">
+          <h3 style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
+            <i class="fi fi-bs-time-forward" style="color: var(--verde);"></i> Entradas anteriores
+          </h3>
+          <div id="listaDiario" class="diario-timeline">
+            <p class="text-suave text-center">Cargando...</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <div id="sema-footer"></div>
+</body>
+</html>

@@ -16,6 +16,7 @@ const notificacionesRoutes = require('./routes/notificaciones');
 const citasRoutes = require('./routes/citas');
 const adminRoutes = require('./routes/admin');
 const comunidadRoutes = require('./routes/comunidad');
+const habitosRoutes = require('./routes/habitos');
 
 
 const app = express();
@@ -56,6 +57,7 @@ app.use('/api/notificaciones', notificacionesRoutes);
 app.use('/api/citas', citasRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/comunidad', comunidadRoutes);
+app.use('/api/habitos', habitosRoutes);
 
 // ==========================================
 // RUTA DE PRUEBA

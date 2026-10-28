@@ -7,10 +7,7 @@
   <meta name="description" content="Panel de gestión para psicólogos.">
   <link rel="icon" type="image/png" href="assets/logo.png">
   
-  <!-- Fuentes -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
-  
-  <!-- Uicons Bold Straight (CORREGIDO) -->
   <link href="https://cdn.jsdelivr.net/npm/@flaticon/flaticon-uicons@3.3.1/css/bold/straight.css" rel="stylesheet">
   
   <link rel="stylesheet" href="css/styles.css">
@@ -19,8 +16,6 @@
   <script defer src="js/app.js"></script>
   <script defer src="js/layout.js"></script>
   <script defer src="js/dashboard-psicologo.js"></script>
-
-
 </head>
 <body>
 
@@ -28,35 +23,19 @@
 
   <div class="dashboard">
     
-    <!-- SIDEBAR -->
     <aside class="sidebar">
       <h5>Panel Profesional</h5>
-      <a href="dashboard-psicologo.html" class="activo">
-        <i class="fi fi-bs-home"></i> Mi Panel
-      </a>
-      <a href="chat.html">
-        <i class="fi fi-bs-comment"></i> Mensajes
-      </a>
-      <a href="citas-psicologo.html">
-        <i class="fi fi-bs-calendar"></i> Mis Citas
-      </a>
-      <a href="pacientes.html">
-        <i class="fi fi-bs-users"></i> Mis Pacientes
-      </a>
+      <a href="dashboard-psicologo.html" class="activo"><i class="fi fi-bs-home"></i> Mi Panel</a>
+      <a href="chat.html"><i class="fi fi-bs-comment"></i> Mensajes</a>
+      <a href="citas-psicologo.html"><i class="fi fi-bs-calendar"></i> Mis Citas</a>
+      <a href="pacientes.html"><i class="fi fi-bs-users"></i> Mis Pacientes</a>
       
       <h5>Cuenta</h5>
-      <a href="perfil.html">
-        <i class="fi fi-bs-user"></i> Mi Perfil
-      </a>
-      <a href="configuracion.html">
-        <i class="fi fi-bs-settings"></i> Configuración
-      </a>
-      <a href="index.html" class="logout-link">
-        <i class="fi fi-bs-exit"></i> Cerrar sesión
-      </a>
+      <a href="perfil.html"><i class="fi fi-bs-user"></i> Mi Perfil</a>
+      <a href="configuracion.html"><i class="fi fi-bs-settings"></i> Configuración</a>
+      <a href="index.html" class="logout-link"><i class="fi fi-bs-exit"></i> Cerrar sesión</a>
     </aside>
 
-    <!-- CONTENIDO PRINCIPAL -->
     <main class="dashboard__main">
       
       <header class="dashboard-header">
@@ -92,50 +71,42 @@
       </header>
 
       <!-- ESTADÍSTICAS -->
-      <div class="grid grid-4 aparecer-1" style="margin-top: 1.5rem;">
+      <div class="grid grid-4 aparecer-1 mt-1-5">
         <div class="tarjeta stat-card">
-          <div class="tarjeta__icono">
-            <i class="fi fi-bs-users"></i>
-          </div>
+          <div class="tarjeta__icono"><i class="fi fi-bs-users"></i></div>
           <h2 id="stat-pacientes">0</h2>
           <p>Pacientes activos</p>
         </div>
         <div class="tarjeta stat-card">
-          <div class="tarjeta__icono">
-            <i class="fi fi-bs-calendar"></i>
-          </div>
+          <div class="tarjeta__icono"><i class="fi fi-bs-calendar"></i></div>
           <h2 id="stat-citas-hoy">0</h2>
           <p>Citas hoy</p>
         </div>
         <div class="tarjeta stat-card">
-          <div class="tarjeta__icono">
-            <i class="fi fi-bs-chart-pie"></i>
-          </div>
+          <div class="tarjeta__icono"><i class="fi fi-bs-chart-pie"></i></div>
           <h2 id="stat-citas-mes">0</h2>
           <p>Citas este mes</p>
         </div>
         <div class="tarjeta stat-card">
-          <div class="tarjeta__icono">
-            <i class="fi fi-bs-comment"></i>
-          </div>
+          <div class="tarjeta__icono"><i class="fi fi-bs-comment"></i></div>
           <h2 id="stat-mensajes">0</h2>
           <p>Mensajes recibidos</p>
         </div>
       </div>
 
       <!-- PRÓXIMAS CITAS -->
-      <section class="tarjeta aparecer-2" style="margin-top: 1.5rem;">
+      <section class="tarjeta aparecer-2 mt-1-5">
         <h3><i class="fi fi-bs-calendar"></i> Próximas citas agendadas</h3>
-        <div id="lista-citas-psicologo" style="margin-top: 1rem;">
-          <p style="color: var(--texto-secundario);">Cargando citas...</p>
+        <div id="lista-citas-psicologo" class="mt-1">
+          <p class="text-suave">Cargando citas...</p>
         </div>
       </section>
 
       <!-- PACIENTES RECIENTES -->
-      <section class="tarjeta aparecer-3" style="margin-top: 1.5rem;">
+      <section class="tarjeta aparecer-3 mt-1-5">
         <h3><i class="fi fi-bs-users"></i> Pacientes recientes</h3>
-        <div id="lista-pacientes" style="margin-top: 1rem;">
-          <p style="color: var(--texto-secundario);">Cargando pacientes...</p>
+        <div id="lista-pacientes" class="mt-1">
+          <p class="text-suave">Cargando pacientes...</p>
         </div>
       </section>
 
@@ -143,6 +114,5 @@
   </div>
 
   <div id="sema-footer"></div>
-
 </body>
 </html>

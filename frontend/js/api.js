@@ -2,12 +2,17 @@
 
 const API_URL = 'http://localhost:3000/api';
 
-// Manejo seguro del token y usuario en el navegador
 const Auth = {
     getToken: () => localStorage.getItem('sema_token'),
     setToken: (token) => localStorage.setItem('sema_token', token),
     removeToken: () => localStorage.removeItem('sema_token'),
-    getUser: () => JSON.parse(localStorage.getItem('sema_user') || '{}'),
+    getUser: () => {
+        try {
+            return JSON.parse(localStorage.getItem('sema_user') || '{}');
+        } catch (e) {
+            return {};
+        }
+    },
     setUser: (user) => localStorage.setItem('sema_user', JSON.stringify(user)),
     clear: () => {
         localStorage.removeItem('sema_token');
@@ -15,7 +20,6 @@ const Auth = {
     }
 };
 
-// Función genérica para hacer peticiones con el token automáticamente
 async function fetchAuth(endpoint, options = {}) {
     const token = Auth.getToken();
     
@@ -28,16 +32,37 @@ async function fetchAuth(endpoint, options = {}) {
         headers['Authorization'] = `Bearer ${token}`;
     }
 
-    const response = await fetch(`${API_URL}${endpoint}`, {
-        ...options,
-        headers
-    });
+    try {
+        const response = await fetch(`${API_URL}${endpoint}`, {
+            ...options,
+            headers
+        });
 
-    const data = await response.json();
+        // 🔑 CORRECCIÓN CLAVE: Detectamos si estamos intentando iniciar sesión
+        const esPeticionDeLogin = endpoint.includes('/auth/login') || endpoint.includes('/auth-psicologo/login');
 
-    if (!response.ok) {
-        throw new Error(data.error || 'Error en la petición al servidor');
+        // Si el token expiró (401) y NO es un intento de login, cerramos sesión.
+        // Si SÍ es un intento de login, dejamos que el error fluya para que login.js lo atrape.
+        if (response.status === 401 && !esPeticionDeLogin) {
+            Auth.clear();
+            window.location.href = 'login.html';
+            return;
+        }
+
+        // Manejar respuestas sin contenido (ej. DELETE exitoso)
+        if (response.status === 204) {
+            return { success: true };
+        }
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || data.message || 'Error en la petición al servidor');
+        }
+
+        return data;
+    } catch (error) {
+        console.error(`Error en fetchAuth [${endpoint}]:`, error);
+        throw error;
     }
-
-    return data;
 }

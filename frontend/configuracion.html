@@ -5,173 +5,124 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Configuración · SEMA</title>
   <link rel="icon" type="image/png" href="assets/logo.png">
-  
-  <!-- Fuentes -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
-  
-  <!-- Uicons Bold Straight -->
   <link href="https://cdn.jsdelivr.net/npm/@flaticon/flaticon-uicons@3.3.1/css/bold/straight.css" rel="stylesheet">
-  
   <link rel="stylesheet" href="css/styles.css">
-  
   <script defer src="js/api.js"></script>
   <script defer src="js/app.js"></script>
   <script defer src="js/layout.js"></script>
   <script defer src="js/configuracion.js"></script>
-
-  <style>
-    /* Ajuste para iconos en enlaces y textos */
-    .fi {
-      vertical-align: middle;
-      margin-right: 0.5rem;
-      font-size: 1.1em;
-    }
-  </style>
 </head>
 <body>
 
   <div id="sema-nav"></div>
 
   <div class="dashboard">
-    <aside class="sidebar">
-      <h5>Mi espacio</h5>
-      <a href="dashboard.html">
-        <i class="fi fi-bs-home"></i> Dashboard
-      </a>
-      <a href="perfil.html">
-        <i class="fi fi-bs-user"></i> Mi Perfil
-      </a>
-      <a href="seguimiento.html">
-        <i class="fi fi-bs-chart-line-up"></i> Seguimiento
-      </a>
-      <a href="citas.html">
-        <i class="fi fi-bs-calendar"></i> Mis citas
-      </a>
-      <a href="chat.html">
-        <i class="fi fi-bs-comment"></i> Mensajes
-      </a>
-      
-      <h5>Cuenta</h5>
-      <a href="configuracion.html" class="activo">
-        <i class="fi fi-bs-settings"></i> Configuración
-      </a>
-      <a href="index.html" class="logout-link">
-        <i class="fi fi-bs-exit"></i> Cerrar sesión
-      </a>
-    </aside>
+    <!-- SIDEBAR DINÁMICO -->
+    <aside class="sidebar" id="sema-sidebar"></aside>
 
     <main class="dashboard__main">
       <header class="dashboard-header">
         <div class="dashboard-title">
-          <h2>Configuración de la cuenta</h2>
-          <p>Administra tu información personal y seguridad.</p>
+          <h1>Configuración</h1>
+          <p>Administra tu información personal, foto y seguridad.</p>
         </div>
       </header>
 
-      <div style="margin-top: 1.5rem;">
+      <div class="grid grid-2" style="align-items: start; gap: 2rem;">
         
-        <!-- SECCIÓN 1: INFORMACIÓN PERSONAL -->
-        <section class="tarjeta">
-          <h3><i class="fi fi-bs-clipboard"></i> Información personal</h3>
-          
-          <div class="grid grid-2" style="margin-top: 1rem;">
+        <!-- COLUMNA IZQUIERDA: FOTO E INFO -->
+        <div>
+          <!-- Foto -->
+          <section class="tarjeta mb-1-5">
+            <h3><i class="fi fi-bs-picture"></i> Foto de perfil</h3>
+            <div class="flex align-center gap-1 mt-1">
+              <img id="previewFoto" src="assets/avatar-default.png" alt="Foto" class="foto-usuario" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid var(--azul);">
+              <div>
+                <input type="file" id="fotoPerfilInput" accept="image/*" class="oculto-visual">
+                <button type="button" class="btn btn-secundario btn-sm" onclick="document.getElementById('fotoPerfilInput').click()">
+                  <i class="fi fi-bs-camera"></i> Seleccionar
+                </button>
+                <button class="btn btn-primario btn-sm ml-0-5" id="guardarFoto">
+                  <i class="fi fi-bs-upload"></i> Subir
+                </button>
+              </div>
+            </div>
+          </section>
+
+          <!-- Info personal -->
+          <section class="tarjeta">
+            <h3><i class="fi fi-bs-clipboard"></i> Información personal</h3>
+            <div class="mt-1">
+              <div class="form-grupo">
+                <label>Nombre completo</label>
+                <input type="text" id="nombre">
+              </div>
+              <div class="form-grupo">
+                <label>Correo electrónico</label>
+                <input type="email" id="correo">
+              </div>
+              <div class="form-grupo">
+                <label>Documento</label>
+                <input type="text" id="documento">
+              </div>
+              <div class="form-grupo">
+                <label>Teléfono</label>
+                <input type="tel" id="telefono">
+              </div>
+              <div class="form-grupo">
+                <label>Ciudad</label>
+                <input type="text" id="ciudad">
+              </div>
+              <div class="form-grupo">
+                <label>Fecha de nacimiento</label>
+                <input type="date" id="fechaNacimiento">
+              </div>
+              <div class="form-grupo">
+                <label>Género</label>
+                <select id="genero">
+                  <option value="">Selecciona</option>
+                  <option>Masculino</option>
+                  <option>Femenino</option>
+                  <option>Otro</option>
+                  <option>Prefiero no decirlo</option>
+                </select>
+              </div>
+              <div class="form-grupo">
+                <label>Biografía</label>
+                <textarea id="biografia" rows="3" placeholder="Cuéntanos un poco sobre ti..."></textarea>
+              </div>
+            </div>
+            <button class="btn btn-primario mt-1" id="guardarPerfil" style="width: 100%;">
+              <i class="fi fi-bs-check"></i> Guardar información
+            </button>
+          </section>
+        </div>
+
+        <!-- COLUMNA DERECHA: SEGURIDAD -->
+        <div>
+          <section class="tarjeta">
+            <h3><i class="fi fi-bs-lock"></i> Seguridad</h3>
+            <p class="text-suave text-sm mb-1">Cambia tu contraseña periódicamente para mantener tu cuenta segura.</p>
+            
             <div class="form-grupo">
-              <label for="nombre">Nombre completo</label>
-              <input type="text" id="nombre" placeholder="Tu nombre completo">
-            </div>
-
-            <div class="form-grupo">
-              <label for="documento">Documento</label>
-              <input type="text" id="documento" placeholder="Número de documento">
-            </div>
-
-            <div class="form-grupo">
-              <label for="correo">Correo electrónico</label>
-              <input type="email" id="correo" placeholder="tu@correo.com">
-            </div>
-
-            <div class="form-grupo">
-              <label for="telefono">Teléfono</label>
-              <input type="tel" id="telefono" placeholder="3001234567">
-            </div>
-
-            <div class="form-grupo">
-              <label for="ciudad">Ciudad</label>
-              <input type="text" id="ciudad" placeholder="Ciudad de residencia">
-            </div>
-
-            <div class="form-grupo">
-              <label for="fechaNacimiento">Fecha de nacimiento</label>
-              <input type="date" id="fechaNacimiento">
-            </div>
-
-            <div class="form-grupo">
-              <label for="genero">Género</label>
-              <select id="genero">
-                <option value="">Selecciona una opción</option>
-                <option>Masculino</option>
-                <option>Femenino</option>
-                <option>Otro</option>
-                <option>Prefiero no decirlo</option>
-              </select>
-            </div>
-
-            <div class="form-grupo" style="grid-column: 1 / -1;">
-              <label for="biografia">Biografía</label>
-              <textarea id="biografia" rows="3" placeholder="Cuéntanos un poco sobre ti..."></textarea>
-            </div>
-          </div>
-
-          <button class="btn btn-primario" id="guardarPerfil" style="margin-top: 1.5rem;">
-            <i class="fi fi-bs-check"></i> Guardar información
-          </button>
-        </section>
-
-        <!-- SECCIÓN 2: FOTO DE PERFIL -->
-        <section class="tarjeta" style="margin-top: 1.5rem;">
-          <h3><i class="fi fi-bs-picture"></i> Foto de perfil</h3>
-          <div style="display: flex; align-items: center; gap: 1.5rem; margin-top: 1rem;">
-            <img id="previewFoto" src="assets/avatar-default.png" alt="Foto" class="foto-usuario" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid var(--color-primario, #2563eb);">
-            <div style="flex: 1;">
-              <input type="file" id="fotoPerfilInput" accept="image/*" style="display: none;">
-              <button type="button" class="btn btn-secundario" onclick="document.getElementById('fotoPerfilInput').click()">
-                <i class="fi fi-bs-camera"></i> Seleccionar imagen
-              </button>
-              <small style="color: var(--texto-secundario); display: block; margin-top: 0.5rem;">JPG, PNG, WebP (Máx. 5MB)</small>
-            </div>
-          </div>
-          <button class="btn btn-primario" id="guardarFoto" style="margin-top: 1rem;">
-            <i class="fi fi-bs-upload"></i> Subir foto de perfil
-          </button>
-        </section>
-
-        <!-- SECCIÓN 3: CONTRASEÑA -->
-        <section class="tarjeta" style="margin-top: 1.5rem;">
-          <h3><i class="fi fi-bs-lock"></i> Seguridad</h3>
-          <p style="color: var(--texto-secundario); margin-bottom: 1rem;">Cambia tu contraseña periódicamente para mantener tu cuenta segura.</p>
-          
-          <div class="grid grid-2" style="margin-top: 1rem;">
-            <div class="form-grupo">
-              <label for="passwordActual">Contraseña actual</label>
+              <label>Contraseña actual</label>
               <input type="password" id="passwordActual" placeholder="••••••••">
             </div>
-
             <div class="form-grupo">
-              <label for="passwordNueva">Nueva contraseña</label>
+              <label>Nueva contraseña</label>
               <input type="password" id="passwordNueva" placeholder="Mínimo 6 caracteres">
             </div>
-
-            <div class="form-grupo" style="grid-column: 1 / -1;">
-              <label for="passwordConfirmar">Confirmar nueva contraseña</label>
+            <div class="form-grupo">
+              <label>Confirmar nueva contraseña</label>
               <input type="password" id="passwordConfirmar" placeholder="Repite la nueva contraseña">
             </div>
-          </div>
 
-          <button class="btn btn-secundario" id="guardarPassword" style="margin-top: 1.5rem;">
-            <i class="fi fi-bs-key"></i> Actualizar contraseña
-          </button>
-        </section>
-
+            <button class="btn btn-secundario mt-1" id="guardarPassword" style="width: 100%;">
+              <i class="fi fi-bs-key"></i> Actualizar contraseña
+            </button>
+          </section>
+        </div>
       </div>
     </main>
   </div>

@@ -6,26 +6,22 @@
   <title>Crear cuenta · SEMA</title>
   <link rel="icon" type="image/png" href="assets/logo.png">
   
-  <!-- Fuentes -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
-  
-  <!-- Font Awesome (CDN confiable) -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   
   <link rel="stylesheet" href="css/styles.css">
   <script defer src="js/api.js"></script>
   <script defer src="js/app.js"></script>
   <script defer src="js/register.js"></script>
-
 </head>
 <body>
 
 <section class="login">
   <div class="login__left">
     <div class="login__content">
-      <img src="assets/logo.png" class="login__logo" alt="SEMA">
+      <img src="assets/logo.png" class="login__logo" alt="SEMA" style="background:#fff; padding:10px; border-radius:20px;">
       
-      <span class="chip">
+      <span class="chip mt-1">
         <i class="fa-solid fa-heart" style="color: var(--azul, #2563eb);"></i> 
         Comunicación que Sana
       </span>
@@ -48,26 +44,26 @@
       <p>Completa la información para registrarte.</p>
       
       <form id="registerForm">
-        <h3 style="margin-top: 1.5rem; margin-bottom: 1rem; color: var(--primario);">
+        <h3 class="mt-1-5 mb-1" style="color: var(--primario);">
           <i class="fa-solid fa-clipboard-list"></i> Información personal
         </h3>
         
         <div class="grid grid-2">
           <div class="form-grupo">
             <label>Nombre completo *</label>
-            <input id="nombre" required>
+            <input type="text" id="nombre" placeholder="Ej. Ana Pérez" required>
           </div>
           <div class="form-grupo">
             <label>Documento *</label>
-            <input id="documento" required>
+            <input type="text" id="documento" placeholder="Ej. 10203040" required>
           </div>
           <div class="form-grupo">
             <label>Correo *</label>
-            <input type="email" id="correo" required>
+            <input type="email" id="correo" placeholder="correo@ejemplo.com" required>
           </div>
           <div class="form-grupo">
             <label>Teléfono</label>
-            <input type="tel" id="telefono">
+            <input type="tel" id="telefono" placeholder="Ej. 3001234567">
           </div>
           <div class="form-grupo">
             <label>Fecha de nacimiento</label>
@@ -85,48 +81,48 @@
           </div>
           <div class="form-grupo">
             <label>Ciudad</label>
-            <input id="ciudad">
+            <input type="text" id="ciudad" placeholder="Ej. Bogotá">
           </div>
         </div>
 
-        <h3 style="margin-top: 1.5rem; margin-bottom: 1rem; color: var(--primario);">
+        <h3 class="mt-1-5 mb-1" style="color: var(--primario);">
           <i class="fa-solid fa-graduation-cap"></i> Información SENA
         </h3>
         
         <div class="grid grid-2">
           <div class="form-grupo">
             <label>Número de ficha *</label>
-            <input id="numeroFicha" placeholder="Ej: 3229944" required>
+            <input type="text" id="numeroFicha" placeholder="Ej: 3229944" required>
           </div>
           <div class="form-grupo">
             <label>Programa de formación *</label>
-            <input id="programaFormacion" placeholder="Ej: Análisis y Desarrollo de Software" required>
+            <input type="text" id="programaFormacion" placeholder="Ej: ADSO" required>
           </div>
         </div>
 
-        <h3 style="margin-top: 1.5rem; margin-bottom: 1rem; color: var(--primario);">
+        <h3 class="mt-1-5 mb-1" style="color: var(--primario);">
           <i class="fa-solid fa-shield-halved"></i> Seguridad
         </h3>
         
         <div class="grid grid-2">
           <div class="form-grupo">
             <label>Contraseña *</label>
-            <input type="password" id="password" required>
+            <input type="password" id="password" placeholder="Mínimo 6 caracteres" required>
           </div>
           <div class="form-grupo">
             <label>Confirmar contraseña *</label>
-            <input type="password" id="confirmPassword" required>
+            <input type="password" id="confirmPassword" placeholder="Repite tu contraseña" required>
           </div>
         </div>
 
-        <div style="margin: 1.5rem 0;">
-          <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+        <div class="mt-1-5 mb-1-5">
+          <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; font-size: 0.9rem;">
             <input type="checkbox" required> 
-            Acepto los términos y condiciones.
+            Acepto los términos y condiciones y la política de privacidad.
           </label>
         </div>
 
-        <button class="btn btn-primario login__btn" type="submit">
+        <button class="btn btn-primario login__btn" type="submit" id="btnRegister">
           Crear cuenta
         </button>
       </form>
@@ -137,7 +133,7 @@
         Ya tengo una cuenta
       </a>
       
-      <div class="login__back">
+      <div class="login__back mt-1">
         <a href="index.html">
           <i class="fa-solid fa-arrow-left" style="font-size: 0.9em;"></i> Volver al inicio
         </a>

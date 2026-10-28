@@ -1,7 +1,3 @@
-/* ============================================================
-   SEMA - LOGIN
-   ============================================================ */
-
 document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("loginForm");
     const emailInput = document.getElementById("email");
@@ -9,107 +5,76 @@ document.addEventListener("DOMContentLoaded", () => {
     const togglePassword = document.getElementById("togglePassword");
     const loginButton = document.querySelector(".login__btn");
 
-    /* Mostrar / Ocultar contraseña */
     if (togglePassword) {
         togglePassword.addEventListener("click", () => {
             const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
             passwordInput.setAttribute("type", type);
-            togglePassword.textContent = type === "password" ? "👁" : "🙈";
+            const icon = togglePassword.querySelector("i");
+            if (icon) icon.className = type === "password" ? "fa-solid fa-eye" : "fa-solid fa-eye-slash";
         });
     }
 
-    /* Animación de los inputs */
-    document.querySelectorAll("input").forEach(input => {
-        input.addEventListener("focus", () => {
-            input.parentElement.classList.add("activo");
-        });
-        input.addEventListener("blur", () => {
-            input.parentElement.classList.remove("activo");
-        });
-    });
-
-    /* Envío del formulario al backend */
     form.addEventListener("submit", async function (e) {
         e.preventDefault();
 
         const correo = emailInput.value.trim();
         const clave = passwordInput.value.trim();
 
-        // Validaciones básicas
-        if (correo === "") {
-            mostrarToast("Ingresa tu correo electrónico.");
-            emailInput.focus();
-            return;
-        }
+        if (!correo || !clave) return mostrarToast("Ingresa tu correo y contraseña.");
 
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo)) {
-            mostrarToast("El correo electrónico no es válido.");
-            emailInput.focus();
-            return;
-        }
-
-        if (clave === "") {
-            mostrarToast("Ingresa tu contraseña.");
-            passwordInput.focus();
-            return;
-        }
-
-        if (clave.length < 6) {
-            mostrarToast("La contraseña debe tener al menos 6 caracteres.");
-            passwordInput.focus();
-            return;
-        }
-
-        // Estado de carga
         loginButton.disabled = true;
         loginButton.innerHTML = `<span class="spinner"></span> Ingresando...`;
 
         try {
             let data;
-            // 1. Intentamos login como usuario normal
+            let esPsicologo = false;
+
             try {
                 data = await fetchAuth('/auth/login', {
                     method: 'POST',
                     body: JSON.stringify({ email: correo, password: clave })
                 });
             } catch (userError) {
-                // 2. Si falla, intentamos como psicólogo
                 data = await fetchAuth('/auth-psicologo/login', {
                     method: 'POST',
                     body: JSON.stringify({ email: correo, password: clave })
                 });
+                esPsicologo = true;
             }
 
-// 3. Limpiamos datos anteriores y guardamos los nuevos
-localStorage.clear(); 
+            // 🔑 GUARDAR EL TEMA ANTES DE LIMPIAR
+            const temaGuardado = localStorage.getItem('theme');
+            localStorage.clear(); 
+            if (temaGuardado) localStorage.setItem('theme', temaGuardado);
 
-// 4. Guardamos el token y los datos del usuario NUEVO
-Auth.setToken(data.token);
-Auth.setUser({ 
-    nombre: data.nombre, 
-    email: data.email, 
-    rol: data.rol || data.tipo || 'usuario'  // ✅ Usar 'tipo' si viene del login de psicólogo
-});
+            const rolUsuario = data.rol || data.tipo || data.user?.rol || data.user?.tipo || (esPsicologo ? 'psicologo' : 'usuario');
+            const nombreUsuario = data.nombre || data.user?.nombre || 'Usuario';
+            const emailUsuario = data.email || data.user?.email || correo;
 
-            mostrarToast(`¡Bienvenido a SEMA, ${data.nombre}! 💙`);
+            Auth.setToken(data.token || data.accessToken);
+            Auth.setUser({ 
+                id: data.id || data._id || data.user?.id || data.user?._id, 
+                nombre: nombreUsuario, 
+                email: emailUsuario, 
+                rol: rolUsuario
+            });
+
+            mostrarToast(`¡Bienvenido a SEMA, ${nombreUsuario}! 💙`);
             
             setTimeout(() => {
-                window.location.href = "dashboard.html";
+                if (rolUsuario === 'psicologo') window.location.href = "dashboard-psicologo.html";
+                else if (rolUsuario === 'administrador') window.location.href = "dashboard-admin.html";
+                else window.location.href = "dashboard.html";
             }, 900);
 
         } catch (error) {
-            mostrarToast(error.message || "Error al iniciar sesión. Verifica tus credenciales.");
-            
-            // Restaurar el botón si hay error
+            mostrarToast(error.message || "Error al iniciar sesión.");
             loginButton.disabled = false;
             loginButton.innerHTML = `Iniciar sesión`;
         }
     });
 });
 
-/* ==========================================
-   Toast (Función original intacta)
-   ========================================== */
 function mostrarToast(texto) {
     let toast = document.querySelector(".toast");
     if (!toast) {
@@ -119,7 +84,5 @@ function mostrarToast(texto) {
     }
     toast.textContent = texto;
     toast.classList.add("activo");
-    setTimeout(() => {
-        toast.classList.remove("activo");
-    }, 3000);
+    setTimeout(() => toast.classList.remove("activo"), 3000);
 }
