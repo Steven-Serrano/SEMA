@@ -1,27 +1,25 @@
-/* ============================================================
-   SEMA - PERFIL (Solo visualización + estadísticas)
-   ============================================================ */
-
-document.addEventListener('DOMContentLoaded', async () => {
+﻿document.addEventListener('DOMContentLoaded', async () => {
     if (typeof Auth === 'undefined' || !Auth.getToken()) {
         window.location.href = "login.html";
         return;
     }
 
     const user = Auth.getUser();
+    const esPsicologo = user.rol === 'psicologo';
+    
+    // 🔑 LA CLAVE: Elegir la ruta correcta según el rol
+    const rutaApi = esPsicologo ? '/psicologos/perfil' : '/usuarios/perfil';
 
-    // ==========================================
-    // 1. CARGAR DATOS DEL PERFIL
-    // ==========================================
     async function cargarPerfil() {
         try {
-            const perfil = await fetchAuth('/usuarios/perfil');
+            const perfil = await fetchAuth(rutaApi);
             
             document.getElementById('perfilNombre').textContent = perfil.nombre || user.nombre;
             document.getElementById('perfilCorreo').textContent = perfil.email || user.email;
             
+            // Usamos getImgUrl para la foto
             if (perfil.fotoPerfil) {
-                document.getElementById('previewFoto').src = perfil.fotoPerfil;
+                document.getElementById('previewFoto').src = getImgUrl(perfil.fotoPerfil);
             }
 
             document.getElementById('doc').textContent = perfil.documento || 'No especificado';
@@ -31,7 +29,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             document.getElementById('genero').textContent = perfil.genero || 'No especificado';
             document.getElementById('bio').textContent = perfil.biografia || 'Sin biografía';
 
-            // Calcular días usando SEMA (asumiendo que el backend envía createdAt)
             if (perfil.createdAt) {
                 const fechaRegistro = new Date(perfil.createdAt);
                 const hoy = new Date();
@@ -42,26 +39,25 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         } catch (error) {
             console.error('Error cargando perfil:', error);
+            // Si falla, al menos mostramos lo que tenemos en la sesión
+            document.getElementById('perfilNombre').textContent = user.nombre || 'Usuario';
+            document.getElementById('perfilCorreo').textContent = user.email || '...';
         }
     }
 
-    // ==========================================
-    // 2. CARGAR ESTADÍSTICAS
-    // ==========================================
     async function cargarEstadisticas() {
         try {
-            const estados = await fetchAuth('/estados-emocionales');
-            const citas = await fetchAuth('/citas');
+            // Para psicólogos, estas estadísticas podrían no existir, así que protegemos el código
+            const estados = await fetchAuth('/estados-emocionales').catch(() => []);
+            const citas = await fetchAuth('/citas').catch(() => []);
             
             const citasCompletadas = citas.filter(c => c.estado === 'completada').length;
             
             document.getElementById('totalRegistros').textContent = estados.length || 0;
             document.getElementById('totalCitas').textContent = citasCompletadas || 0;
-            // Nota: Para mensajes, necesitarías un endpoint en el backend que te diga el total
             document.getElementById('totalMensajes').textContent = "0"; 
-
         } catch (error) {
-            console.error('Error cargando estadísticas:', error);
+            console.warn('No se pudieron cargar las estadísticas', error);
         }
     }
 

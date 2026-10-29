@@ -9,6 +9,8 @@
     const selectorCalidad = document.getElementById('calidadSueno');
     const contenedorHistorial = document.getElementById('historialSueno');
     const calidadAutoText = document.getElementById('calidadAutoText');
+    
+    // Variables para el motivo
     const motivoContainer = document.getElementById('motivoContainer');
     const motivoInput = document.getElementById('motivoSueno');
     
@@ -21,7 +23,7 @@
         if (horas < 5) return 'Malo';
         if (horas >= 5 && horas <= 6) return 'Regular';
         if (horas >= 7 && horas <= 9) return 'Excelente';
-        return 'Excesivo';
+        return 'Excesivo'; 
     }
 
     function aplicarCalidadAutomatica(horas) {
@@ -39,7 +41,7 @@
         calidadAutoText.innerHTML = `✨ Calidad sugerida: ${calidadSugerida} ${emojis[calidadSugerida]}`;
         calidadAutoText.style.color = calidadSugerida === 'Excelente' ? 'var(--verde)' : 'var(--texto-suave)';
         
-        // Si vuelve a las horas sugeridas, ocultamos el "¿Por qué?"
+        // Si vuelve a las horas sugeridas, ocultamos el motivo
         motivoContainer.style.display = 'none';
         motivoInput.value = '';
     }
@@ -174,7 +176,7 @@
         btnRestar.disabled = true;
         selectorCalidad.style.pointerEvents = 'none';
         selectorCalidad.style.opacity = '0.5';
-        motivoContainer.style.display = 'none'; // Ocultamos el por qué si ya registró
+        motivoContainer.style.display = 'none';
         
         btnGuardar.disabled = true;
         btnGuardar.innerHTML = '<i class="fi fi-bs-check"></i> Ya registrado hoy';
@@ -182,8 +184,6 @@
         
         calidadAutoText.innerHTML = '✅ Ya registraste tu sueño hoy';
         calidadAutoText.style.color = 'var(--texto-suave)';
-        
-        mostrarToast('ℹ️ Ya registraste tu sueño hoy.');
     }
 
     cargarHistorial();

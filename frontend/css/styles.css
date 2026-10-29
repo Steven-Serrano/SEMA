@@ -2256,3 +2256,424 @@ input:disabled, button:disabled {
     font-size: 1.5rem;
   }
 }
+
+/* ==========================================
+   ESTILOS DE CITAS (TARJETAS)
+   ========================================== */
+.cita-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.2rem;
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-left: 4px solid var(--azul); /* Línea de color a la izquierda */
+  border-radius: var(--radio-sm);
+  margin-bottom: 1rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.cita-item:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--sombra-sm);
+  border-color: var(--azul);
+  border-left-color: var(--verde);
+}
+
+.cita-fecha {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 60px;
+  height: 60px;
+  background: var(--bg);
+  border-radius: 50%;
+  border: 1px solid var(--borde);
+}
+
+.cita-fecha .dia {
+  font-family: var(--fuente-display);
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--azul);
+  line-height: 1;
+}
+
+.cita-fecha .mes {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--texto-suave);
+  margin-top: 2px;
+}
+
+.cita-info {
+  flex: 1;
+}
+
+.cita-info h4 {
+  margin: 0 0 0.2rem 0;
+  font-size: 1.05rem;
+  color: var(--texto);
+}
+
+.cita-info p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--texto-suave);
+}
+
+/* Ajuste para pantallas pequeñas */
+@media (max-width: 500px) {
+  .cita-item {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.5rem;
+    padding: 1rem;
+  }
+  .cita-info {
+    padding: 0;
+  }
+}
+
+/* ==========================================================================
+   PARCHE DE CORRECCIÓN RESPONSIVE (PEGAR AL FINAL DE TODO)
+   ========================================================================== */
+
+/* 1. ARREGLAR EL APLASTAMIENTO EN CELULAR (Diario, Sueño, etc.) */
+@media (max-width: 768px) {
+  /* Forza a que todas las columnas se apilen una debajo de otra en celular */
+  .grid-2, .grid-3, .grid-4 {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+
+  .dashboard__main {
+    padding: 1rem !important;
+  }
+
+  /* Ajustes para que el diario y sueño respiren bien */
+  .diario-textarea {
+    min-height: 150px;
+  }
+  
+  .sleep-tracker {
+    gap: 1rem !important;
+  }
+  
+  .sleep-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
+  }
+  
+  .sleep-display span#horasDisplay {
+    font-size: 3.5rem;
+  }
+
+  /* Ajuste para la meditación */
+  .player-box {
+    padding: 2rem 1rem;
+  }
+}
+
+/* 2. ARREGLAR EL MENÚ LATERAL (HAMBURGUESA) EN CELULAR */
+/* Ocultamos el botón de hamburguesa por defecto en PC */
+.menu-toggle {
+  display: none;
+  background: transparent;
+  border: none;
+  color: var(--texto);
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  margin-right: 0.5rem;
+}
+
+/* Fondo oscuro para cuando se abre el menú */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 9998;
+  backdrop-filter: blur(3px);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.sidebar-overlay.activo {
+  display: block;
+  opacity: 1;
+}
+
+@media (max-width: 800px) {
+  /* Mostramos el botón de hamburguesa */
+  .menu-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Sobrescribimos el display: none que tenías antes */
+  .sidebar {
+    display: block !important; 
+    position: fixed;
+    top: 0;
+    left: -280px; /* Oculto a la izquierda */
+    width: 260px;
+    height: 100vh;
+    z-index: 9999 !important; /* Por encima de todo */
+    transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: var(--sombra-lg);
+    overflow-y: auto;
+    background: var(--superficie);
+  }
+
+  /* Cuando el JS le pone la clase 'activo', se desliza hacia la derecha */
+  .sidebar.activo {
+    left: 0;
+  }
+
+  /* Ajustes al Navbar en celular para que quepa la hamburguesa */
+  .navbar {
+    padding: 0.75rem 1rem;
+  }
+  
+  .navbar__menu {
+    display: none; /* Ocultamos el menú superior en celular, usamos el lateral */
+  }
+}
+
+/* ==========================================================================
+   CORRECCIONES FINALES DE CAPAS Y MÓVIL
+   ========================================================================== */
+
+/* 1. Evitar que los enlaces se queden "pegados" como activos al tocarlos en celular */
+@media (hover: none) {
+  .sidebar a:hover, 
+  .sidebar a.activo {
+    background: transparent;
+    color: var(--texto-suave);
+  }
+  /* Solo el que tenga la clase .activo de verdad se pintará */
+  .sidebar a.activo {
+    background: var(--gradiente-suave);
+    color: var(--azul);
+  }
+}
+
+/* 2. Subir las capas (z-index) para que el menú lateral y su fondo tapen TODO */
+@media (max-width: 800px) {
+  .sidebar-overlay {
+    z-index: 99998 !important; /* Por encima del menú de usuario (10000) */
+  }
+  
+  .sidebar {
+    z-index: 99999 !important; /* Por encima de todo */
+  }
+}
+/* ==========================================================================
+   PANTALLA DE MEDITACIÓN (INMERSIVA)
+   ========================================================================== */
+
+.meditacion-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 180px);
+  padding: 2rem 1rem;
+  text-align: center;
+}
+
+/* Círculo de respiración */
+.breathing-circle {
+  width: 280px;
+  height: 280px;
+  border-radius: 50%;
+  background: var(--gradiente-suave);
+  border: 2px solid rgba(37, 99, 235, 0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  margin-bottom: 3rem;
+  box-shadow: 0 0 40px rgba(37, 99, 235, 0.1), inset 0 0 20px rgba(37, 99, 235, 0.05);
+  transition: all 0.5s ease;
+}
+
+/* Animación de respiración (solo cuando está activo) */
+.breathing-circle.activo {
+  animation: respirar 8s ease-in-out infinite;
+}
+
+@keyframes respirar {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 40px rgba(37, 99, 235, 0.1); }
+  50% { transform: scale(1.05); box-shadow: 0 0 60px rgba(16, 185, 129, 0.2); }
+}
+
+/* El reloj gigante */
+.timer-text {
+  font-family: var(--fuente-display);
+  font-size: 5rem;
+  font-weight: 800;
+  line-height: 1;
+  background: var(--gradiente);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin: 0;
+  letter-spacing: -2px;
+}
+
+.timer-label {
+  font-size: 0.9rem;
+  color: var(--texto-suave);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-top: 0.5rem;
+}
+
+/* Botones de tiempo (Píldoras) */
+.time-pills {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 3rem;
+  background: var(--superficie);
+  padding: 0.5rem;
+  border-radius: 999px;
+  border: 1px solid var(--borde);
+}
+
+.time-pill {
+  padding: 0.6rem 1.2rem;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--texto-suave);
+  transition: all var(--transicion);
+}
+
+.time-pill:hover {
+  background: var(--hover-bg);
+  color: var(--texto);
+}
+
+.time-pill.activo {
+  background: var(--gradiente);
+  color: #fff;
+  box-shadow: var(--sombra);
+}
+
+/* Botón de Play Gigante */
+.btn-play-meditacion {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: var(--gradiente);
+  color: white;
+  font-size: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 30px rgba(37, 99, 235, 0.4);
+  transition: transform 0.2s, box-shadow 0.2s;
+  margin-bottom: 1.5rem;
+}
+
+.btn-play-meditacion:hover {
+  transform: scale(1.05);
+  box-shadow: 0 15px 40px rgba(37, 99, 235, 0.5);
+}
+
+.btn-play-meditacion.activo {
+  background: var(--superficie);
+  color: var(--texto);
+  box-shadow: var(--sombra-sm);
+  border: 2px solid var(--borde);
+}
+
+/* Botón de completar */
+.btn-completar {
+  display: none;
+  animation: aparecer 0.5s ease;
+}
+
+.btn-completar.visible {
+  display: inline-flex;
+}
+
+/* Ajustes para celular */
+@media (max-width: 600px) {
+  .breathing-circle {
+    width: 220px;
+    height: 220px;
+  }
+  .timer-text {
+    font-size: 4rem;
+  }
+}
+/* ==========================================================================
+   CORRECCIÓN DE ANCHOS Y ESTRUCTURA (DIARIO Y SUEÑO)
+   ========================================================================== */
+
+/* 1. Hacer que el área principal ocupe todo el ancho y se centre */
+.dashboard__main {
+  width: 100% !important;
+  max-width: 1200px !important;
+  margin: 0 auto !important;
+}
+
+/* 2. Asegurar que los grids ocupen todo el ancho */
+.grid-2 {
+  width: 100% !important;
+  align-items: start;
+}
+
+/* 3. Arreglar el texto del historial para que no se apile */
+.historial-item {
+  display: flex !important;
+  align-items: center !important;
+  width: 100% !important;
+  padding: 1rem;
+}
+
+.historial-item .flex-1 {
+  flex: 1 1 0% !important;
+  min-width: 0 !important; /* Evita que el texto desborde */
+}
+
+.historial-item h4 {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 4. Hacer que las tarjetas ocupen el 100% de su columna */
+.tarjeta {
+  width: 100% !important;
+}
+
+/* 5. Ajustar el Diario */
+.diario-textarea {
+  min-height: 250px !important;
+  width: 100% !important;
+}
+
+.diario-timeline {
+  max-height: 600px;
+  width: 100%;
+}
+
+/* 6. Ajustar Sueño */
+.sleep-tracker {
+  width: 100%;
+  justify-content: center;
+}
+
+.slider-container {
+  width: 100% !important;
+}

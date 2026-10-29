@@ -12,7 +12,9 @@ router.post('/:chatId', verificarToken, async (req, res) => {
     const { chatId } = req.params;
     const { contenido } = req.body;
     const emisorId = req.usuario.id;
-    const tipoEmisor = req.usuario.tipo || 'usuario'; // 'usuario' o 'psicologo'
+    
+    // 🔑 CORRECCIÓN: Usamos 'rol' en lugar de 'tipo'
+    const rolEmisor = req.usuario.rol || req.usuario.tipo || 'usuario'; 
 
     if (!contenido || contenido.trim() === '') {
       return res.status(400).json({ error: 'El mensaje no puede estar vacío' });
@@ -24,21 +26,20 @@ router.post('/:chatId', verificarToken, async (req, res) => {
       return res.status(404).json({ error: 'Chat no encontrado' });
     }
 
-    // 2. Verificar permisos según el tipo de emisor
-    if (tipoEmisor === 'usuario') {
-      if (chat.usuarioId.toString() !== emisorId) {
-        return res.status(403).json({ error: 'No tienes permiso para escribir en este chat' });
-      }
-    } else if (tipoEmisor === 'psicologo') {
+    // 2. Verificar permisos según el rol
+    if (rolEmisor === 'psicologo') {
       if (chat.psicologoId.toString() !== emisorId) {
         return res.status(403).json({ error: 'No tienes permiso para escribir en este chat' });
       }
     } else {
-      return res.status(403).json({ error: 'Tipo de usuario no válido' });
+      if (chat.usuarioId.toString() !== emisorId) {
+        return res.status(403).json({ error: 'No tienes permiso para escribir en este chat' });
+      }
     }
 
-    const emisorModel = tipoEmisor === 'psicologo' ? 'Psicologo' : 'Usuario';
+    const emisorModel = rolEmisor === 'psicologo' ? 'Psicologo' : 'Usuario';
 
+    // 3. Crear el mensaje
     const nuevoMensaje = await Mensaje.create({
       chatId,
       emisorId,
@@ -46,18 +47,21 @@ router.post('/:chatId', verificarToken, async (req, res) => {
       contenido: contenido.trim()
     });
 
-    // Si el que escribe es el psicólogo, notificamos al usuario
+    // 4. Notificaciones automáticas
     if (emisorModel === 'Psicologo') {
-      const chatInfo = await Chat.findById(chatId).select('usuarioId');
-
+      // Si el psicólogo escribe, notificamos al estudiante
       await Notificacion.create({
-        usuarioId: chatInfo.usuarioId,
+        usuarioId: chat.usuarioId,
         titulo: 'Nuevo mensaje de tu psicólogo',
         mensaje: 'Tu psicólogo te ha respondido en el chat.',
         leida: false
       });
+    } else {
+      // Si el estudiante escribe, notificamos al psicólogo (requiere que el modelo Notificacion lo soporte, o podemos omitirlo si solo notifica a estudiantes)
+      // await Notificacion.create({...});
     }
 
+    // 5. Actualizar la fecha del chat para que suba en la lista
     await Chat.findByIdAndUpdate(chatId, { updatedAt: new Date() });
 
     res.status(201).json({
@@ -75,7 +79,7 @@ router.get('/:chatId', verificarToken, async (req, res) => {
   try {
     const { chatId } = req.params;
     const usuarioId = req.usuario.id;
-    const tipoUsuario = req.usuario.tipo || 'usuario';
+    const rolUsuario = req.usuario.rol || req.usuario.tipo || 'usuario';
 
     const chat = await Chat.findById(chatId);
     if (!chat) {
@@ -83,8 +87,8 @@ router.get('/:chatId', verificarToken, async (req, res) => {
     }
 
     const tieneAcceso =
-      (tipoUsuario === 'usuario' && chat.usuarioId.toString() === usuarioId) ||
-      (tipoUsuario === 'psicologo' && chat.psicologoId.toString() === usuarioId);
+      (rolUsuario === 'usuario' && chat.usuarioId.toString() === usuarioId) ||
+      (rolUsuario === 'psicologo' && chat.psicologoId.toString() === usuarioId);
 
     if (!tieneAcceso) {
       return res.status(403).json({ error: 'No tienes permiso para ver este chat' });
@@ -95,25 +99,6 @@ router.get('/:chatId', verificarToken, async (req, res) => {
     res.json(mensajes);
   } catch (err) {
     res.status(500).json({ error: 'Error al obtener los mensajes' });
-  }
-});
-
-// GET /api/mensajes/mis-chats - Obtener todos los chats del psicólogo autenticado
-router.get('/mis-chats', verificarToken, async (req, res) => {
-  try {
-    const psicologoId = req.usuario.id;
-
-    if (req.usuario.tipo !== 'psicologo') {
-      return res.status(403).json({ error: 'Acceso denegado' });
-    }
-
-    const chats = await Chat.find({ psicologoId })
-      .populate('usuarioId', 'nombre email')
-      .sort({ updatedAt: -1 });
-
-    res.json(chats);
-  } catch (err) {
-    res.status(500).json({ error: 'Error al obtener los chats' });
   }
 });
 

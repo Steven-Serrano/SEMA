@@ -7,8 +7,21 @@ const psicologoSchema = new mongoose.Schema({
   password: { type: String, required: true },
   especialidad: { type: String, required: true, trim: true },
   telefono: { type: String, trim: true },
+  documento: { type: String, trim: true },
+  ciudad: { type: String, trim: true },
+  biografia: { type: String, default: '' },
+  fotoPerfil: { type: String, default: '' },
   verificado: { type: Boolean, default: false },
-  estado: { type: String, enum: ['activo', 'inactivo'], default: 'activo' }
+  estado: { type: String, enum: ['activo', 'inactivo'], default: 'activo' },
+  
+  // 🔑 NUEVO CAMPO: Bloques de disponibilidad
+  disponibilidad: [
+    {
+      fecha: { type: String, required: true }, // Formato "YYYY-MM-DD"
+      inicio: { type: String, required: true }, // Formato "HH:mm"
+      fin: { type: String, required: true }     // Formato "HH:mm"
+    }
+  ]
 }, { timestamps: true });
 
 // Encriptar contraseña automáticamente antes de guardar
@@ -17,7 +30,7 @@ psicologoSchema.pre('save', async function() {
   this.password = await bcrypt.hash(this.password, 10);
 });
 
-// ✅ MÉTODO AGREGADO: Para comparar contraseñas en el login
+// Método para comparar contraseñas
 psicologoSchema.methods.comparePassword = async function(candidatePassword) {
   return await bcrypt.compare(candidatePassword, this.password);
 };

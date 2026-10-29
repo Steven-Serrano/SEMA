@@ -1,55 +1,129 @@
-/* ============================================================
-   SEMA - DASHBOARD PSICÓLOGO (Actualizado: Todos los pacientes)
-   ============================================================ */
-
-document.addEventListener('DOMContentLoaded', async () => {
+﻿document.addEventListener('DOMContentLoaded', async () => {
     
-    // ==========================================
-    // 1. VERIFICAR AUTENTICACIÓN Y ROL
-    // ==========================================
     if (typeof Auth === 'undefined' || !Auth.getToken()) {
         window.location.href = "login.html";
         return;
     }
 
     const user = Auth.getUser();
-    
-    // Si no es psicólogo, redirigir al dashboard normal
     if (user.rol !== 'psicologo') {
         window.location.href = "dashboard.html";
         return;
     }
 
-    // ==========================================
-    // 2. ACTUALIZAR DATOS DEL USUARIO
-    // ==========================================
     const saludo = document.getElementById('saludoPsicologo');
     if (saludo) saludo.textContent = `Hola, ${user.nombre}`;
 
-    const nombreUsuario = document.querySelector('.nombre-usuario');
-    const correoUsuario = document.querySelector('.correo-usuario');
-    
-    if (nombreUsuario) nombreUsuario.textContent = user.nombre;
-    if (correoUsuario) correoUsuario.textContent = user.email;
+    document.querySelector('.nombre-usuario').textContent = user.nombre;
+    document.querySelector('.correo-usuario').textContent = user.email;
+
+    // 🔑 ACTUALIZAR FOTO DESDE EL SERVIDOR
+    try {
+        const perfil = await fetchAuth('/psicologos/perfil');
+        const fotoUsuario = document.querySelector('.foto-usuario');
+        if (fotoUsuario && perfil.fotoPerfil) {
+            fotoUsuario.src = getImgUrl(perfil.fotoPerfil);
+            
+            const userActual = Auth.getUser();
+            userActual.fotoPerfil = perfil.fotoPerfil;
+            Auth.setUser(userActual);
+        }
+    } catch (error) {
+        console.warn('No se pudo actualizar la foto de perfil:', error);
+    }
 
     // ==========================================
-    // 3. CARGAR ESTADÍSTICAS
+    // 1. GESTIÓN DE DISPONIBILIDAD
+    // ==========================================
+    const formDisponibilidad = document.getElementById('form-disponibilidad');
+    const listaDisponibilidad = document.getElementById('lista-disponibilidad');
+    const dispFecha = document.getElementById('disp-fecha');
+
+    if (dispFecha) {
+        const hoy = new Date().toISOString().split('T')[0];
+        dispFecha.setAttribute('min', hoy);
+    }
+
+    async function cargarDisponibilidad() {
+        try {
+            const perfil = await fetchAuth('/psicologos/perfil');
+            const bloques = perfil.disponibilidad || [];
+            
+            bloques.sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
+
+            if (bloques.length === 0) {
+                listaDisponibilidad.innerHTML = '<p class="text-suave" style="grid-column: 1/-1;">No has agregado horarios aún. ¡Agrega tu primer turno!</p>';
+                return;
+            }
+
+            listaDisponibilidad.innerHTML = bloques.map(b => `
+                <div class="tarjeta" style="padding: 1rem; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid var(--verde);">
+                    <div>
+                        <h4 style="margin: 0; color: var(--texto);">${b.fecha}</h4>
+                        <p class="text-suave text-sm" style="margin: 0;">De ${b.inicio} a ${b.fin}</p>
+                    </div>
+                    <button class="btn btn-fantasma" onclick="eliminarBloque('${b._id}')" style="color: var(--rojo);"><i class="fi fi-bs-trash"></i></button>
+                </div>
+            `).join('');
+        } catch (error) {
+            console.error('Error cargando disponibilidad:', error);
+        }
+    }
+
+    if (formDisponibilidad) {
+        formDisponibilidad.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const fecha = document.getElementById('disp-fecha').value;
+            const inicio = document.getElementById('disp-inicio').value;
+            const fin = document.getElementById('disp-fin').value;
+
+            if (inicio >= fin) return mostrarToast('⚠️ La hora de inicio debe ser menor a la de fin');
+
+            const btn = formDisponibilidad.querySelector('button');
+            btn.disabled = true;
+
+            try {
+                await fetchAuth('/psicologos/disponibilidad', {
+                    method: 'POST',
+                    body: JSON.stringify({ fecha, inicio, fin })
+                });
+                mostrarToast('✅ Turno agregado');
+                formDisponibilidad.reset();
+                cargarDisponibilidad();
+            } catch (error) {
+                mostrarToast('❌ Error: ' + error.message);
+            } finally {
+                btn.disabled = false;
+            }
+        });
+    }
+
+    window.eliminarBloque = async function(id) {
+        if (!confirm('¿Eliminar este turno?')) return;
+        try {
+            await fetchAuth(`/psicologos/disponibilidad/${id}`, { method: 'DELETE' });
+            mostrarToast('🗑️ Turno eliminado');
+            cargarDisponibilidad();
+        } catch (error) {
+            mostrarToast('❌ Error al eliminar');
+        }
+    };
+
+    // ==========================================
+    // 2. CARGAR ESTADÍSTICAS
     // ==========================================
     async function cargarEstadisticas() {
         try {
-            // Intentamos obtener todos los pacientes
             let totalPacientes = 0;
             try {
                 const pacientes = await fetchAuth('/usuarios/pacientes');
                 totalPacientes = pacientes.length;
             } catch (e) {
-                // Fallback: Si falla /pacientes, contamos los chats
                 const chats = await fetchAuth('/chats');
                 totalPacientes = chats.length;
             }
             document.getElementById('stat-pacientes').textContent = totalPacientes;
 
-            // Cargar citas
             const citas = await fetchAuth('/citas');
             const hoyStr = new Date().toISOString().split('T')[0];
             
@@ -59,37 +133,27 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
             document.getElementById('stat-citas-hoy').textContent = citasHoy.length;
 
-            // Citas este mes
             const mesActual = new Date().getMonth();
-            const citasMes = citas.filter(c => 
-                new Date(c.fecha).getMonth() === mesActual && c.estado !== 'cancelada'
-            );
+            const citasMes = citas.filter(c => new Date(c.fecha).getMonth() === mesActual && c.estado !== 'cancelada');
             document.getElementById('stat-citas-mes').textContent = citasMes.length;
 
-            // Mensajes recibidos (Optimizado con Promise.all)
             let totalMensajes = 0;
             const chats = await fetchAuth('/chats').catch(() => []);
-            
             if (chats.length > 0) {
-                // Limitamos a los primeros 10 para no colapsar el servidor
-                const promesasMensajes = chats.slice(0, 10).map(chat => 
-                    fetchAuth(`/mensajes/${chat._id}`).catch(() => [])
-                );
+                const promesasMensajes = chats.slice(0, 10).map(chat => fetchAuth(`/mensajes/${chat._id}`).catch(() => []));
                 const resultados = await Promise.all(promesasMensajes);
-                
                 resultados.forEach(mensajes => {
                     totalMensajes += mensajes.filter(m => m.emisorModel === 'Usuario').length;
                 });
             }
             document.getElementById('stat-mensajes').textContent = totalMensajes;
-
         } catch (error) {
             console.error('Error cargando estadísticas:', error);
         }
     }
 
     // ==========================================
-    // 4. CARGAR PRÓXIMAS CITAS
+    // 3. CARGAR PRÓXIMAS CITAS
     // ==========================================
     async function cargarCitas() {
         try {
@@ -97,10 +161,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             const proximas = citas
                 .filter(c => c.estado !== 'cancelada' && c.estado !== 'completada')
                 .sort((a, b) => new Date(a.fecha) - new Date(b.fecha))
-                .slice(0, 5); // Mostrar solo las 5 más próximas
+                .slice(0, 5);
 
             const contenedor = document.getElementById('lista-citas-psicologo');
-            
             if (proximas.length === 0) {
                 contenedor.innerHTML = '<p class="text-suave">No tienes citas programadas.</p>';
                 return;
@@ -128,31 +191,25 @@ document.addEventListener('DOMContentLoaded', async () => {
                     </div>
                 `;
             }).join('');
-
         } catch (error) {
             console.error('Error cargando citas:', error);
         }
     }
 
     // ==========================================
-    // 5. CARGAR PACIENTES RECIENTES
+    // 4. CARGAR PACIENTES RECIENTES
     // ==========================================
     async function cargarPacientes() {
         try {
             const contenedor = document.getElementById('lista-pacientes');
-            
-            // 1. Intentar traer a TODOS los pacientes
             let usuarios = [];
             try {
                 usuarios = await fetchAuth('/usuarios/pacientes'); 
             } catch (error) {
-                // Si el backend no tiene la ruta /pacientes, usamos los chats
-                console.warn('Ruta /pacientes no encontrada, usando chats...');
                 const chats = await fetchAuth('/chats');
                 usuarios = chats.map(c => c.usuarioId).filter(Boolean);
             }
 
-            // 2. Traer los chats para saber si ya hay conversación
             const chats = await fetchAuth('/chats').catch(() => []);
 
             if (usuarios.length === 0) {
@@ -160,23 +217,24 @@ document.addEventListener('DOMContentLoaded', async () => {
                 return;
             }
 
-            // 3. Renderizar los primeros 5
             contenedor.innerHTML = usuarios.slice(0, 5).map(u => {
                 const nombre = u.nombre || 'Paciente';
                 const email = u.email || '';
                 const iniciales = nombre.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
-                
-                // Buscar si este usuario ya tiene un chat
                 const chatExistente = chats.find(c => c.usuarioId?._id === u._id);
                 
-                // Si hay chat, botón de ir al chat. Si no, botón para iniciarlo
                 const botonChat = chatExistente 
                     ? `<a href="chat.html?chat=${chatExistente._id}" class="btn btn-secundario btn-sm"><i class="fi fi-bs-comment"></i> Chat</a>`
                     : `<a href="chat.html?nuevoChat=${u._id}" class="btn btn-secundario btn-sm"><i class="fi fi-bs-comment"></i> Iniciar</a>`;
 
+                // 🔑 AQUÍ APLICAMOS LA FOTO AL PACIENTE
+                const avatarHtml = u.fotoPerfil 
+                    ? `<img src="${getImgUrl(u.fotoPerfil)}" class="avatar-grande" style="object-fit: cover;">` 
+                    : `<div class="avatar-grande">${iniciales}</div>`;
+
                 return `
                     <div class="paciente-item">
-                        <div class="avatar-grande">${iniciales}</div>
+                        ${avatarHtml}
                         <div class="flex-1">
                             <h4>${nombre}</h4>
                             <small class="text-suave">${email}</small>
@@ -185,27 +243,22 @@ document.addEventListener('DOMContentLoaded', async () => {
                     </div>
                 `;
             }).join('');
-
         } catch (error) {
             console.error('Error cargando pacientes:', error);
-            document.getElementById('lista-pacientes').innerHTML = '<p class="text-suave">Error al cargar pacientes.</p>';
         }
     }
 
     // ==========================================
-    // 6. MENÚ DESPLEGABLE
+    // 5. MENÚ Y LOGOUT
     // ==========================================
     const userMenuBtn = document.getElementById('userMenuBtn');
     const userDropdown = document.getElementById('userDropdown');
-    
     if (userMenuBtn && userDropdown) {
         userMenuBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
+            e.preventDefault(); e.stopPropagation();
             userDropdown.classList.toggle('activo');
             userMenuBtn.classList.toggle('activo');
         });
-
         document.addEventListener('click', (e) => {
             if (!userMenuBtn.contains(e.target) && !userDropdown.contains(e.target)) {
                 userDropdown.classList.remove('activo');
@@ -214,23 +267,29 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    // ==========================================
-    // 7. CERRAR SESIÓN
-    // ==========================================
-    document.querySelectorAll('a[href="index.html"]').forEach(link => {
+    document.querySelectorAll('.logout-link').forEach(link => {
         link.addEventListener('click', (e) => {
-            e.preventDefault();
-            Auth.clear();
-            window.location.href = 'index.html';
+            e.preventDefault(); Auth.clear(); window.location.href = 'index.html';
         });
     });
 
-    // ==========================================
-    // 8. INICIALIZAR (Cargar todo en paralelo)
-    // ==========================================
+    // Inicializar
     await Promise.all([
+        cargarDisponibilidad(),
         cargarEstadisticas(),
         cargarCitas(),
         cargarPacientes()
     ]);
 });
+
+function mostrarToast(texto) {
+    let toast = document.querySelector(".toast");
+    if (!toast) {
+        toast = document.createElement("div");
+        toast.className = "toast";
+        document.body.appendChild(toast);
+    }
+    toast.textContent = texto;
+    toast.classList.add("activo");
+    setTimeout(() => toast.classList.remove("activo"), 3000);
+}

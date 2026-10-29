@@ -2,19 +2,28 @@
 <html lang="es" data-theme="light">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Meditación Diaria · SEMA</title>
+  <link rel="icon" type="image/png" href="assets/logo.png">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/@flaticon/flaticon-uicons@3.3.1/css/bold/straight.css" rel="stylesheet">
+  
   <link rel="stylesheet" href="css/styles.css">
+  
   <script defer src="js/api.js"></script>
   <script defer src="js/app.js"></script>
   <script defer src="js/layout.js"></script>
 </head>
 <body>
+
   <div id="sema-nav"></div>
+  
   <div class="dashboard">
     <aside class="sidebar" id="sema-sidebar"></aside>
-    <div class="dashboard__main">
-      <header class="dashboard-header">
+    
+    <div class="dashboard__main" style="display: flex; flex-direction: column;">
+      
+      <header class="dashboard-header" style="margin-bottom: 0; border-bottom: none;">
         <div class="dashboard-title">
           <h1>Meditación Diaria</h1>
           <p>Respira, enfócate y reduce tu estrés.</p>
@@ -22,71 +31,115 @@
         <a href="dashboard.html" class="btn btn-secundario"><i class="fi fi-bs-arrow-left"></i> Volver al Dashboard</a>
       </header>
 
-      <div class="tarjeta text-center" style="max-width: 500px; margin: 2rem auto; padding: 3rem 1rem;">
-        <h2 id="timerDisplay" style="font-size: 4rem; margin: 0; color: var(--azul);">05:00</h2>
-        <p class="text-suave mb-1-5">Tiempo de respiración</p>
+      <!-- CONTENIDO INMERSIVO -->
+      <div class="meditacion-wrapper">
         
-        <div class="flex mb-1-5" style="justify-content: center; gap: 1rem;">
-          <button class="btn btn-secundario btn-sm" onclick="setTimer(5)">5 min</button>
-          <button class="btn btn-secundario btn-sm" onclick="setTimer(10)">10 min</button>
-          <button class="btn btn-secundario btn-sm" onclick="setTimer(15)">15 min</button>
+        <!-- Círculo de respiración -->
+        <div class="breathing-circle" id="circulo-respiracion">
+          <h2 class="timer-text" id="timerDisplay">05:00</h2>
+          <span class="timer-label" id="timerLabel">Tiempo de respiración</span>
         </div>
 
-        <button class="btn btn-primario" id="btnPlay" style="width: 100%; margin-bottom: 1rem;">Iniciar Meditación</button>
-        <button class="btn btn-primario" id="btnCompletar" style="width: 100%; display: none; background: var(--verde);"><i class="fi fi-bs-check"></i> Marcar como completada</button>
+        <!-- Selector de tiempo -->
+        <div class="time-pills" id="time-pills">
+          <button class="time-pill activo" onclick="setTimer(5)">5 min</button>
+          <button class="time-pill" onclick="setTimer(10)">10 min</button>
+          <button class="time-pill" onclick="setTimer(15)">15 min</button>
+        </div>
+
+        <!-- Controles -->
+        <button class="btn-play-meditacion" id="btnPlay" aria-label="Iniciar meditación">
+          <i class="fi fi-bs-play" style="margin-left: 4px;"></i>
+        </button>
+
+        <button class="btn btn-primario btn-completar" id="btnCompletar">
+          <i class="fi fi-bs-check"></i> Marcar como completada
+        </button>
+
       </div>
     </div>
   </div>
+
   <div id="sema-footer"></div>
 
   <script>
-    let tiempoTotal = 300, tiempoRestante = 300, interval = null;
+    let tiempoTotal = 300; // 5 minutos
+    let tiempoRestante = tiempoTotal;
+    let interval = null;
+    let enMarcha = false;
+
     const display = document.getElementById('timerDisplay');
     const btnPlay = document.getElementById('btnPlay');
     const btnCompletar = document.getElementById('btnCompletar');
+    const circulo = document.getElementById('circulo-respiracion');
+    const label = document.getElementById('timerLabel');
+    const pills = document.querySelectorAll('.time-pill');
 
+    // Formatear tiempo (MM:SS)
     function formatTime(secs) {
-      return `${Math.floor(secs / 60).toString().padStart(2, '0')}:${(secs % 60).toString().padStart(2, '0')}`;
+      const m = Math.floor(secs / 60).toString().padStart(2, '0');
+      const s = (secs % 60).toString().padStart(2, '0');
+      return `${m}:${s}`;
     }
 
+    // Establecer el tiempo
     window.setTimer = function(minutos) {
-      if (interval) clearInterval(interval);
-      interval = null;
+      if (enMarcha) return; // No dejar cambiar si está corriendo
+
       tiempoTotal = minutos * 60;
       tiempoRestante = tiempoTotal;
       display.textContent = formatTime(tiempoRestante);
-      btnPlay.textContent = 'Iniciar Meditación';
-      btnPlay.style.display = 'block';
-      btnCompletar.style.display = 'none';
+      
+      // Actualizar botones de píldora
+      pills.forEach(p => p.classList.remove('activo'));
+      event.target.classList.add('activo');
+
+      btnCompletar.classList.remove('visible');
+      label.textContent = 'Tiempo de respiración';
     }
 
+    // Lógica del botón Play/Pausa
     btnPlay.addEventListener('click', () => {
-      if (interval) {
+      if (enMarcha) {
+        // PAUSAR
         clearInterval(interval);
-        interval = null;
-        btnPlay.textContent = 'Continuar';
+        enMarcha = false;
+        btnPlay.innerHTML = '<i class="fi fi-bs-play" style="margin-left: 4px;"></i>';
+        btnPlay.classList.remove('activo');
+        circulo.classList.remove('activo');
+        label.textContent = 'En pausa';
       } else {
-        btnPlay.textContent = 'Pausar';
+        // INICIAR
+        enMarcha = true;
+        btnPlay.innerHTML = '<i class="fi fi-bs-pause"></i>';
+        btnPlay.classList.add('activo');
+        circulo.classList.add('activo');
+        label.textContent = 'Inhala... Exhala...';
+
         interval = setInterval(() => {
           tiempoRestante--;
           display.textContent = formatTime(tiempoRestante);
+          
           if (tiempoRestante <= 0) {
             clearInterval(interval);
-            interval = null;
+            enMarcha = false;
+            display.textContent = "00:00";
             btnPlay.style.display = 'none';
-            btnCompletar.style.display = 'block';
-            if (typeof mostrarToast === 'function') mostrarToast('¡Meditación terminada!');
+            circulo.classList.remove('activo');
+            label.textContent = '¡Lo lograste!';
+            btnCompletar.classList.add('visible');
           }
         }, 1000);
       }
     });
 
+    // Guardar en el backend
     btnCompletar.addEventListener('click', async function() {
       this.innerHTML = '<span class="spinner"></span> Guardando...';
       this.disabled = true;
       try {
         await fetchAuth('/habitos/meditaciones', { method: 'POST', body: JSON.stringify({}) });
-        if (typeof mostrarToast === 'function') mostrarToast('✅ Registro guardado');
+        if (typeof mostrarToast === 'function') mostrarToast('✅ Meditación registrada');
         setTimeout(() => window.location.href = 'dashboard.html', 1000);
       } catch (error) {
         if (typeof mostrarToast === 'function') mostrarToast('❌ Error al guardar');

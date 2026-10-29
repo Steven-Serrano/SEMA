@@ -7,21 +7,37 @@
     const user = Auth.getUser();
     if (!user) return;
 
-    // 1. ACTUALIZAR DATOS DEL USUARIO
+    // 1. ACTUALIZAR DATOS DEL USUARIO (Desde localStorage)
     const saludo = document.getElementById('saludoUsuario');
     if (saludo) {
         const hora = new Date().getHours();
         let saludoTexto = 'Hola';
         if (hora >= 12 && hora < 19) saludoTexto = 'Buenas tardes';
         else if (hora >= 19) saludoTexto = 'Buenas noches';
-        
         saludo.textContent = `${saludoTexto}, ${user.nombre || 'Usuario'}`;
     }
 
     const nombreUsuario = document.querySelector('.nombre-usuario');
     const correoUsuario = document.querySelector('.correo-usuario');
+    
     if (nombreUsuario) nombreUsuario.textContent = user.nombre || 'Usuario SEMA';
     if (correoUsuario) correoUsuario.textContent = user.email || 'usuario@sema.com';
+
+    // 🔑 1.5 ACTUALIZAR FOTO DESDE EL SERVIDOR (Para evitar problemas de caché)
+    try {
+        const perfil = await fetchAuth('/usuarios/perfil');
+        const fotoUsuario = document.querySelector('.foto-usuario');
+        if (fotoUsuario && perfil.fotoPerfil) {
+            fotoUsuario.src = getImgUrl(perfil.fotoPerfil);
+            
+            // Actualizamos el localStorage por si acaso
+            const userActual = Auth.getUser();
+            userActual.fotoPerfil = perfil.fotoPerfil;
+            Auth.setUser(userActual);
+        }
+    } catch (error) {
+        console.warn('No se pudo actualizar la foto de perfil:', error);
+    }
 
     // 2. CARGAR PRÓXIMA CITA
     try {
@@ -106,11 +122,10 @@
     }
 
     // 4. SELECTOR DE ÁNIMO
-
     const animoSelector = document.getElementById('animo-selector');
     if (animoSelector) {
         animoSelector.addEventListener('click', async (e) => {
-            const btn = e.target.closest('.animo-btn'); // <-- Asegúrate que sea .animo-btn
+            const btn = e.target.closest('.animo-btn');
             if (!btn) return;
 
             const estado = btn.dataset.animo;

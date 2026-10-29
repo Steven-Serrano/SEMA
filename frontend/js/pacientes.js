@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', async () => {
+﻿document.addEventListener('DOMContentLoaded', async () => {
     
     if (typeof Auth === 'undefined' || !Auth.getToken()) {
         window.location.href = "login.html";
@@ -20,33 +20,54 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     async function cargarPacientes() {
         try {
-            // 🔌 AQUÍ CAMBIAMOS LA RUTA: En vez de /chats, pedimos todos los pacientes
-            // (Asegúrate de que esta ruta exista en tu backend)
-            const usuarios = await fetchAuth('/usuarios/pacientes'); 
-            
-            // Obtenemos los chats para saber si el paciente ya tiene conversación
-            const chats = await fetchAuth('/chats').catch(() => []); 
-            
-            pacientesData = usuarios.map(u => {
-                // Buscar si este usuario ya tiene un chat con el psicólogo
-                const chatExistente = chats.find(c => c.usuarioId?._id === u._id);
+            let usuarios = [];
+            let chats = [];
 
-                return {
-                    id: u._id,
-                    nombre: u.nombre || 'Paciente',
-                    email: u.email || 'Sin correo',
-                    chatId: chatExistente ? chatExistente._id : null, // Si no hay chat, es null
-                    ultimaActividad: chatExistente ? chatExistente.updatedAt : u.createdAt
-                };
-            });
+            // 1. Intentar traer a TODOS los estudiantes registrados
+            try {
+                usuarios = await fetchAuth('/usuarios/pacientes');
+            } catch (error) {
+                console.warn('La ruta /usuarios/pacientes falló, usando chats...');
+            }
+
+            // 2. Traer los chats para saber quién ya tiene conversación
+            try {
+                chats = await fetchAuth('/chats');
+            } catch (error) {
+                console.warn('No se pudieron cargar los chats');
+            }
+
+            // 3. Cruzar la información
+            if (usuarios.length > 0) {
+                pacientesData = usuarios.map(u => {
+                    const chatExistente = chats.find(c => c.usuarioId?._id === u._id);
+                    return {
+                        id: u._id,
+                        nombre: u.nombre || 'Paciente',
+                        email: u.email || 'Sin correo',
+                        fotoPerfil: u.fotoPerfil || null,
+                        chatId: chatExistente ? chatExistente._id : null, // Si tiene chat, guardamos su ID
+                        ultimaActividad: chatExistente ? chatExistente.updatedAt : u.createdAt
+                    };
+                });
+            } else {
+                // Respaldo por si la ruta falla (solo muestra los que tienen chat)
+                pacientesData = chats.map(c => ({
+                    id: c.usuarioId?._id,
+                    nombre: c.usuarioId?.nombre || 'Paciente',
+                    email: c.usuarioId?.email || 'Sin correo',
+                    fotoPerfil: c.usuarioId?.fotoPerfil || null,
+                    chatId: c._id,
+                    ultimaActividad: c.updatedAt
+                })).filter(p => p.id);
+            }
 
             renderizarPacientes(pacientesData);
 
         } catch (error) {
             listaPacientes.innerHTML = `
                 <p class="text-center mt-1" style="color: var(--error);">
-                    Error al cargar los pacientes: ${error.message}. <br>
-                    <small>Asegúrate de que la ruta /pacientes exista en tu backend.</small>
+                    Error al cargar los pacientes: ${error.message}
                 </p>
             `;
         }
@@ -57,7 +78,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             listaPacientes.innerHTML = `
                 <div class="text-center text-suave mt-1" style="padding: 2rem;">
                     <i class="fi fi-bs-users block mb-1" style="font-size: 3rem; opacity:0.5;"></i>
-                    <p>No hay pacientes registrados.</p>
+                    <p>No hay pacientes que coincidan con la búsqueda.</p>
                 </div>
             `;
             return;
@@ -65,18 +86,26 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         listaPacientes.innerHTML = pacientes.map(paciente => {
             const iniciales = paciente.nombre.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
-            const fecha = paciente.ultimaActividad 
-                ? new Date(paciente.ultimaActividad).toLocaleDateString('es', { year: 'numeric', month: 'short', day: 'numeric' })
-                : 'Recién registrado';
             
-            // Si tiene chat, muestra el botón de chat. Si no, permite iniciar uno.
-            const botonChat = paciente.chatId 
+            const fecha = paciente.ultimaActividad 
+                ? new Date(paciente.ultimaActividad).toLocaleDateString('es', { 
+                    year: 'numeric', month: 'short', day: 'numeric' 
+                  })
+                : 'Sin actividad';
+            
+            // 🔑 Foto o iniciales
+            const avatarHtml = paciente.fotoPerfil 
+                ? `<img src="${getImgUrl(paciente.fotoPerfil)}" class="avatar-grande" style="object-fit: cover;">` 
+                : `<div class="avatar-grande">${iniciales}</div>`;
+
+            // 🔑 Botón dinámico: Si tiene chat va al chat, si no, lo inicia.
+            const botonChat = paciente.chatId
                 ? `<a href="chat.html?chat=${paciente.chatId}" class="btn btn-primario btn-sm"><i class="fi fi-bs-comment"></i> Chat</a>`
-                : `<a href="chat.html?nuevoChat=${paciente.id}" class="btn btn-primario btn-sm"><i class="fi fi-bs-comment"></i> Iniciar Chat</a>`;
+                : `<a href="chat.html?nuevoChat=${paciente.id}" class="btn btn-secundario btn-sm"><i class="fi fi-bs-comment"></i> Iniciar</a>`;
 
             return `
                 <div class="paciente-item">
-                    <div class="avatar-grande">${iniciales}</div>
+                    ${avatarHtml}
                     <div class="flex-1">
                         <h4>${paciente.nombre}</h4>
                         <p class="text-suave text-sm">${paciente.email}</p>
@@ -120,6 +149,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         });
     }
+    
     document.querySelectorAll('a[href="index.html"]').forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault(); Auth.clear(); window.location.href = 'index.html';

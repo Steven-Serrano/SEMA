@@ -4,9 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Panel Profesional · SEMA</title>
-  <meta name="description" content="Panel de gestión para psicólogos.">
   <link rel="icon" type="image/png" href="assets/logo.png">
-  
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/@flaticon/flaticon-uicons@3.3.1/css/bold/straight.css" rel="stylesheet">
   
@@ -22,22 +20,10 @@
   <div id="sema-nav"></div>
 
   <div class="dashboard">
-    
-    <aside class="sidebar">
-      <h5>Panel Profesional</h5>
-      <a href="dashboard-psicologo.html" class="activo"><i class="fi fi-bs-home"></i> Mi Panel</a>
-      <a href="chat.html"><i class="fi fi-bs-comment"></i> Mensajes</a>
-      <a href="citas-psicologo.html"><i class="fi fi-bs-calendar"></i> Mis Citas</a>
-      <a href="pacientes.html"><i class="fi fi-bs-users"></i> Mis Pacientes</a>
-      
-      <h5>Cuenta</h5>
-      <a href="perfil.html"><i class="fi fi-bs-user"></i> Mi Perfil</a>
-      <a href="configuracion.html"><i class="fi fi-bs-settings"></i> Configuración</a>
-      <a href="index.html" class="logout-link"><i class="fi fi-bs-exit"></i> Cerrar sesión</a>
-    </aside>
+    <!-- SIDEBAR DINÁMICO -->
+    <aside class="sidebar" id="sema-sidebar"></aside>
 
     <main class="dashboard__main">
-      
       <header class="dashboard-header">
         <div class="dashboard-title">
           <h1 id="saludoPsicologo">Hola, Psicólogo</h1>
@@ -56,15 +42,13 @@
                 <span class="nombre-usuario">Cargando...</span>
                 <small class="correo-usuario">...</small>
               </div>
-              <span class="user-arrow">
-                <i class="fi fi-bs-angle-down"></i>
-              </span>
+              <span class="user-arrow"><i class="fi fi-bs-angle-down"></i></span>
             </button>
             <div class="user-dropdown" id="userDropdown">
               <a href="perfil.html"><i class="fi fi-bs-user"></i> Mi perfil</a>
               <a href="configuracion.html"><i class="fi fi-bs-settings"></i> Configuración</a>
               <hr>
-              <a href="index.html"><i class="fi fi-bs-exit"></i> Cerrar sesión</a>
+              <a href="index.html" class="logout-link"><i class="fi fi-bs-exit"></i> Cerrar sesión</a>
             </div>
           </div>
         </div>
@@ -94,8 +78,37 @@
         </div>
       </div>
 
-      <!-- PRÓXIMAS CITAS -->
+      <!-- DISPONIBILIDAD (HORARIOS ROTATIVOS) -->
       <section class="tarjeta aparecer-2 mt-1-5">
+        <h3><i class="fi fi-bs-clock"></i> Mi disponibilidad para citas</h3>
+        <p class="text-suave text-sm mb-1">Como tus horarios son rotativos, agrega aquí los días y horas en los que estarás disponible. Los estudiantes solo verán estas horas.</p>
+        
+        <form id="form-disponibilidad" class="grid grid-4 align-center" style="gap: 1rem; margin-bottom: 1.5rem;">
+          <div class="form-grupo" style="margin: 0;">
+            <label>Fecha</label>
+            <input type="date" id="disp-fecha" required>
+          </div>
+          <div class="form-grupo" style="margin: 0;">
+            <label>Hora Inicio</label>
+            <input type="time" id="disp-inicio" required>
+          </div>
+          <div class="form-grupo" style="margin: 0;">
+            <label>Hora Fin</label>
+            <input type="time" id="disp-fin" required>
+          </div>
+          <div style="margin-top: 1.5rem;">
+            <button type="submit" class="btn btn-primario" style="width: 100%;"><i class="fi fi-bs-plus"></i> Agregar Turno</button>
+          </div>
+        </form>
+
+        <div id="lista-disponibilidad" class="grid grid-2">
+          <!-- Aquí el JS mostrará los turnos guardados -->
+          <p class="text-suave" style="grid-column: 1/-1;">Cargando horarios...</p>
+        </div>
+      </section>
+
+      <!-- PRÓXIMAS CITAS -->
+      <section class="tarjeta aparecer-3 mt-1-5">
         <h3><i class="fi fi-bs-calendar"></i> Próximas citas agendadas</h3>
         <div id="lista-citas-psicologo" class="mt-1">
           <p class="text-suave">Cargando citas...</p>

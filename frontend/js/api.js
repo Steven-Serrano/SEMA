@@ -66,3 +66,11 @@ async function fetchAuth(endpoint, options = {}) {
         throw error;
     }
 }
+
+// 🔑 Función global para obtener la URL correcta de cualquier imagen
+function getImgUrl(ruta) {
+    if (!ruta) return 'assets/avatar-default.png'; // Si no hay foto, mostramos el default
+    if (ruta.startsWith('http') || ruta.startsWith('data:')) return ruta; // Si ya es URL o base64, la dejamos
+    const baseUrl = API_URL.replace('/api', ''); // Quitamos el /api para que apunte al backend base
+    return `${baseUrl}${ruta}`;
+}

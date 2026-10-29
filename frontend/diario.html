@@ -2,20 +2,26 @@
 <html lang="es" data-theme="light">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Diario Emocional · SEMA</title>
+  <link rel="icon" type="image/png" href="assets/logo.png">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/@flaticon/flaticon-uicons@3.3.1/css/bold/straight.css" rel="stylesheet">
+  
   <link rel="stylesheet" href="css/styles.css">
+  
   <script defer src="js/api.js"></script>
   <script defer src="js/app.js"></script>
   <script defer src="js/layout.js"></script>
   <script defer src="js/diario.js"></script>
 </head>
 <body>
+
   <div id="sema-nav"></div>
   <div class="dashboard">
     <aside class="sidebar" id="sema-sidebar"></aside>
     
-    <div class="dashboard__main">
+    <main class="dashboard__main">
       <header class="dashboard-header">
         <div class="dashboard-title">
           <h1>Mi Diario Emocional</h1>
@@ -24,7 +30,7 @@
         <a href="dashboard.html" class="btn btn-secundario"><i class="fi fi-bs-arrow-left"></i> Volver</a>
       </header>
 
-      <div class="grid grid-2" style="align-items: start; gap: 2rem;">
+      <div class="grid grid-2" style="gap: 2rem;">
         
         <!-- COLUMNA IZQUIERDA: NUEVA ENTRADA -->
         <div class="tarjeta aparecer">
@@ -48,7 +54,7 @@
         </div>
 
       </div>
-    </div>
+    </main>
   </div>
   <div id="sema-footer"></div>
 </body>

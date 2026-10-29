@@ -1,29 +1,27 @@
-/* ============================================================
-   SEMA - CITAS
-   ============================================================ */
-
 document.addEventListener('DOMContentLoaded', async () => {
     
-    // ==========================================
-    // 1. VERIFICAR AUTENTICACIÓN
-    // ==========================================
-    if (!Auth || !Auth.getToken()) {
+    if (typeof Auth === 'undefined' || !Auth.getToken()) {
         window.location.href = "login.html";
         return;
     }
 
     const psiSelect = document.getElementById('psi');
+    const horaSelect = document.getElementById('hora');
     const formCita = document.getElementById('form-cita');
     const listaCitas = document.getElementById('lista-citas');
     const btnEnviar = document.getElementById('btn-enviar-cita');
     const fechaInput = document.getElementById('fecha');
 
-    // ==========================================
-    // 2. CARGAR PSICÓLOGOS REALES EN EL SELECT
-    // ==========================================
+    const urlParams = new URLSearchParams(window.location.search);
+    const psicologoIdPreSeleccionado = urlParams.get('psicologoId');
+
+    let psicologosData = [];
+
+    // 1. CARGAR PSICÓLOGOS
     async function cargarPsicologos() {
         try {
             const psicologos = await fetchAuth('/psicologos');
+            psicologosData = psicologos;
             
             psiSelect.innerHTML = '<option value="">Selecciona un profesional...</option>';
             
@@ -31,38 +29,89 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const option = document.createElement('option');
                 option.value = p._id;
                 option.textContent = `${p.nombre} - ${p.especialidad}`;
+                
+                if (p._id === psicologoIdPreSeleccionado) {
+                    option.selected = true;
+                }
+                
                 psiSelect.appendChild(option);
             });
+
+            // Si venimos desde el directorio, actualizar horas si ya hay fecha
+            if (psicologoIdPreSeleccionado) {
+                actualizarHorasDisponibles();
+            }
             
         } catch (error) {
             psiSelect.innerHTML = '<option value="">Error al cargar psicólogos</option>';
-            console.error('Error cargando psicólogos:', error);
         }
     }
 
-    // ==========================================
+    // 2. ACTUALIZAR HORAS DISPONIBLES
+    function actualizarHorasDisponibles() {
+        const psiId = psiSelect.value;
+        const fechaSeleccionada = fechaInput.value;
+        
+        horaSelect.innerHTML = '<option value="">Selecciona una hora</option>';
+        
+        if (!psiId || !fechaSeleccionada) {
+            horaSelect.disabled = true;
+            horaSelect.innerHTML = '<option value="">Elige psicólogo y fecha primero</option>';
+            return;
+        }
+
+        const psicologo = psicologosData.find(p => p._id === psiId);
+        if (!psicologo) return;
+
+        // Buscar si el psicólogo tiene un turno para esa fecha exacta
+        const turnosDelDia = psicologo.disponibilidad?.filter(d => d.fecha === fechaSeleccionada) || [];
+
+        if (turnosDelDia.length === 0) {
+            horaSelect.disabled = true;
+            horaSelect.innerHTML = '<option value="">No hay disponibilidad este día</option>';
+            return;
+        }
+
+        horaSelect.disabled = false;
+        
+        // Generar bloques de 1 hora para cada turno del día
+        turnosDelDia.forEach(turno => {
+            const hInicio = parseInt(turno.inicio.split(':')[0]);
+            const hFin = parseInt(turno.fin.split(':')[0]);
+
+            for (let h = hInicio; h < hFin; h++) {
+                const horaFormat = h.toString().padStart(2, '0') + ':00';
+                const option = document.createElement('option');
+                option.value = horaFormat;
+                option.textContent = horaFormat;
+                horaSelect.appendChild(option);
+            }
+        });
+    }
+
+    // Escuchar cambios en el psicólogo y en la fecha
+    psiSelect.addEventListener('change', actualizarHorasDisponibles);
+    fechaInput.addEventListener('change', actualizarHorasDisponibles);
+
     // 3. CARGAR CITAS DEL USUARIO
-    // ==========================================
     async function cargarCitas() {
         try {
             const citas = await fetchAuth('/citas');
             
             if (!citas || citas.length === 0) {
-                listaCitas.innerHTML = '<p style="color: var(--texto-secundario, #64748b);">No tienes citas programadas.</p>';
+                listaCitas.innerHTML = '<p class="text-suave text-center mt-1">No tienes citas programadas aún.</p>';
                 return;
             }
             
-            // Ordenar por fecha (más próximas primero)
             const citasOrdenadas = citas.sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
             
             listaCitas.innerHTML = citasOrdenadas.map(cita => {
                 const fechaObj = new Date(cita.fecha);
-                const dia = fechaObj.getDate();
+                const dia = fechaObj.getUTCDate(); 
                 const mes = fechaObj.toLocaleString('es', { month: 'short' }).replace('.', '');
                 const nombrePsicologo = cita.psicologoId?.nombre || 'Psicólogo';
                 const especialidad = cita.psicologoId?.especialidad || '';
                 
-                // Color del badge según estado
                 let badgeClass = 'badge-azul';
                 if (cita.estado === 'confirmada') badgeClass = 'badge-verde';
                 if (cita.estado === 'cancelada') badgeClass = 'badge-rojo';
@@ -76,7 +125,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         <div class="cita-info">
                             <h4>${nombrePsicologo}</h4>
                             <p>${cita.hora} · ${cita.motivo || 'Sin motivo especificado'}</p>
-                            <small style="color: var(--texto-secundario, #64748b); display: block; margin-top: 4px;">${especialidad}</small>
+                            <small class="text-suave text-sm block mt-0-5">${especialidad}</small>
                         </div>
                         <span class="badge ${badgeClass}">
                             ${cita.estado.charAt(0).toUpperCase() + cita.estado.slice(1)}
@@ -86,35 +135,23 @@ document.addEventListener('DOMContentLoaded', async () => {
             }).join('');
             
         } catch (error) {
-            listaCitas.innerHTML = '<p style="color: var(--error, #ef4444);">Error al cargar las citas.</p>';
-            console.error('Error cargando citas:', error);
+            listaCitas.innerHTML = '<p style="color: var(--error); text-align:center; margin-top:1rem;">Error al cargar las citas.</p>';
         }
     }
 
-    // ==========================================
-    // 4. ENVIAR NUEVA CITA AL BACKEND
-    // ==========================================
+    // 4. ENVIAR NUEVA CITA
     if (formCita) {
         formCita.addEventListener('submit', async (e) => {
             e.preventDefault();
             
             const psicologoId = psiSelect.value;
             const fecha = fechaInput.value;
-            const hora = document.getElementById('hora').value;
+            const hora = horaSelect.value;
             const motivo = document.getElementById('motivo').value.trim();
             
-            // Validaciones básicas
-            if (!psicologoId) {
-                if (typeof mostrarToast === 'function') mostrarToast('⚠️ Selecciona un profesional');
-                return;
-            }
+            if (!psicologoId) return mostrarToast('⚠️ Selecciona un profesional');
+            if (!fecha || !hora) return mostrarToast('⚠️ Completa la fecha y la hora');
             
-            if (!fecha || !hora) {
-                if (typeof mostrarToast === 'function') mostrarToast('⚠️ Completa la fecha y la hora');
-                return;
-            }
-            
-            // Estado de carga en el botón
             btnEnviar.disabled = true;
             btnEnviar.innerHTML = '<span class="spinner"></span> Agendando...';
             
@@ -129,34 +166,39 @@ document.addEventListener('DOMContentLoaded', async () => {
                     })
                 });
                 
-                if (typeof mostrarToast === 'function') {
-                    mostrarToast('✅ Cita agendada correctamente');
-                }
-                
-                formCita.reset();
-                await cargarCitas(); // Recargar la lista de citas
+                mostrarToast('✅ Cita agendada correctamente');
+                formCita.reset(); 
+                horaSelect.innerHTML = '<option value="">Elige psicólogo y fecha primero</option>';
+                horaSelect.disabled = true;
+                await cargarCitas(); 
                 
             } catch (error) {
-                if (typeof mostrarToast === 'function') {
-                    mostrarToast('❌ ' + error.message);
-                }
+                mostrarToast('❌ ' + error.message);
             } finally {
-                // Restaurar el botón
                 btnEnviar.disabled = false;
                 btnEnviar.innerHTML = 'Confirmar cita';
             }
         });
     }
 
-    // ==========================================
-    // 5. INICIALIZAR
-    // ==========================================
+    // Inicializar
     await cargarPsicologos();
     await cargarCitas();
     
-    // Establecer fecha mínima (hoy) en el input de fecha para evitar citas en el pasado
     if (fechaInput) {
         const hoy = new Date().toISOString().split('T')[0];
         fechaInput.setAttribute('min', hoy);
     }
 });
+
+function mostrarToast(texto) {
+    let toast = document.querySelector(".toast");
+    if (!toast) {
+        toast = document.createElement("div");
+        toast.className = "toast";
+        document.body.appendChild(toast);
+    }
+    toast.textContent = texto;
+    toast.classList.add("activo");
+    setTimeout(() => toast.classList.remove("activo"), 3000);
+}

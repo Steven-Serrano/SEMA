@@ -1,33 +1,33 @@
-document.addEventListener('DOMContentLoaded', () => {
+﻿document.addEventListener('DOMContentLoaded', () => {
     // ==========================================
     // 1. DATOS DE PRUEBA (Fallback si la API falla)
     // ==========================================
     let posts = [
         {
             id: 1, autor: 'Mario', ini: 'M', tiempo: 'hace 2h',
-            texto: 'Logré terminar mis exámenes finales. Fue duro, pero SEMA me ayudó a mantenerme enfocado.',
+            texto: 'LogrÃ© terminar mis exÃ¡menes finales. Fue duro, pero SEMA me ayudÃ³ a mantenerme enfocado.',
             likes: 24, gustado: false, comentado: false, compartido: false,
             comentarios: [], categoria: 'Logro Personal'
         },
         {
-            id: 2, autor: 'Sofía', ini: 'S', tiempo: 'hace 5h',
-            texto: 'Compartir aquí me hace sentir menos sola. Gracias a todos por leer.',
+            id: 2, autor: 'SofÃ­a', ini: 'S', tiempo: 'hace 5h',
+            texto: 'Compartir aquÃ­ me hace sentir menos sola. Gracias a todos por leer.',
             likes: 42, gustado: false, comentado: false, compartido: false,
-            comentarios: [], categoria: 'Reflexión'
+            comentarios: [], categoria: 'ReflexiÃ³n'
         },
         {
             id: 3, autor: 'Diego', ini: 'D', tiempo: 'hace 1d',
-            texto: 'Empecé a meditar 10 min al día. La diferencia es real.',
+            texto: 'EmpecÃ© a meditar 10 min al dÃ­a. La diferencia es real.',
             likes: 31, gustado: false, comentado: false, compartido: false,
-            comentarios: [], categoria: 'Motivación'
+            comentarios: [], categoria: 'MotivaciÃ³n'
         }
     ];
 
-    // Función auxiliar para mostrar toasts
+    // FunciÃ³n auxiliar para mostrar toasts
     function toast(msg) {
         if (typeof mostrarToast === 'function') return mostrarToast(msg);
         if (window.SEMA && window.SEMA.toast) return window.SEMA.toast(msg);
-        alert(msg); // Último recurso
+        alert(msg); // Ãšltimo recurso
     }
 
     // ==========================================
@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // ==========================================
     async function cargarPublicaciones() {
         try {
-            // Descomentar cuando el backend esté listo
+            // Descomentar cuando el backend estÃ© listo
             /*
             const data = await fetchAuth('/posts');
             if (data && data.length > 0) posts = data;
@@ -57,8 +57,8 @@ document.addEventListener('DOMContentLoaded', () => {
             contenedorPosts.innerHTML = `
                 <div class="tarjeta comunidad-vacio">
                     <div class="comunidad-vacio-icono"><i class="fi fi-bs-seedling"></i></div>
-                    <h3>No hay publicaciones aquí todavía</h3>
-                    <p>Cuando haya contenido disponible, aparecerá en esta sección.</p>
+                    <h3>No hay publicaciones aquÃ­ todavÃ­a</h3>
+                    <p>Cuando haya contenido disponible, aparecerÃ¡ en esta secciÃ³n.</p>
                 </div>
             `;
             return;
@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="avatar">${p.ini}</div>
                 <div class="flex-1">
                     <h4>${p.autor}</h4>
-                    <div class="meta">${p.tiempo} · <span style="color:var(--azul); font-weight:600;">${p.categoria}</span></div>
+                    <div class="meta">${p.tiempo} Â· <span style="color:var(--azul); font-weight:600;">${p.categoria}</span></div>
                     <p class="post-texto">${p.texto}</p>
 
                     <div class="acciones">
@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                     <div class="comentario-avatar">${c.autor.charAt(0)}</div>
                                     <div class="comentario-contenido">
                                         <strong>${c.autor}</strong>
-                                        <span class="comentario-tiempo">· ${c.tiempo}</span>
+                                        <span class="comentario-tiempo">Â· ${c.tiempo}</span>
                                         <p>${c.texto}</p>
                                     </div>
                                 </div>
@@ -115,7 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
         render(); // Renderizado optimista
 
         try {
-            // Descomentar cuando el backend esté listo
+            // Descomentar cuando el backend estÃ© listo
             // await fetchAuth(`/posts/${id}/like`, { method: 'POST' });
         } catch (e) {
             console.error('Error al dar like en backend', e);
@@ -126,7 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const post = posts.find(p => p.id === id);
         if (!post) return;
 
-        // Evitar duplicar el formulario si ya está abierto
+        // Evitar duplicar el formulario si ya estÃ¡ abierto
         const postElement = document.querySelector(`.post[data-id="${id}"]`);
         if (postElement.querySelector('.comentario-form')) return;
 
@@ -156,13 +156,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!texto) return toast('Escribe un comentario antes de publicar.');
 
         // Guardado local (Optimista)
-        post.comentarios.push({ autor: 'Tú', texto: texto, tiempo: 'ahora' });
+        post.comentarios.push({ autor: 'TÃº', texto: texto, tiempo: 'ahora' });
         post.comentado = true;
         render();
         toast('Comentario publicado');
 
         try {
-            // Descomentar cuando el backend esté listo
+            // Descomentar cuando el backend estÃ© listo
             /*
             await fetchAuth(`/posts/${id}/comment`, {
                 method: 'POST',
@@ -179,11 +179,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!post) return;
         post.compartido = true;
         render();
-        toast('Publicación marcada como compartida');
+        toast('PublicaciÃ³n marcada como compartida');
     };
 
     // ==========================================
-    // 5. CREAR NUEVA PUBLICACIÓN
+    // 5. CREAR NUEVA PUBLICACIÃ“N
     // ==========================================
     document.getElementById('form-post').addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -193,7 +193,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!texto) return;
 
         const nuevaPub = {
-            id: Date.now(), autor: 'Tú', ini: 'T', tiempo: 'ahora',
+            id: Date.now(), autor: 'TÃº', ini: 'T', tiempo: 'ahora',
             texto: texto, likes: 0, gustado: false, comentado: false, 
             compartido: false, categoria: categoria, comentarios: []
         };
@@ -201,10 +201,10 @@ document.addEventListener('DOMContentLoaded', () => {
         posts.unshift(nuevaPub);
         e.target.reset();
         render();
-        toast('Publicación creada con éxito');
+        toast('PublicaciÃ³n creada con Ã©xito');
 
         try {
-            // Descomentar cuando el backend esté listo
+            // Descomentar cuando el backend estÃ© listo
             /*
             await fetchAuth('/posts', {
                 method: 'POST',
@@ -231,7 +231,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let resultado = [];
         switch (seccion) {
             case 'comunidad': resultado = posts; break;
-            case 'mis-publicaciones': resultado = posts.filter(post => post.autor === 'Tú'); break;
+            case 'mis-publicaciones': resultado = posts.filter(post => post.autor === 'TÃº'); break;
             case 'me-gusta': resultado = posts.filter(post => post.gustado === true); break;
             case 'comentados': resultado = posts.filter(post => post.comentado === true); break;
             case 'compartidos': resultado = posts.filter(post => post.compartido === true); break;

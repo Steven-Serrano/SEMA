@@ -20,9 +20,10 @@
     let intervaloRecarga = null;
     let mensajesRenderizados = new Set();
 
+    // 1. CARGAR LISTA DE CHATS
     async function cargarListaChats() {
         try {
-            listaChats.innerHTML = `<div class="text-center text-suave" style="padding: 1.5rem;"><i class="fi fi-bs-hourglass-end block mb-1" style="font-size: 1.5rem;"></i><p>Cargando...</p></div>`;
+            listaChats.innerHTML = `<div class="text-center text-suave" style="padding: 1.5rem;"><i class="fi fi-bs-hourglass-end block mb-1"></i><p>Cargando...</p></div>`;
             const chats = await fetchAuth('/chats');
             
             if (!chats || chats.length === 0) {
@@ -36,9 +37,14 @@
                 let iniciales = nombre.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
                 let activo = chat._id === chatActivoId ? 'chat-item--activo' : '';
                 
+                const otroUser = esPsicologo ? chat.usuarioId : chat.psicologoId;
+                const fotoChat = otroUser?.fotoPerfil ? getImgUrl(otroUser.fotoPerfil) : null;
+
                 return `
                     <div class="chat-item ${activo}" data-chat-id="${chat._id}">
-                        <div class="chat-item__avatar"><div class="avatar-grande">${iniciales}</div></div>
+                        <div class="chat-item__avatar">
+                            ${fotoChat ? `<img src="${fotoChat}" class="avatar-grande" style="object-fit: cover;">` : `<div class="avatar-grande">${iniciales}</div>`}
+                        </div>
                         <div class="chat-item__info"><h4>${nombre}</h4><small>${especialidad}</small></div>
                     </div>
                 `;
@@ -57,6 +63,7 @@
         }
     }
 
+    // 2. SELECCIONAR CHAT
     async function seleccionarChat(chatId, chatData) {
         if (intervaloRecarga) clearInterval(intervaloRecarga);
         chatActivoId = chatId;
@@ -79,9 +86,11 @@
         });
 
         await cargarMensajes(chatId);
+        // Polling: Recargar mensajes cada 4 segundos
         intervaloRecarga = setInterval(() => cargarMensajes(chatId, true), 4000);
     }
 
+    // 3. CARGAR MENSAJES
     async function cargarMensajes(chatId, soloNuevos = false) {
         try {
             const mensajes = await fetchAuth(`/mensajes/${chatId}`);
@@ -109,6 +118,7 @@
         } catch (error) { console.error('Error cargando mensajes:', error); }
     }
 
+    // 4. ENVIAR MENSAJE
     if (chatForm) {
         chatForm.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -128,7 +138,8 @@
                 chatMensajes.scrollTop = chatMensajes.scrollHeight;
                 await cargarMensajes(chatActivoId, false); 
             } catch (error) {
-                if (typeof mostrarToast === 'function') mostrarToast('❌ Error al enviar');
+                if (typeof mostrarToast === 'function') mostrarToast('❌ Error al enviar mensaje');
+                else alert('Error al enviar mensaje');
             } finally {
                 chatInput.disabled = false; btnEnviar.disabled = false;
                 btnEnviar.innerHTML = textoOriginal;
@@ -141,9 +152,10 @@
         if (intervaloRecarga) clearInterval(intervaloRecarga);
     });
 
-    // --- LÓGICA PARA NUEVO CHAT Y BOTÓN DE PÁNICO ---
+    // 5. INICIALIZAR
     await cargarListaChats();
 
+    // Manejo de parámetros SOS o Nuevo Chat
     const urlParams = new URLSearchParams(window.location.search);
     const nuevoChatId = urlParams.get('nuevoChat');
     const esPanico = urlParams.get('panico');
@@ -160,10 +172,20 @@
             if (typeof mostrarToast === 'function') mostrarToast('No se pudo iniciar el chat.');
         }
     } else if (esPanico) {
-        if (typeof mostrarToast === 'function') mostrarToast('Buscando un psicólogo disponible...');
-        setTimeout(() => {
-            const primerChat = document.querySelector('.chat-item');
-            if (primerChat) primerChat.click();
-        }, 1000);
+        chatNombre.textContent = "Buscando ayuda...";
+        chatMensajes.innerHTML = `<div class="flex-col align-center justify-center" style="height: 100%;"><i class="fi fi-bs-spinner animate-spin" style="font-size: 3rem; color: var(--azul);"></i><p class="mt-1">Conectando con un profesional...</p></div>`;
+        try {
+            const psicologos = await fetchAuth('/psicologos');
+            if (!psicologos || psicologos.length === 0) throw new Error('No hay psicólogos disponibles');
+            
+            const res = await fetchAuth('/chats', {
+                method: 'POST',
+                body: JSON.stringify({ psicologoId: psicologos[0]._id })
+            });
+            await cargarListaChats();
+            seleccionarChat(res._id, res);
+        } catch (error) {
+            chatMensajes.innerHTML = `<p class="text-center" style="color: var(--error); margin-top: 2rem;">No pudimos conectarte.</p>`;
+        }
     }
 });
