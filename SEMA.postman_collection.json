@@ -1,8 +1,8 @@
 {
   "info": {
-    "_postman_id": "sema-api-collection",
-    "name": "SEMA - API Collection",
-    "description": "Colección completa de endpoints del proyecto SEMA (Comunicación que Sana)",
+    "_postman_id": "sema-api-collection-v3",
+    "name": "SEMA - API Collection (Full Admin)",
+    "description": "Colección completa de endpoints del proyecto SEMA. Incluye Hábitos, Seguimiento, Tiempo Real y Roles de Administrador.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
@@ -92,7 +92,7 @@
       ]
     },
     {
-      "name": "02 - Usuarios",
+      "name": "02 - Usuarios (Estudiantes)",
       "item": [
         {
           "name": "Obtener Perfil",
@@ -137,6 +137,33 @@
           }
         },
         {
+          "name": "Subir Foto de Perfil",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "foto",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/usuarios/subir-foto",
+              "host": ["{{base_url}}"],
+              "path": ["usuarios", "subir-foto"]
+            }
+          }
+        },
+        {
           "name": "Cambiar Contraseña",
           "request": {
             "method": "PUT",
@@ -162,7 +189,7 @@
           }
         },
         {
-          "name": "Listar Todos los Usuarios",
+          "name": "Listar Pacientes (Para Psicólogos)",
           "request": {
             "method": "GET",
             "header": [
@@ -172,32 +199,9 @@
               }
             ],
             "url": {
-              "raw": "{{base_url}}/usuarios",
+              "raw": "{{base_url}}/usuarios/pacientes",
               "host": ["{{base_url}}"],
-              "path": ["usuarios"]
-            }
-          }
-        },
-        {
-          "name": "Obtener Usuario por ID",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
-              }
-            ],
-            "url": {
-              "raw": "{{base_url}}/usuarios/:id",
-              "host": ["{{base_url}}"],
-              "path": ["usuarios", ":id"],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "ID_DEL_USUARIO"
-                }
-              ]
+              "path": ["usuarios", "pacientes"]
             }
           }
         }
@@ -207,7 +211,7 @@
       "name": "03 - Psicólogos",
       "item": [
         {
-          "name": "Listar Psicólogos",
+          "name": "Listar Todos los Psicólogos",
           "request": {
             "method": "GET",
             "header": [
@@ -224,7 +228,49 @@
           }
         },
         {
-          "name": "Crear Psicólogo (Admin)",
+          "name": "Obtener Perfil Psicólogo",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/psicologos/perfil",
+              "host": ["{{base_url}}"],
+              "path": ["psicologos", "perfil"]
+            }
+          }
+        },
+        {
+          "name": "Actualizar Perfil Psicólogo",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Dra. Ana López\",\n  \"telefono\": \"3109998877\",\n  \"ciudad\": \"Bogotá\",\n  \"biografia\": \"Especialista en ansiedad\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/psicologos/perfil",
+              "host": ["{{base_url}}"],
+              "path": ["psicologos", "perfil"]
+            }
+          }
+        },
+        {
+          "name": "Agregar Bloque de Disponibilidad",
           "request": {
             "method": "POST",
             "header": [
@@ -239,12 +285,62 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"nombre\": \"Dra. Ana López\",\n  \"email\": \"ana.lopez@sema.com\",\n  \"password\": \"psico123\",\n  \"especialidad\": \"Ansiedad y Estrés\",\n  \"telefono\": \"3109998877\"\n}"
+              "raw": "{\n  \"fecha\": \"2026-11-05\",\n  \"inicio\": \"08:00\",\n  \"fin\": \"12:00\"\n}"
             },
             "url": {
-              "raw": "{{base_url}}/psicologos",
+              "raw": "{{base_url}}/psicologos/disponibilidad",
               "host": ["{{base_url}}"],
-              "path": ["psicologos"]
+              "path": ["psicologos", "disponibilidad"]
+            }
+          }
+        },
+        {
+          "name": "Eliminar Bloque de Disponibilidad",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/psicologos/disponibilidad/:id",
+              "host": ["{{base_url}}"],
+              "path": ["psicologos", "disponibilidad", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "ID_DEL_BLOQUE"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Subir Foto de Perfil (Psicólogo)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "foto",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/psicologos/subir-foto",
+              "host": ["{{base_url}}"],
+              "path": ["psicologos", "subir-foto"]
             }
           }
         }
@@ -286,7 +382,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"psicologoId\": \"ID_DEL_PSICOLOGO\",\n  \"fecha\": \"2026-10-20\",\n  \"hora\": \"10:00\",\n  \"motivo\": \"Consulta de seguimiento\"\n}"
+              "raw": "{\n  \"psicologoId\": \"ID_DEL_PSICOLOGO\",\n  \"fecha\": \"2026-11-05\",\n  \"hora\": \"09:00\",\n  \"motivo\": \"Consulta de seguimiento\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/citas",
@@ -296,7 +392,53 @@
           }
         },
         {
-          "name": "Cambiar Estado de Cita",
+          "name": "Cancelar Cita (Estudiante)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/citas/:id/cancelar",
+              "host": ["{{base_url}}"],
+              "path": ["citas", ":id", "cancelar"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "ID_DE_LA_CITA"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Ocultar Cita (Estudiante)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/citas/:id/ocultar",
+              "host": ["{{base_url}}"],
+              "path": ["citas", ":id", "ocultar"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "ID_DE_LA_CITA"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Cambiar Estado de Cita (Psicólogo)",
           "request": {
             "method": "PUT",
             "header": [
@@ -317,6 +459,29 @@
               "raw": "{{base_url}}/citas/:id/estado",
               "host": ["{{base_url}}"],
               "path": ["citas", ":id", "estado"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "ID_DE_LA_CITA"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Eliminar Cita Permanentemente",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/citas/:id",
+              "host": ["{{base_url}}"],
+              "path": ["citas", ":id"],
               "variable": [
                 {
                   "key": "id",
@@ -349,7 +514,7 @@
           }
         },
         {
-          "name": "Crear Chat con Psicólogo",
+          "name": "Crear Chat (Estudiante busca Psicólogo)",
           "request": {
             "method": "POST",
             "header": [
@@ -370,6 +535,54 @@
               "raw": "{{base_url}}/chats",
               "host": ["{{base_url}}"],
               "path": ["chats"]
+            }
+          }
+        },
+        {
+          "name": "Crear Chat (Psicólogo inicia con Paciente)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"usuarioId\": \"ID_DEL_USUARIO\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/chats",
+              "host": ["{{base_url}}"],
+              "path": ["chats"]
+            }
+          }
+        },
+        {
+          "name": "Eliminar Chat y Mensajes",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/chats/:chatId",
+              "host": ["{{base_url}}"],
+              "path": ["chats", ":chatId"],
+              "variable": [
+                {
+                  "key": "chatId",
+                  "value": "ID_DEL_CHAT"
+                }
+              ]
             }
           }
         }
@@ -455,6 +668,29 @@
           }
         },
         {
+          "name": "Listar Estados de un Paciente (Psicólogo)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/estados-emocionales?paciente=ID_DEL_PACIENTE",
+              "host": ["{{base_url}}"],
+              "path": ["estados-emocionales"],
+              "query": [
+                {
+                  "key": "paciente",
+                  "value": "ID_DEL_PACIENTE"
+                }
+              ]
+            }
+          }
+        },
+        {
           "name": "Registrar Estado Emocional",
           "request": {
             "method": "POST",
@@ -485,7 +721,7 @@
       "name": "08 - Notificaciones",
       "item": [
         {
-          "name": "Listar Mis Notificaciones",
+          "name": "Listar Notificaciones (Estudiante)",
           "request": {
             "method": "GET",
             "header": [
@@ -500,12 +736,342 @@
               "path": ["notificaciones"]
             }
           }
+        },
+        {
+          "name": "Listar Notificaciones (Psicólogo)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/notificaciones/psicologo",
+              "host": ["{{base_url}}"],
+              "path": ["notificaciones", "psicologo"]
+            }
+          }
+        },
+        {
+          "name": "Marcar Notificación como Leída",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/notificaciones/:id/leida",
+              "host": ["{{base_url}}"],
+              "path": ["notificaciones", ":id", "leida"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "ID_NOTIFICACION"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Eliminar Notificación",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/notificaciones/:id",
+              "host": ["{{base_url}}"],
+              "path": ["notificaciones", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "ID_NOTIFICACION"
+                }
+              ]
+            }
+          }
         }
       ]
     },
     {
-      "name": "09 - Admin",
+      "name": "09 - Hábitos y Seguimiento",
       "item": [
+        {
+          "name": "Registrar Meditación",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": {
+              "raw": "{{base_url}}/habitos/meditaciones",
+              "host": ["{{base_url}}"],
+              "path": ["habitos", "meditaciones"]
+            }
+          }
+        },
+        {
+          "name": "Crear Entrada de Diario",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"contenido\": \"Hoy fue un buen día, aprendí mucho.\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/habitos/diario",
+              "host": ["{{base_url}}"],
+              "path": ["habitos", "diario"]
+            }
+          }
+        },
+        {
+          "name": "Listar Entradas de Diario",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/habitos/diario",
+              "host": ["{{base_url}}"],
+              "path": ["habitos", "diario"]
+            }
+          }
+        },
+        {
+          "name": "Editar Entrada de Diario",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"contenido\": \"Texto corregido...\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/habitos/diario/:id",
+              "host": ["{{base_url}}"],
+              "path": ["habitos", "diario", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "ID_ENTRADA"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Eliminar Entrada de Diario",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/habitos/diario/:id",
+              "host": ["{{base_url}}"],
+              "path": ["habitos", "diario", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "ID_ENTRADA"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Registrar Sueño",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"horas\": 8,\n  \"calidad\": \"Excelente\",\n  \"motivo\": \"\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/habitos/sueno",
+              "host": ["{{base_url}}"],
+              "path": ["habitos", "sueno"]
+            }
+          }
+        },
+        {
+          "name": "Obtener Historial de Sueño",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/habitos/sueno",
+              "host": ["{{base_url}}"],
+              "path": ["habitos", "sueno"]
+            }
+          }
+        },
+        {
+          "name": "Obtener Resumen Mensual",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/habitos/resumen-mensual",
+              "host": ["{{base_url}}"],
+              "path": ["habitos", "resumen-mensual"]
+            }
+          }
+        },
+        {
+          "name": "Obtener Estadísticas Semanales",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/habitos/estadisticas-semanales",
+              "host": ["{{base_url}}"],
+              "path": ["habitos", "estadisticas-semanales"]
+            }
+          }
+        },
+        {
+          "name": "Ver Seguimiento de un Paciente (Psicólogo)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/habitos/resumen-mensual?paciente=ID_DEL_PACIENTE",
+              "host": ["{{base_url}}"],
+              "path": ["habitos", "resumen-mensual"],
+              "query": [
+                {
+                  "key": "paciente",
+                  "value": "ID_DEL_PACIENTE"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "10 - Landing / Estadísticas Públicas",
+      "item": [
+        {
+          "name": "Obtener Estadísticas Generales",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/estadisticas",
+              "host": ["{{base_url}}"],
+              "path": ["estadisticas"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "11 - Admin",
+      "item": [
+        {
+          "name": "Crear Psicólogo (Admin SENA)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Dr. Carlos Ruiz\",\n  \"email\": \"carlos@sema.com\",\n  \"password\": \"psico1234\",\n  \"especialidad\": \"Depresión y Ansiedad\",\n  \"telefono\": \"3101112233\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/admin/crear-psicologo",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "crear-psicologo"]
+            }
+          }
+        },
         {
           "name": "Estadísticas Globales",
           "request": {
@@ -520,63 +1086,6 @@
               "raw": "{{base_url}}/admin/estadisticas",
               "host": ["{{base_url}}"],
               "path": ["admin", "estadisticas"]
-            }
-          }
-        },
-        {
-          "name": "Listar Todos los Usuarios",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
-              }
-            ],
-            "url": {
-              "raw": "{{base_url}}/admin/usuarios",
-              "host": ["{{base_url}}"],
-              "path": ["admin", "usuarios"]
-            }
-          }
-        },
-        {
-          "name": "Eliminar Usuario",
-          "request": {
-            "method": "DELETE",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
-              }
-            ],
-            "url": {
-              "raw": "{{base_url}}/admin/usuarios/:id",
-              "host": ["{{base_url}}"],
-              "path": ["admin", "usuarios", ":id"],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "ID_DEL_USUARIO"
-                }
-              ]
-            }
-          }
-        },
-        {
-          "name": "Psicólogos Pendientes",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
-              }
-            ],
-            "url": {
-              "raw": "{{base_url}}/admin/psicologos-pendientes",
-              "host": ["{{base_url}}"],
-              "path": ["admin", "psicologos-pendientes"]
             }
           }
         },
@@ -600,6 +1109,32 @@
                   "value": "ID_DEL_PSICOLOGO"
                 }
               ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "12 - Auth Admin",
+      "item": [
+        {
+          "name": "Login Admin (SENA / Super)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@sema.com\",\n  \"password\": \"admin123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth-admin/login",
+              "host": ["{{base_url}}"],
+              "path": ["auth-admin", "login"]
             }
           }
         }

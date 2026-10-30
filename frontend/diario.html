@@ -2,7 +2,10 @@
 <html lang="es" data-theme="light">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Diario Emocional · SEMA</title>
+  <link rel="icon" type="image/png" href="assets/logo.png">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/@flaticon/flaticon-uicons@3.3.1/css/bold/straight.css" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
   <script defer src="js/api.js"></script>
@@ -11,33 +14,39 @@
   <script defer src="js/diario.js"></script>
 </head>
 <body>
+
   <div id="sema-nav"></div>
   <div class="dashboard">
     <aside class="sidebar" id="sema-sidebar"></aside>
-    <div class="dashboard__main">
+    
+    <main class="dashboard__main">
       <header class="dashboard-header">
         <div class="dashboard-title">
           <h1>Mi Diario Emocional</h1>
-          <p>Escribe cómo te sientes y consulta tus entradas pasadas.</p>
+          <p>Desahógate, escribe tus metas o plasma cómo te sientes hoy.</p>
         </div>
         <a href="dashboard.html" class="btn btn-secundario"><i class="fi fi-bs-arrow-left"></i> Volver</a>
       </header>
 
-      <div class="grid grid-2" style="gap: 1.5rem; align-items: start;">
-        <section class="tarjeta">
-          <h3>Nueva entrada</h3>
-          <textarea id="textoDiario" class="form-grupo mt-1" style="width:100%; min-height:150px;" placeholder="Escribe libremente aquí..."></textarea>
-          <button class="btn btn-primario mt-1" id="btnGuardar" style="width: 100%;">Guardar entrada</button>
-        </section>
+      <div class="diario-grid">
+        <!-- COLUMNA IZQUIERDA -->
+        <div class="tarjeta">
+          <h3 style="margin-bottom: 1rem;"><i class="fi fi-bs-edit" style="color: var(--azul);"></i> Nueva entrada</h3>
+          <textarea id="textoDiario" class="diario-textarea" placeholder="Querido diario... ¿cómo te sientes hoy?"></textarea>
+          <button class="btn btn-primario mt-1" id="btnGuardar" style="width: 100%; padding: 1rem; font-size: 1.1rem;">
+            <i class="fi fi-bs-paper-plane"></i> Guardar entrada
+          </button>
+        </div>
 
-        <section class="tarjeta">
-          <h3>Entradas anteriores</h3>
-          <div id="listaDiario" class="mt-1">
-            <p class="text-suave">Cargando...</p>
+        <!-- COLUMNA DERECHA -->
+        <div class="tarjeta">
+          <h3 style="margin-bottom: 1rem;"><i class="fi fi-bs-time-forward" style="color: var(--verde);"></i> Entradas anteriores</h3>
+          <div id="listaDiario" class="diario-timeline">
+            <p class="text-suave text-center">Cargando...</p>
           </div>
-        </section>
+        </div>
       </div>
-    </div>
+    </main>
   </div>
   <div id="sema-footer"></div>
 </body>

@@ -1,205 +1,298 @@
-/* ============================================================
-   SEMA - DASHBOARD ADMINISTRADOR
-   ============================================================ */
-
 document.addEventListener('DOMContentLoaded', async () => {
-    
-    // ==========================================
     // 1. VERIFICAR AUTENTICACIÓN Y ROL
-    // ==========================================
-    if (!Auth || !Auth.getToken()) {
-        window.location.href = "login.html";
+    if (typeof Auth === 'undefined' || !Auth.getToken()) {
+        window.location.href = "index.html";
         return;
     }
 
     const user = Auth.getUser();
+    const esSuperAdmin = user.rol === 'super_administrador';
     
-    // Si no es administrador, redirigir
-    if (user.rol !== 'administrador') {
-        if (user.rol === 'psicologo') {
-            window.location.href = "dashboard-psicologo.html";
-        } else {
-            window.location.href = "dashboard.html";
-        }
+    if (user.rol !== 'administrador_sena' && !esSuperAdmin) {
+        window.location.href = "login.html";
         return;
     }
 
-    // ==========================================
-    // 2. ACTUALIZAR DATOS DEL USUARIO
-    // ==========================================
-    const saludo = document.getElementById('saludoAdmin');
-    if (saludo) saludo.textContent = `Hola, ${user.nombre}`;
+    // 2. LÓGICA DE PESTAÑAS (TABS)
+    const tabs = document.querySelectorAll('.admin-tab');
+    const contents = document.querySelectorAll('.admin-tab-content');
+    
+    // Mostrar pestaña de administradores solo al Super Admin
+    if (esSuperAdmin) {
+        const tabBtnAdmins = document.getElementById('tab-btn-admins');
+        if (tabBtnAdmins) tabBtnAdmins.style.display = 'flex';
+    }
+
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            tabs.forEach(t => t.classList.remove('activo'));
+            contents.forEach(c => c.classList.remove('activo'));
+            
+            tab.classList.add('activo');
+            document.getElementById(tab.dataset.target).classList.add('activo');
+        });
+    });
 
     // ==========================================
     // 3. CARGAR ESTADÍSTICAS
     // ==========================================
     async function cargarEstadisticas() {
         try {
-            const stats = await fetchAuth('/admin/estadisticas');
-            
-            document.getElementById('stat-usuarios').textContent = stats.usuarios;
-            document.getElementById('stat-psicologos').textContent = stats.psicologos;
-            document.getElementById('stat-citas').textContent = stats.citas;
-            document.getElementById('stat-chats').textContent = stats.chats;
-            
-        } catch (error) {
-            console.error('Error cargando estadísticas:', error);
+            const stats = await fetchAuth('/estadisticas');
+            document.getElementById('total-usuarios').textContent = stats.usuarios || 0;
+            document.getElementById('total-psicologos').textContent = stats.psicologos || 0;
+            document.getElementById('total-citas').textContent = stats.citas || 0;
+        } catch (error) { 
+            console.warn('Error stats:', error); 
         }
     }
 
     // ==========================================
-    // 4. CARGAR PSICÓLOGOS PENDIENTES
+    // 4. GESTIÓN DE PSICÓLOGOS
     // ==========================================
-    async function cargarPsicologosPendientes() {
+    async function cargarPsicologos() {
+        const contenedor = document.getElementById('lista-psicologos-admin');
         try {
-            const psicologos = await fetchAuth('/admin/psicologos-pendientes');
-            const contenedor = document.getElementById('lista-psicologos-pendientes');
+            const psicologos = await fetchAuth('/psicologos');
             
-            if (psicologos.length === 0) {
-                contenedor.innerHTML = '<p style="color: var(--texto-secundario);">No hay psicólogos pendientes de aprobación.</p>';
+            if (!psicologos || psicologos.length === 0) {
+                contenedor.innerHTML = '<p class="text-suave text-center" style="padding: 1rem;">No hay psicólogos registrados.</p>';
                 return;
             }
 
-            contenedor.innerHTML = psicologos.map(p => `
-                <div style="display: flex; align-items: center; justify-content: space-between; padding: 1rem; border: 1px solid var(--borde); border-radius: 8px; margin-bottom: 0.5rem;">
-                    <div>
-                        <h4 style="margin: 0;">${p.nombre}</h4>
-                        <small style="color: var(--texto-secundario);">${p.email} · ${p.especialidad || 'Sin especialidad'}</small>
+            contenedor.innerHTML = psicologos.slice(0, 5).map(p => `
+                <div class="paciente-item" style="padding: 0.8rem 0; display: flex; justify-content: space-between; align-items: center;">
+                    <div style="display: flex; align-items: center; gap: 0.8rem;">
+                        <div class="avatar-admin" style="width: 35px; height: 35px; font-size: 0.9rem;">
+                            ${p.nombre ? p.nombre.charAt(0) : 'P'}
+                        </div>
+                        <div>
+                            <h4 style="font-size: 0.95rem; margin: 0;">${p.nombre || 'Sin nombre'}</h4>
+                            <small class="text-suave" style="font-size: 0.75rem;">${p.especialidad || 'Sin especialidad'}</small>
+                        </div>
                     </div>
-                    <button class="btn btn-primario btn-aprobar" data-id="${p._id}" style="padding: 0.5rem 1rem;">
-                        ✓ Aprobar
+                    <button class="btn btn-peligro btn-sm" onclick="eliminarPsicologo('${p._id}')" title="Eliminar">
+                        <i class="fa-solid fa-trash"></i>
                     </button>
                 </div>
             `).join('');
-
-            // Event listeners para aprobar
-            document.querySelectorAll('.btn-aprobar').forEach(btn => {
-                btn.addEventListener('click', async (e) => {
-                    const id = e.target.dataset.id;
-                    await aprobarPsicologo(id);
-                });
-            });
-
-        } catch (error) {
-            console.error('Error cargando psicólogos pendientes:', error);
+        } catch (error) { 
+            console.error("Error cargando psicólogos:", error);
+            contenedor.innerHTML = `<p class="text-center" style="color: var(--error);">Error al cargar la lista.</p>`; 
         }
     }
 
-    async function aprobarPsicologo(id) {
+    window.eliminarPsicologo = async function(id) {
+        if (!confirm('⚠️ ¿Eliminar permanentemente a este psicólogo?')) return;
         try {
-            await fetchAuth(`/admin/psicologos/${id}/aprobar`, {
-                method: 'PUT'
-            });
-            
-            mostrarToast('✅ Psicólogo aprobado correctamente');
-            await cargarPsicologosPendientes(); // Recargar
-            
-        } catch (error) {
-            mostrarToast(' Error: ' + error.message);
+            await fetchAuth(`/admin/psicologos/${id}`, { method: 'DELETE' });
+            if (typeof mostrarToast === 'function') mostrarToast('🗑️ Psicólogo eliminado');
+            cargarPsicologos();
+        } catch (error) { 
+            alert('Error al eliminar: ' + error.message); 
         }
-    }
+    };
 
     // ==========================================
-    // 5. CARGAR LISTA DE USUARIOS
+    // 5. GESTIÓN DE ESTUDIANTES
     // ==========================================
-    async function cargarUsuarios() {
+    let estudiantesData = [];
+    
+    async function cargarEstudiantes() {
+        const contenedor = document.getElementById('lista-estudiantes-admin');
         try {
-            const usuarios = await fetchAuth('/admin/usuarios');
-            const contenedor = document.getElementById('lista-usuarios');
-            
-            if (usuarios.length === 0) {
-                contenedor.innerHTML = '<p style="color: var(--texto-secundario);">No hay usuarios registrados.</p>';
-                return;
-            }
-
-            contenedor.innerHTML = usuarios.map(u => {
-                const fecha = new Date(u.createdAt).toLocaleDateString();
-                const badgeColor = u.rol === 'administrador' ? 'badge-azul' : 
-                                  u.rol === 'psicologo' ? 'badge-verde' : 'badge-gris';
-                
-                return `
-                    <div class="usuario-item" style="display: flex; align-items: center; justify-content: space-between; padding: 1rem; border: 1px solid var(--borde); border-radius: 8px; margin-bottom: 0.5rem;">
-                        <div style="flex: 1;">
-                            <h4 style="margin: 0;">${u.nombre}</h4>
-                            <small style="color: var(--texto-secundario);">${u.email}</small>
-                        </div>
-                        <div style="display: flex; align-items: center; gap: 1rem;">
-                            <span class="badge ${badgeColor}">${u.rol}</span>
-                            <small style="color: var(--texto-secundario);">${fecha}</small>
-                            <button class="btn btn-secundario btn-eliminar" data-id="${u._id}" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
-                                🗑 Eliminar
-                            </button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-
-            // Event listeners para eliminar
-            document.querySelectorAll('.btn-eliminar').forEach(btn => {
-                btn.addEventListener('click', async (e) => {
-                    const id = e.target.dataset.id;
-                    await eliminarUsuario(id);
-                });
-            });
-
-        } catch (error) {
-            console.error('Error cargando usuarios:', error);
+            const usuarios = await fetchAuth('/usuarios');
+            // Filtramos para que solo aparezcan aprendices
+            estudiantesData = usuarios.filter(u => u.rol === 'usuario' || !u.rol); 
+            renderizarEstudiantes(estudiantesData);
+        } catch (error) { 
+            console.error("Error cargando estudiantes:", error);
+            contenedor.innerHTML = `<p class="text-center" style="color: var(--error);">Error al cargar la lista.</p>`; 
         }
     }
 
-    async function eliminarUsuario(id) {
-        if (!confirm('¿Estás seguro de eliminar este usuario? Esta acción no se puede deshacer.')) {
+    function renderizarEstudiantes(lista) {
+        const contenedor = document.getElementById('lista-estudiantes-admin');
+        if (lista.length === 0) {
+            contenedor.innerHTML = '<p class="text-suave text-center" style="padding: 1rem;">No hay estudiantes registrados.</p>';
             return;
         }
 
+        contenedor.innerHTML = lista.map(u => {
+            const esActivo = u.activo !== false;
+            return `
+            <div class="paciente-item" style="padding: 1rem 0; align-items: flex-start; border-bottom: 1px solid var(--borde);">
+                <div class="avatar-admin" style="width: 40px; height: 40px; font-size: 1rem; background: ${esActivo ? 'var(--azul)' : 'var(--gris-oscuro)'};">
+                    ${u.nombre ? u.nombre.charAt(0) : 'U'}
+                </div>
+                <div class="flex-1" style="padding: 0 1rem;">
+                    <h4 style="font-size: 1rem; margin: 0;">${u.nombre || 'Estudiante'}</h4>
+                    <small class="text-suave" style="font-size: 0.8rem;">${u.email}</small>
+                    <p class="text-suave" style="font-size: 0.8rem; margin: 0.2rem 0 0 0;">
+                        <i class="fa-solid fa-id-badge"></i> Ficha: ${u.numeroFicha || 'N/A'} | 
+                        <i class="fa-solid fa-graduation-cap"></i> ${u.programaFormacion || 'N/A'}
+                    </p>
+                    ${!esActivo ? '<span class="badge badge-rojo mt-1">Baneado</span>' : ''}
+                </div>
+                <div class="flex gap-0-5" style="flex-direction: column;">
+                    <button class="btn btn-sm ${esActivo ? 'btn-peligro' : 'btn-primario'}" onclick="cambiarEstadoEstudiante('${u._id}', ${esActivo})">
+                        <i class="fa-solid ${esActivo ? 'fa-user-slash' : 'fa-user-check'}"></i> ${esActivo ? 'Banear' : 'Activar'}
+                    </button>
+                    <button class="btn btn-sm btn-peligro" onclick="eliminarEstudiante('${u._id}')" title="Eliminar permanentemente">
+                        <i class="fa-solid fa-trash"></i> Eliminar
+                    </button>
+                </div>
+            </div>
+        `}).join('');
+    }
+
+    window.cambiarEstadoEstudiante = async function(id, estadoActual) {
+        const nuevoEstado = !estadoActual;
+        if (!confirm(`¿Estás seguro de ${nuevoEstado ? 'activar' : 'banear'} a este estudiante?`)) return;
         try {
-            await fetchAuth(`/admin/usuarios/${id}`, {
-                method: 'DELETE'
+            await fetchAuth(`/admin/usuarios/${id}/estado`, {
+                method: 'PUT',
+                body: JSON.stringify({ activo: nuevoEstado })
             });
+            if (typeof mostrarToast === 'function') mostrarToast(`✅ Estudiante ${nuevoEstado ? 'activado' : 'baneado'}`);
+            cargarEstudiantes();
+        } catch (error) { 
+            alert('Error al cambiar estado: ' + error.message); 
+        }
+    };
+
+    window.eliminarEstudiante = async function(id) {
+        if (!confirm('⚠️ ¿Estás seguro de ELIMINAR a este estudiante? Se borrarán todos sus datos permanentemente.')) return;
+        try {
+            await fetchAuth(`/admin/usuarios/${id}`, { method: 'DELETE' });
+            if (typeof mostrarToast === 'function') mostrarToast('🗑️ Estudiante eliminado');
+            cargarEstudiantes();
+        } catch (error) { 
+            alert('Error al eliminar: ' + error.message); 
+        }
+    };
+
+    const buscadorEst = document.getElementById('buscador-estudiantes');
+    if (buscadorEst) {
+        buscadorEst.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            const filtrados = estudiantesData.filter(u => 
+                (u.nombre || '').toLowerCase().includes(query) ||
+                (u.email || '').toLowerCase().includes(query) ||
+                (u.numeroFicha || '').toLowerCase().includes(query)
+            );
+            renderizarEstudiantes(filtrados);
+        });
+    }
+
+    // ==========================================
+    // 6. GESTIÓN DE ADMINISTRADORES (Solo Super Admin)
+    // ==========================================
+    async function cargarAdminsSena() {
+        if (!esSuperAdmin) return;
+        const contenedor = document.getElementById('lista-admins-sena');
+        try {
+            const admins = await fetchAuth('/admin/admins-sena');
             
-            mostrarToast('✅ Usuario eliminado correctamente');
-            await cargarUsuarios(); // Recargar
-            await cargarEstadisticas(); // Actualizar stats
-            
-        } catch (error) {
-            mostrarToast('❌ Error: ' + error.message);
+            if (!admins || admins.length === 0) {
+                contenedor.innerHTML = '<p class="text-suave text-center" style="padding: 1rem;">No hay administradores registrados.</p>';
+                return;
+            }
+
+            contenedor.innerHTML = admins.map(a => `
+                <div class="paciente-item" style="padding: 0.8rem 0; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--borde);">
+                    <div style="display: flex; align-items: center; gap: 0.8rem;">
+                        <div class="avatar-admin" style="width: 35px; height: 35px; font-size: 0.9rem;">${a.nombre.charAt(0)}</div>
+                        <div>
+                            <h4 style="font-size: 0.95rem; margin: 0;">${a.nombre}</h4>
+                            <small class="text-suave" style="font-size: 0.75rem;">${a.email}</small>
+                        </div>
+                    </div>
+                    <button class="btn btn-peligro btn-sm" onclick="eliminarAdminSena('${a._id}')" title="Eliminar Administrador">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                </div>
+            `).join('');
+        } catch (error) { 
+            console.error("Error cargando admins:", error);
+            contenedor.innerHTML = `<p class="text-center" style="color: var(--error);">Error al cargar la lista.</p>`;
         }
     }
 
+    window.eliminarAdminSena = async function(id) {
+        if (!confirm('⚠️ ¿Estás seguro de eliminar a este Administrador del SENA?')) return;
+        try {
+            await fetchAuth(`/admin/admins-sena/${id}`, { method: 'DELETE' });
+            if (typeof mostrarToast === 'function') mostrarToast('🗑️ Administrador eliminado');
+            cargarAdminsSena();
+        } catch (error) { 
+            alert('Error al eliminar: ' + error.message); 
+        }
+    };
+
     // ==========================================
-    // 6. BUSCADOR DE USUARIOS
+    // 7. FORMULARIOS DE CREACIÓN
     // ==========================================
-    const buscador = document.getElementById('buscador-usuarios');
-    if (buscador) {
-        buscador.addEventListener('input', (e) => {
-            const query = e.target.value.toLowerCase();
-            const items = document.querySelectorAll('.usuario-item');
+    const formPsi = document.getElementById('form-crear-psicologo');
+    if (formPsi) {
+        formPsi.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btnCrearPsi');
+            const textoOriginal = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span> Creando...';
             
-            items.forEach(item => {
-                const texto = item.textContent.toLowerCase();
-                item.style.display = texto.includes(query) ? 'flex' : 'none';
-            });
+            try {
+                await fetchAuth('/admin/crear-psicologo', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        nombre: document.getElementById('psi-nombre').value,
+                        email: document.getElementById('psi-email').value,
+                        password: document.getElementById('psi-password').value,
+                        especialidad: document.getElementById('psi-especialidad').value,
+                        telefono: document.getElementById('psi-telefono').value
+                    })
+                });
+                if (typeof mostrarToast === 'function') mostrarToast('✅ Psicólogo creado');
+                formPsi.reset(); 
+                cargarPsicologos();
+            } catch (error) { 
+                alert(error.message); 
+            } finally { 
+                btn.disabled = false; 
+                btn.innerHTML = textoOriginal;
+            }
         });
     }
 
-    // ==========================================
-    // 7. MENÚ DESPLEGABLE
-    // ==========================================
-    const userMenuBtn = document.getElementById('userMenuBtn');
-    const userDropdown = document.getElementById('userDropdown');
-    
-    if (userMenuBtn && userDropdown) {
-        userMenuBtn.addEventListener('click', (e) => {
+    const formAdmin = document.getElementById('form-crear-admin-sena');
+    if (formAdmin && esSuperAdmin) {
+        formAdmin.addEventListener('submit', async (e) => {
             e.preventDefault();
-            e.stopPropagation();
-            userDropdown.classList.toggle('activo');
-            userMenuBtn.classList.toggle('activo');
-        });
-
-        document.addEventListener('click', (e) => {
-            if (!userMenuBtn.contains(e.target) && !userDropdown.contains(e.target)) {
-                userDropdown.classList.remove('activo');
-                userMenuBtn.classList.remove('activo');
+            const btn = document.getElementById('btnCrearAdmin');
+            const textoOriginal = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span> Creando...';
+            
+            try {
+                await fetchAuth('/admin/crear-admin-sena', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        nombre: document.getElementById('admin-nombre').value,
+                        email: document.getElementById('admin-email').value,
+                        password: document.getElementById('admin-password').value,
+                        ficha: document.getElementById('admin-ficha').value,
+                        centro: document.getElementById('admin-centro').value
+                    })
+                });
+                if (typeof mostrarToast === 'function') mostrarToast('✅ Administrador creado');
+                formAdmin.reset(); 
+                cargarAdminsSena();
+            } catch (error) { 
+                alert(error.message); 
+            } finally { 
+                btn.disabled = false; 
+                btn.innerHTML = textoOriginal;
             }
         });
     }
@@ -207,30 +300,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     // ==========================================
     // 8. CERRAR SESIÓN
     // ==========================================
-    document.querySelectorAll('a[href="index.html"]').forEach(link => {
+    document.querySelectorAll('.logout-link').forEach(link => {
         link.addEventListener('click', (e) => {
-            e.preventDefault();
-            Auth.clear();
+            e.preventDefault(); 
+            Auth.clear(); 
             window.location.href = 'index.html';
         });
     });
 
     // ==========================================
-    // 9. INICIALIZAR
+    // 9. INICIALIZAR TODO
     // ==========================================
     await cargarEstadisticas();
-    await cargarPsicologosPendientes();
-    await cargarUsuarios();
+    await cargarPsicologos();
+    await cargarEstudiantes();
+    await cargarAdminsSena();
 });
-
-function mostrarToast(texto) {
-    let toast = document.querySelector(".toast");
-    if (!toast) {
-        toast = document.createElement("div");
-        toast.className = "toast";
-        document.body.appendChild(toast);
-    }
-    toast.textContent = texto;
-    toast.classList.add("activo");
-    setTimeout(() => toast.classList.remove("activo"), 3000);
-}

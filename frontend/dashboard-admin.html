@@ -3,14 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Panel de Administración · SEMA</title>
+  <title>Panel Administrativo · SEMA</title>
   <link rel="icon" type="image/png" href="assets/logo.png">
-  
-  <!-- Fuentes -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
-  
-  <!-- Uicons Bold Straight -->
-  <link href="https://cdn.jsdelivr.net/npm/@flaticon/flaticon-uicons@3.3.1/css/bold/straight.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   
   <link rel="stylesheet" href="css/styles.css">
   
@@ -18,110 +14,126 @@
   <script defer src="js/app.js"></script>
   <script defer src="js/layout.js"></script>
   <script defer src="js/dashboard-admin.js"></script>
-
-  <style>
-    /* Ajuste general para iconos */
-    .fi {
-      vertical-align: middle;
-      margin-right: 0.5rem;
-      font-size: 1.1em;
-    }
-    /* Iconos grandes para las tarjetas de estadísticas */
-    .tarjeta__icono .fi {
-      margin-right: 0;
-      font-size: 2rem;
-      color: var(--color-primario, #2563eb);
-    }
-  </style>
 </head>
-<body>
-
+<body class="admin-view">
   <div id="sema-nav"></div>
 
   <div class="dashboard">
-    <aside class="sidebar">
-      <h5>Panel Admin</h5>
-      <a href="dashboard-admin.html" class="activo">
-        <i class="fi fi-bs-chart-pie"></i> Dashboard
-      </a>
-      <a href="#usuarios">
-        <i class="fi fi-bs-users"></i> Usuarios
-      </a>
-      <a href="#psicologos">
-        <i class="fi fi-bs-user-doctor"></i> Psicólogos
-      </a>
-      <a href="configuracion.html">
-        <i class="fi fi-bs-settings"></i> Configuración
-      </a>
-      <a href="index.html" class="logout-link">
-        <i class="fi fi-bs-exit"></i> Cerrar sesión
-      </a>
-    </aside>
+    <aside class="sidebar" id="sema-sidebar"></aside>
 
     <main class="dashboard__main">
       <header class="dashboard-header">
         <div class="dashboard-title">
-          <h1 id="saludoAdmin">Panel de Administración</h1>
-          <p>Gestión completa de la plataforma SEMA.</p>
+          <span class="admin-header-badge"><i class="fa-solid fa-shield-halved"></i> Panel Global</span>
+          <h1>Gestión Institucional</h1>
+          <p>Administra los recursos, el personal y supervisa la plataforma.</p>
         </div>
+        <a href="index.html" class="btn btn-secundario logout-link"><i class="fa-solid fa-arrow-right-from-bracket"></i> Cerrar Sesión</a>
       </header>
 
-      <!-- ESTADÍSTICAS -->
-      <div class="grid grid-4" style="margin-top: 1.5rem;">
-        <div class="tarjeta stat-card">
-          <div class="tarjeta__icono">
-            <i class="fi fi-bs-users"></i>
+      <!-- 🔑 PESTAÑAS DE NAVEGACIÓN -->
+      <div class="admin-tabs mb-1-5">
+        <button class="admin-tab activo" data-target="tab-estadisticas">
+          <i class="fa-solid fa-chart-pie"></i> Estadísticas
+        </button>
+        <button class="admin-tab" data-target="tab-psicologos">
+          <i class="fa-solid fa-user-doctor"></i> Psicólogos
+        </button>
+        <button class="admin-tab" data-target="tab-estudiantes">
+          <i class="fa-solid fa-users"></i> Estudiantes
+        </button>
+        <button class="admin-tab" data-target="tab-admins" id="tab-btn-admins" style="display: none;">
+          <i class="fa-solid fa-users-gear"></i> Administradores
+        </button>
+      </div>
+
+      <!-- PESTAÑA 1: ESTADÍSTICAS -->
+      <div id="tab-estadisticas" class="admin-tab-content activo">
+        <div class="grid grid-3 mb-1-5">
+          <div class="tarjeta stat-card">
+            <div class="tarjeta__icono" style="background: rgba(37, 99, 235, 0.1); color: var(--azul);"><i class="fa-solid fa-users"></i></div>
+            <h2 id="total-usuarios">0</h2>
+            <p>Estudiantes Registrados</p>
           </div>
-          <h2 id="stat-usuarios">0</h2>
-          <p>Estudiantes</p>
+          <div class="tarjeta stat-card">
+            <div class="tarjeta__icono" style="background: rgba(16, 185, 129, 0.1); color: var(--verde);"><i class="fa-solid fa-user-doctor"></i></div>
+            <h2 id="total-psicologos">0</h2>
+            <p>Psicólogos Activos</p>
+          </div>
+          <div class="tarjeta stat-card">
+            <div class="tarjeta__icono" style="background: rgba(245, 158, 11, 0.1); color: var(--amarillo);"><i class="fa-solid fa-calendar"></i></div>
+            <h2 id="total-citas">0</h2>
+            <p>Citas Totales</p>
+          </div>
         </div>
-        <div class="tarjeta stat-card">
-          <div class="tarjeta__icono">
-            <i class="fi fi-bs-user-doctor"></i>
-          </div>
-          <h2 id="stat-psicologos">0</h2>
-          <p>Psicólogos</p>
-        </div>
-        <div class="tarjeta stat-card">
-          <div class="tarjeta__icono">
-            <i class="fi fi-bs-calendar"></i>
-          </div>
-          <h2 id="stat-citas">0</h2>
-          <p>Citas totales</p>
-        </div>
-        <div class="tarjeta stat-card">
-          <div class="tarjeta__icono">
-            <i class="fi fi-bs-comments"></i>
-          </div>
-          <h2 id="stat-chats">0</h2>
-          <p>Chats activos</p>
+        <div class="tarjeta">
+          <h3><i class="fa-solid fa-chart-line" style="color: var(--azul);"></i> Resumen de Actividad</h3>
+          <p class="text-suave mt-1">Las estadísticas se actualizan en tiempo real basándose en los registros de la base de datos.</p>
         </div>
       </div>
 
-      <!-- PSICÓLOGOS PENDIENTES -->
-      <section class="tarjeta" style="margin-top: 1.5rem;">
-        <h3><i class="fi fi-bs-user-clock"></i> Psicólogos pendientes de aprobación</h3>
-        <div id="lista-psicologos-pendientes" style="margin-top: 1rem;">
-          <p style="color: var(--texto-secundario);">Cargando...</p>
+      <!-- PESTAÑA 2: PSICÓLOGOS -->
+      <div id="tab-psicologos" class="admin-tab-content">
+        <div class="grid grid-2">
+          <div class="tarjeta form-crear">
+            <h3><i class="fa-solid fa-plus-circle" style="color: var(--verde);"></i> Nuevo Psicólogo</h3>
+            <p class="text-suave text-sm mb-1">Crea la cuenta para un profesional de la salud.</p>
+            <form id="form-crear-psicologo">
+              <div class="form-grupo"><label>Nombre Completo</label><input type="text" id="psi-nombre" required></div>
+              <div class="form-grupo"><label>Correo Electrónico</label><input type="email" id="psi-email" required></div>
+              <div class="form-grupo"><label>Contraseña Provisional</label><input type="text" id="psi-password" required></div>
+              <div class="form-grupo"><label>Especialidad</label><input type="text" id="psi-especialidad" required></div>
+              <div class="form-grupo"><label>Teléfono</label><input type="tel" id="psi-telefono"></div>
+              <button type="submit" class="btn btn-primario btn-crear-admin" id="btnCrearPsi"><i class="fa-solid fa-check"></i> Crear Psicólogo</button>
+            </form>
+          </div>
+          <div class="tarjeta">
+            <h3><i class="fa-solid fa-list" style="color: var(--azul);"></i> Psicólogos Recientes</h3>
+            <div id="lista-psicologos-admin" class="mt-1 lista-psi-container"><p class="text-suave text-center">Cargando...</p></div>
+          </div>
         </div>
-      </section>
+      </div>
 
-      <!-- LISTA DE USUARIOS -->
-      <section class="tarjeta" style="margin-top: 1.5rem;">
-        <h3><i class="fi fi-bs-users"></i> Gestión de Usuarios</h3>
-        <div style="margin: 1rem 0; max-width: 500px; position: relative;">
-          <i class="fi fi-bs-search" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--texto-secundario); margin-right: 0;"></i>
-          <input type="search" id="buscador-usuarios" placeholder="Buscar por nombre o email..." style="width: 100%; padding: 0.75rem 1rem 0.75rem 2.5rem; border: 1px solid var(--borde); border-radius: 8px; background: var(--fondo); color: var(--texto);">
+      <!-- PESTAÑA 3: ESTUDIANTES -->
+      <div id="tab-estudiantes" class="admin-tab-content">
+        <div class="tarjeta">
+          <div class="flex-between align-center mb-1-5 flex-wrap gap-1">
+            <h3><i class="fa-solid fa-users" style="color: var(--azul);"></i> Directorio de Aprendices</h3>
+            <div class="buscador-wrapper" style="max-width: 300px;">
+              <i class="fa-solid fa-magnifying-glass buscador-icono"></i>
+              <input type="search" id="buscador-estudiantes" class="buscador-input" placeholder="Buscar por nombre o ficha...">
+            </div>
+          </div>
+          <div id="lista-estudiantes-admin" class="lista-psi-container">
+            <p class="text-suave text-center">Cargando estudiantes...</p>
+          </div>
         </div>
-        <div id="lista-usuarios" style="margin-top: 1rem;">
-          <p style="color: var(--texto-secundario);">Cargando usuarios...</p>
+      </div>
+
+      <!-- PESTAÑA 4: ADMINISTRADORES SENA (Solo Super Admin) -->
+      <div id="tab-admins" class="admin-tab-content">
+        <div class="grid grid-2">
+          <div class="tarjeta form-crear">
+            <h3><i class="fa-solid fa-user-plus" style="color: var(--azul);"></i> Nuevo Administrador SENA</h3>
+            <p class="text-suave text-sm mb-1">Crea una cuenta de gestión para un coordinador.</p>
+            <form id="form-crear-admin-sena">
+              <div class="form-grupo"><label>Nombre Completo</label><input type="text" id="admin-nombre" required></div>
+              <div class="form-grupo"><label>Correo Electrónico</label><input type="email" id="admin-email" required></div>
+              <div class="form-grupo"><label>Contraseña</label><input type="text" id="admin-password" required></div>
+              <div class="form-grupo"><label>Ficha</label><input type="text" id="admin-ficha" required></div>
+              <div class="form-grupo"><label>Centro de Formación</label><input type="text" id="admin-centro" required></div>
+              <button type="submit" class="btn btn-primario btn-crear-admin" id="btnCrearAdmin" style="background: var(--gradiente);"><i class="fa-solid fa-check"></i> Crear Administrador</button>
+            </form>
+          </div>
+          <div class="tarjeta">
+            <h3><i class="fa-solid fa-list" style="color: var(--azul);"></i> Administradores Activos</h3>
+            <div id="lista-admins-sena" class="mt-1 lista-psi-container"><p class="text-suave text-center">Cargando...</p></div>
+          </div>
         </div>
-      </section>
+      </div>
 
     </main>
   </div>
-
   <div id="sema-footer"></div>
-
 </body>
 </html>

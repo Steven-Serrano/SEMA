@@ -13,22 +13,25 @@
   
   <link rel="stylesheet" href="css/styles.css">
   
+  <!-- Cliente de Socket.io -->
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  
   <!-- Scripts en orden correcto -->
   <script defer src="js/api.js"></script>
   <script defer src="js/app.js"></script>
   <script defer src="js/layout.js"></script>
   <script defer src="js/chat.js"></script>
-
 </head>
 <body>
 
   <div id="sema-nav"></div>
 
+  <!-- Contenedor del sidebar global -->
+  <aside class="sidebar" id="sema-sidebar"></aside>
+
   <div class="chat-layout">
     
-    <!-- ==========================================
-         SIDEBAR IZQUIERDO: Lista de chats
-         ========================================== -->
+    <!-- SIDEBAR IZQUIERDO: Lista de chats -->
     <aside class="chat-sidebar">
       <div class="chat-sidebar__header">
         <h3><i class="fi fi-bs-comments"></i> Mis conversaciones</h3>
@@ -40,23 +43,28 @@
       </div>
     </aside>
 
-    <!-- ==========================================
-         PANEL DERECHO: Chat activo
-         ========================================== -->
+    <!-- PANEL DERECHO: Chat activo -->
     <main class="chat-main">
       
       <!-- Header del chat activo -->
       <header class="chat-header" id="chat-header">
-        <div class="chat-header__info" id="chat-header-info">
-          <div class="avatar-grande" id="chat-avatar">
-            <i class="fi fi-bs-comment"></i>
+        <div class="chat-header__info" id="chat-header-info" style="display: flex; justify-content: space-between; width: 100%;">
+          <div style="display: flex; align-items: center; gap: 1rem;">
+            <div class="avatar-grande" id="chat-avatar">
+              <i class="fi fi-bs-comment"></i>
+            </div>
+            <div>
+              <h3 id="chat-nombre">Selecciona una conversación</h3>
+              <small id="chat-estado" style="color: var(--texto-secundario, #64748b);">
+                Elige un chat de la lista
+              </small>
+            </div>
           </div>
-          <div>
-            <h3 id="chat-nombre">Selecciona una conversación</h3>
-            <small id="chat-estado" style="color: var(--texto-secundario, #64748b);">
-              Elige un chat de la lista
-            </small>
-          </div>
+          
+          <!-- 🔑 BOTÓN DE ELIMINAR CHAT -->
+          <button id="btnEliminarChat" class="btn-fantasma" title="Eliminar conversación" style="display: none; color: var(--rojo); padding: 0.5rem; border-radius: 50%; transition: all 0.2s;">
+            <i class="fi fi-bs-trash" style="font-size: 1.2rem;"></i>
+          </button>
         </div>
       </header>
 

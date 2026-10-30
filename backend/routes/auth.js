@@ -2,7 +2,7 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const Usuario = require('../models/Usuario');
 
-const router = express.Router(); // ← ¡ESTA LÍNEA ES LA QUE FALTABA!
+const router = express.Router();
 
 // ==========================================
 // POST /api/auth/registro
@@ -24,26 +24,22 @@ router.post('/registro', async (req, res) => {
       rol = 'usuario'
     } = req.body;
 
-    // Validar campos obligatorios
     if (!nombre || !documento || !email || !password || !numeroFicha || !programaFormacion) {
       return res.status(400).json({ 
         error: 'Campos obligatorios: nombre, documento, email, password, numeroFicha, programaFormacion' 
       });
     }
 
-    // Verificar si el email ya existe
     const emailExistente = await Usuario.findOne({ email });
     if (emailExistente) {
       return res.status(400).json({ error: 'El correo electrónico ya está registrado' });
     }
 
-    // Verificar si el documento ya existe
     const documentoExistente = await Usuario.findOne({ documento });
     if (documentoExistente) {
       return res.status(400).json({ error: 'El número de documento ya está registrado' });
     }
 
-    // Crear usuario
     const usuario = new Usuario({
       nombre,
       documento,
@@ -61,7 +57,6 @@ router.post('/registro', async (req, res) => {
 
     await usuario.save();
 
-    // Generar token
     const token = jwt.sign(
       { id: usuario._id, tipo: rol },
       process.env.JWT_SECRET,
@@ -94,19 +89,23 @@ router.post('/login', async (req, res) => {
       return res.status(400).json({ error: 'El correo y la contraseña son obligatorios' });
     }
 
-    // Buscar usuario
     const usuario = await Usuario.findOne({ email });
     if (!usuario) {
       return res.status(401).json({ error: 'Credenciales incorrectas' });
     }
 
-    // Verificar contraseña
     const esValida = await usuario.comparePassword(password);
     if (!esValida) {
       return res.status(401).json({ error: 'Credenciales incorrectas' });
     }
 
-    // Generar token
+    // 🔑 VALIDACIÓN DE BANEO
+    if (usuario.activo === false) {
+      return res.status(403).json({ 
+        error: 'Tu cuenta ha sido suspendida por un administrador. Contacta a Bienestar SENA.' 
+      });
+    }
+
     const token = jwt.sign(
       { id: usuario._id, tipo: usuario.rol },
       process.env.JWT_SECRET,
@@ -119,7 +118,7 @@ router.post('/login', async (req, res) => {
       nombre: usuario.nombre,
       email: usuario.email,
       rol: usuario.rol,
-      tipo: usuario.rol // Para compatibilidad con el frontend
+      tipo: usuario.rol
     });
   } catch (err) {
     res.status(500).json({ error: err.message });

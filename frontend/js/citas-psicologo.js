@@ -41,8 +41,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const fechaObj = new Date(cita.fecha);
                 const dia = fechaObj.getUTCDate();
                 const mes = fechaObj.toLocaleString('es', { month: 'short' }).replace('.', '').toUpperCase();
-                const nombrePaciente = cita.usuarioId?.nombre || 'Paciente';
-                const emailPaciente = cita.usuarioId?.email || '';
+                const nombrePaciente = cita.usuarioId?.nombre || 'Paciente eliminado';
+                const emailPaciente = cita.usuarioId?.email || 'Sin correo';
+                const fotoPaciente = cita.usuarioId?.fotoPerfil || null;
+                const iniciales = nombrePaciente.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
                 
                 let badgeClass = 'badge-azul';
                 if (cita.estado === 'confirmada') badgeClass = 'badge-verde';
@@ -65,24 +67,42 @@ document.addEventListener('DOMContentLoaded', async () => {
                             <i class="fi fi-bs-check"></i> Completar
                         </button>
                     `;
+                } else {
+                    acciones = `
+                        <button class="btn-fantasma" onclick="eliminarCita('${cita._id}')" title="Eliminar del historial" style="color: var(--texto-suave); opacity: 0.6; padding: 0.3rem;">
+                            <i class="fi fi-bs-trash" style="font-size: 1.1rem;"></i>
+                        </button>
+                    `;
                 }
                 
+                // 🔑 Renderizar foto o iniciales
+                const avatarHtml = fotoPaciente 
+                    ? `<img src="${getImgUrl(fotoPaciente)}" class="avatar-grande" style="width: 50px; height: 50px; object-fit: cover;">` 
+                    : `<div class="avatar-grande" style="width: 50px; height: 50px;">${iniciales}</div>`;
+
                 return `
-                    <div class="cita-item">
-                        <div class="cita-fecha">
+                    <div class="cita-item" style="align-items: flex-start;">
+                        <!-- 🔑 AVATAR DEL PACIENTE -->
+                        <div style="margin-right: 1rem;">
+                            ${avatarHtml}
+                        </div>
+                        
+                        <div class="cita-fecha" style="min-width: 50px;">
                             <div class="dia">${dia}</div>
                             <div class="mes">${mes}</div>
                         </div>
                         <div class="cita-info">
                             <h4>${nombrePaciente}</h4>
                             <p>${cita.hora} · ${cita.motivo || 'Consulta'}</p>
-                            <small class="text-suave text-sm">${emailPaciente}</small>
+                            <small class="text-suave text-sm block mt-0-5">${emailPaciente}</small>
                         </div>
-                        <span class="badge ${badgeClass}">
-                            ${cita.estado.charAt(0).toUpperCase() + cita.estado.slice(1)}
-                        </span>
-                        <div class="cita-acciones">
-                            ${acciones}
+                        <div class="flex flex-col align-end gap-0-5">
+                            <span class="badge ${badgeClass}">
+                                ${cita.estado.charAt(0).toUpperCase() + cita.estado.slice(1)}
+                            </span>
+                            <div class="cita-acciones flex gap-0-5">
+                                ${acciones}
+                            </div>
                         </div>
                     </div>
                 `;
@@ -125,15 +145,24 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
-    // Filtros mejorados (sin mezclar clases incorrectamente)
+    window.eliminarCita = async function(id) {
+        if (!confirm('¿Borrar esta cita del historial permanentemente?')) return;
+
+        try {
+            await fetchAuth(`/citas/${id}`, { method: 'DELETE' });
+            if (typeof mostrarToast === 'function') mostrarToast('🗑️ Cita eliminada');
+            cargarCitas(); 
+        } catch (error) {
+            if (typeof mostrarToast === 'function') mostrarToast('❌ Error al eliminar');
+        }
+    };
+
     document.querySelectorAll('.filtro-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-            // Resetear todos
             document.querySelectorAll('.filtro-btn').forEach(b => {
                 b.classList.remove('activo', 'btn-primario');
                 b.classList.add('btn-secundario');
             });
-            // Activar el clickeado
             btn.classList.remove('btn-secundario');
             btn.classList.add('activo', 'btn-primario');
             
@@ -142,7 +171,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     });
 
-    // MENÚ Y LOGOUT
     const userMenuBtn = document.getElementById('userMenuBtn');
     const userDropdown = document.getElementById('userDropdown');
     if (userMenuBtn && userDropdown) {
@@ -158,7 +186,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         });
     }
-    document.querySelectorAll('a[href="index.html"]').forEach(link => {
+    document.querySelectorAll('.logout-link').forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault(); Auth.clear(); window.location.href = 'index.html';
         });

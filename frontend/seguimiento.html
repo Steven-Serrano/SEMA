@@ -25,13 +25,15 @@
       
       <header class="dashboard-header">
         <div class="dashboard-title">
-          <h1>Mi Seguimiento</h1>
-          <p>Mira todo lo que has logrado y cómo te has sentido.</p>
+          <h1 id="titulo-seguimiento">Mi Seguimiento</h1>
+          <p id="subtitulo-seguimiento">Mira todo lo que has logrado y cómo te has sentido.</p>
         </div>
-        <a href="dashboard.html" class="btn btn-secundario"><i class="fi fi-bs-arrow-left"></i> Volver al Dashboard</a>
+        <a href="dashboard.html" class="btn btn-secundario" id="btn-volver">
+          <i class="fi fi-bs-arrow-left"></i> Volver al Dashboard
+        </a>
       </header>
 
-            <!-- TARJETA DE RESUMEN GENERAL -->
+      <!-- TARJETA DE RESUMEN GENERAL -->
       <div class="tarjeta resumen-general aparecer-1 mb-1-5" id="tarjeta-resumen">
         <div class="resumen-icono" id="resumen-icono">⏳</div>
         <div class="resumen-texto">
@@ -64,12 +66,12 @@
       </div>
 
       <!-- GRÁFICO DE EMOCIONES -->
-      <h2 class="mt-2 mb-1" style="font-size: 1.5rem;"><i class="fi fi-bs-chart-pie" style="color: var(--azul);"></i> Mi balance emocional</h2>
+      <h2 class="mt-2 mb-1" style="font-size: 1.5rem;"><i class="fi fi-bs-chart-pie" style="color: var(--azul);"></i> Balance emocional</h2>
       
       <div class="grid grid-2 aparecer-2 mb-1-5">
         <div class="tarjeta">
           <h3>Emociones más frecuentes</h3>
-          <p class="text-suave text-sm mb-1">Basado en todos tus registros</p>
+          <p class="text-suave text-sm mb-1">Basado en todos los registros</p>
           <div id="grafico-emociones" class="bars" style="height: 180px; margin-top: 2rem;">
             <p class="text-suave text-center" style="width:100%;">Cargando datos...</p>
           </div>
@@ -83,7 +85,10 @@
       </div>
 
       <!-- CALENDARIO DE SUEÑO -->
-      <h2 class="mt-2 mb-1" style="font-size: 1.5rem;"><i class="fi fi-bs-moon" style="color: var(--azul);"></i> Calendario de Sueño</h2>
+      <h2 class="mt-2 mb-1" style="font-size: 1.5rem;">
+        <i class="fi fi-bs-moon" style="color: var(--azul);"></i> 
+        <span id="seccion-calendario">Calendario de Sueño</span>
+      </h2>
       
       <div class="tarjeta aparecer-3" style="padding: 2rem;">
         <div id="calendario-sueno" class="calendario-wrapper">

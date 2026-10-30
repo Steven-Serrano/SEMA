@@ -7,7 +7,7 @@
     const user = Auth.getUser();
     if (!user) return;
 
-    // 1. ACTUALIZAR DATOS DEL USUARIO (Desde localStorage)
+    // 1. ACTUALIZAR DATOS DEL USUARIO
     const saludo = document.getElementById('saludoUsuario');
     if (saludo) {
         const hora = new Date().getHours();
@@ -19,91 +19,96 @@
 
     const nombreUsuario = document.querySelector('.nombre-usuario');
     const correoUsuario = document.querySelector('.correo-usuario');
-    
     if (nombreUsuario) nombreUsuario.textContent = user.nombre || 'Usuario SEMA';
     if (correoUsuario) correoUsuario.textContent = user.email || 'usuario@sema.com';
 
-    // 🔑 1.5 ACTUALIZAR FOTO DESDE EL SERVIDOR (Para evitar problemas de caché)
+    // 2. ACTUALIZAR FOTO
     try {
         const perfil = await fetchAuth('/usuarios/perfil');
         const fotoUsuario = document.querySelector('.foto-usuario');
         if (fotoUsuario && perfil.fotoPerfil) {
             fotoUsuario.src = getImgUrl(perfil.fotoPerfil);
-            
-            // Actualizamos el localStorage por si acaso
-            const userActual = Auth.getUser();
-            userActual.fotoPerfil = perfil.fotoPerfil;
-            Auth.setUser(userActual);
         }
-    } catch (error) {
-        console.warn('No se pudo actualizar la foto de perfil:', error);
-    }
+    } catch (error) { console.warn('Error foto:', error); }
 
-    // 2. CARGAR PRÓXIMA CITA
-    try {
-        const citas = await fetchAuth('/citas');
-        const proximas = citas.filter(c => c.estado !== 'cancelada' && c.estado !== 'completada');
-        
-        if (proximas.length > 0) {
+    // 3. CARGAR PRÓXIMA CITA
+    async function cargarProximaCita() {
+        const contenedor = document.getElementById('contenedor-cita-dashboard');
+        if (!contenedor) return;
+        try {
+            const citas = await fetchAuth('/citas');
+            const proximas = citas.filter(c => c.estado !== 'cancelada' && c.estado !== 'completada').sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
+            
+            if (proximas.length === 0) {
+                contenedor.innerHTML = `<p class="text-suave text-sm text-center" style="margin-top:1rem;">No tienes citas programadas.</p>`;
+                return;
+            }
             const cita = proximas[0];
             const fechaObj = new Date(cita.fecha);
             const dia = fechaObj.getUTCDate();
             const mes = fechaObj.toLocaleString('es', { month: 'short' }).replace('.', '');
             const nombrePsicologo = cita.psicologoId?.nombre || 'Psicólogo';
             
-            const citaItem = document.querySelector('.cita-item');
-            if (citaItem) {
-                citaItem.querySelector('.cita-fecha').innerHTML = `<div class="dia">${dia}</div><div class="mes">${mes}</div>`;
-                citaItem.querySelector('.cita-info').innerHTML = `<h4>${nombrePsicologo}</h4><p>${cita.hora} · Sesión online</p>`;
-                const badge = citaItem.querySelector('.badge');
-                badge.textContent = cita.estado.charAt(0).toUpperCase() + cita.estado.slice(1);
-                badge.className = `badge badge-${cita.estado === 'confirmada' ? 'verde' : 'azul'}`;
-            }
-        }
-    } catch (error) {
-        console.warn('No se pudieron cargar las citas:', error.message);
+            contenedor.innerHTML = `
+                <div class="cita-item" style="margin-bottom: 0; border-left-color: var(--azul);">
+                    <div class="cita-fecha">
+                        <div class="dia">${dia}</div>
+                        <div class="mes">${mes}</div>
+                    </div>
+                    <div class="cita-info">
+                        <h4>${nombrePsicologo}</h4>
+                        <p>${cita.hora} · Sesión online</p>
+                    </div>
+                    <span class="badge badge-${cita.estado === 'confirmada' ? 'verde' : 'azul'}">
+                        ${cita.estado}
+                    </span>
+                </div>
+            `;
+        } catch (error) { console.error(error); }
     }
 
-    // 3. CARGAR NOTIFICACIONES
-    try {
-        const notificaciones = await fetchAuth('/notificaciones');
+    // 4. CARGAR NOTIFICACIONES (Tarjeta grande)
+    async function cargarNotificacionesTarjeta() {
         const listaNotif = document.getElementById('lista-notificaciones');
-        
-        if (listaNotif) {
-            if (notificaciones.length > 0) {
-                listaNotif.innerHTML = notificaciones.slice(0, 3).map(n => `
-                    <li class="notif-item" id="notif-${n._id}">
-                        <div class="notif-content">
-                            <i class="fi fi-bs-bell"></i> 
-                            <span>${n.titulo}</span>
-                            <small style="display:block; color:var(--texto-suave); font-size:0.8rem;">${n.mensaje}</small>
-                        </div>
-                        <button class="notif-delete" data-id="${n._id}" title="Eliminar">
-                            <i class="fi fi-bs-trash"></i>
-                        </button>
-                    </li>
-                `).join('');
-            } else {
+        if (!listaNotif) return;
+
+        try {
+            const notificaciones = await fetchAuth('/notificaciones');
+            
+            if (!notificaciones || notificaciones.length === 0) {
                 listaNotif.innerHTML = '<li class="text-center" style="padding:1rem; color:var(--texto-suave); font-size:.9rem">No tienes notificaciones pendientes ✨</li>';
+                return;
             }
+
+            listaNotif.innerHTML = notificaciones.slice(0, 3).map(n => `
+                <li class="notif-item" id="notif-${n._id}">
+                    <div class="notif-content">
+                        <i class="fi fi-bs-bell"></i> 
+                        <span>${n.titulo}</span>
+                        <small style="display:block; color:var(--texto-suave); font-size:0.8rem;">${n.mensaje}</small>
+                    </div>
+                    <button class="notif-delete" data-id="${n._id}" title="Eliminar">
+                        <i class="fi fi-bs-trash"></i>
+                    </button>
+                </li>
+            `).join('');
+
+        } catch (error) {
+            console.error('Error notificaciones:', error);
+            listaNotif.innerHTML = '<li class="text-center" style="padding:1rem; color:var(--error);">Error al cargar.</li>';
         }
-    } catch (error) {
-        console.warn('No se pudieron cargar las notificaciones:', error.message);
     }
 
-    // 3.1 BORRAR NOTIFICACIONES
+    // Borrar notificación
     const listaNotif = document.getElementById('lista-notificaciones');
     if (listaNotif) {
         listaNotif.addEventListener('click', async (e) => {
             const btnDelete = e.target.closest('.notif-delete');
             if (!btnDelete) return;
-
             const idNotificacion = btnDelete.dataset.id;
             const item = btnDelete.closest('.notif-item');
             
             item.style.opacity = '0';
-            item.style.transform = 'translateX(20px)';
-            
             try {
                 await fetchAuth(`/notificaciones/${idNotificacion}`, { method: 'DELETE' });
                 setTimeout(() => {
@@ -115,47 +120,36 @@
                 mostrarToast('Notificación eliminada');
             } catch (error) {
                 item.style.opacity = '1';
-                item.style.transform = 'translateX(0)';
                 mostrarToast('Error al eliminar');
             }
         });
     }
 
-    // 4. SELECTOR DE ÁNIMO
+    // 5. SELECTOR DE ÁNIMO
     const animoSelector = document.getElementById('animo-selector');
     if (animoSelector) {
         animoSelector.addEventListener('click', async (e) => {
             const btn = e.target.closest('.animo-btn');
             if (!btn) return;
-
             const estado = btn.dataset.animo;
             document.querySelectorAll('.animo-btn').forEach(b => b.classList.remove('activo'));
             btn.classList.add('activo');
-
             try {
-                await fetchAuth('/estados-emocionales', {
-                    method: 'POST',
-                    body: JSON.stringify({ estado: estado, descripcion: 'Registro desde dashboard' })
-                });
-                mostrarToast(`✅ Ánimo "${estado}" registrado`);
-            } catch (error) {
-                mostrarToast('❌ Error al registrar el ánimo');
-            }
+                await fetchAuth('/estados-emocionales', { method: 'POST', body: JSON.stringify({ estado: estado }) });
+                mostrarToast(`✅ Ánimo registrado`);
+            } catch (error) { mostrarToast('❌ Error'); }
         });
     }
 
-    // 5. MENÚ DESPLEGABLE
+    // 6. MENÚ
     const userMenuBtn = document.getElementById('userMenuBtn');
     const userDropdown = document.getElementById('userDropdown');
-    
     if (userMenuBtn && userDropdown) {
         userMenuBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
+            e.preventDefault(); e.stopPropagation();
             userDropdown.classList.toggle('activo');
             userMenuBtn.classList.toggle('activo');
         });
-
         document.addEventListener('click', (e) => {
             if (!userMenuBtn.contains(e.target) && !userDropdown.contains(e.target)) {
                 userDropdown.classList.remove('activo');
@@ -164,14 +158,15 @@
         });
     }
 
-    // 6. CERRAR SESIÓN
-    document.querySelectorAll('.logout-link').forEach(link => {
-        link.addEventListener('click', (e) => {
-            e.preventDefault();
-            Auth.clear();
-            window.location.href = 'index.html';
-        });
+    // 🔑 7. ESCUCHAR EL EVENTO DE SOCKET.IO PARA ACTUALIZAR LA TARJETA
+    document.addEventListener('actualizarNotificaciones', () => {
+        console.log("🔄 Actualizando tarjeta de notificaciones...");
+        cargarNotificacionesTarjeta();
     });
+
+    // INICIALIZAR
+    await cargarProximaCita();
+    await cargarNotificacionesTarjeta();
 });
 
 function mostrarToast(texto) {

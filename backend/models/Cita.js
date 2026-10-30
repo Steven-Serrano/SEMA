@@ -10,7 +10,12 @@ const citaSchema = new mongoose.Schema({
     type: String, 
     enum: ['pendiente', 'confirmada', 'cancelada', 'completada'], 
     default: 'pendiente' 
-  }
+  },
+  // Agrega este campo dentro de tu esquema de Cita
+ocultaEstudiante: {
+  type: Boolean,
+  default: false
+}
 }, { timestamps: true });
 
 module.exports = mongoose.model('Cita', citaSchema);

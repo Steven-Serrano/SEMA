@@ -22,6 +22,7 @@ const Auth = {
 
 async function fetchAuth(endpoint, options = {}) {
     const token = Auth.getToken();
+    const user = Auth.getUser();
     
     const headers = {
         'Content-Type': 'application/json',
@@ -38,21 +39,20 @@ async function fetchAuth(endpoint, options = {}) {
             headers
         });
 
-        // 🔑 CORRECCIÓN CLAVE: Detectamos si estamos intentando iniciar sesión
-        const esPeticionDeLogin = endpoint.includes('/auth/login') || endpoint.includes('/auth-psicologo/login');
+        const esPeticionDeLogin = endpoint.includes('/auth/login') || endpoint.includes('/auth-psicologo/login') || endpoint.includes('/auth-admin/login');
 
-        // Si el token expiró (401) y NO es un intento de login, cerramos sesión.
-        // Si SÍ es un intento de login, dejamos que el error fluya para que login.js lo atrape.
+        // 🔑 CORRECCIÓN: Redirigir al login correcto según el rol
         if (response.status === 401 && !esPeticionDeLogin) {
             Auth.clear();
-            window.location.href = 'login.html';
+            if (user.rol === 'administrador_sena' || user.rol === 'super_administrador') {
+                window.location.href = 'login-admin.html';
+            } else {
+                window.location.href = 'login.html';
+            }
             return;
         }
 
-        // Manejar respuestas sin contenido (ej. DELETE exitoso)
-        if (response.status === 204) {
-            return { success: true };
-        }
+        if (response.status === 204) return { success: true };
 
         const data = await response.json();
 
@@ -67,10 +67,9 @@ async function fetchAuth(endpoint, options = {}) {
     }
 }
 
-// 🔑 Función global para obtener la URL correcta de cualquier imagen
 function getImgUrl(ruta) {
-    if (!ruta) return 'assets/avatar-default.png'; // Si no hay foto, mostramos el default
-    if (ruta.startsWith('http') || ruta.startsWith('data:')) return ruta; // Si ya es URL o base64, la dejamos
-    const baseUrl = API_URL.replace('/api', ''); // Quitamos el /api para que apunte al backend base
+    if (!ruta) return 'assets/avatar-default.png';
+    if (ruta.startsWith('http') || ruta.startsWith('data:')) return ruta;
+    const baseUrl = API_URL.replace('/api', '');
     return `${baseUrl}${ruta}`;
 }

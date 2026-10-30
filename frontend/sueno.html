@@ -22,72 +22,76 @@
     <aside class="sidebar" id="sema-sidebar"></aside>
     
     <main class="dashboard__main">
-      <header class="dashboard-header">
-        <div class="dashboard-title">
-          <h1>Registro de Sueño</h1>
-          <p>Registra cuántas horas dormiste y cómo te sentiste.</p>
-        </div>
-        <a href="dashboard.html" class="btn btn-secundario"><i class="fi fi-bs-arrow-left"></i> Volver</a>
-      </header>
-
-      <div class="grid grid-2" style="gap: 2rem;">
+      
+      <!-- 🔑 Envolvemos todo en el contenedor de hábitos -->
+      <div class="habito-container">
         
-        <!-- FORMULARIO -->
-        <div class="tarjeta aparecer" style="text-align: center; padding: 2rem;">
-          <h3 style="margin-bottom: 1.5rem;">¿Cuántas horas dormiste?</h3>
+        <header class="dashboard-header">
+          <div class="dashboard-title">
+            <h1>Registro de Sueño</h1>
+            <p>Registra cuántas horas dormiste y cómo te sentiste.</p>
+          </div>
+          <a href="dashboard.html" class="btn btn-secundario"><i class="fi fi-bs-arrow-left"></i> Volver</a>
+        </header>
+
+        <div class="grid grid-2" style="gap: 2rem; align-items: start;">
           
-          <div class="sleep-tracker">
-            <button class="sleep-btn" id="btn-restar" aria-label="Restar hora">−</button>
-            <div class="sleep-display">
-              <i class="fi fi-bs-moon" style="color: var(--azul); font-size: 2rem; display: block; margin-bottom: 0.5rem;"></i>
-              <span id="horasDisplay">8</span>
-              <span style="font-size: 1.2rem; color: var(--texto-suave); font-family: var(--fuente);">hrs</span>
+          <!-- FORMULARIO -->
+          <div class="tarjeta aparecer" style="text-align: center; padding: 2rem;">
+            <h3 style="margin-bottom: 1.5rem;">¿Cuántas horas dormiste?</h3>
+            
+            <div class="sleep-tracker">
+              <button class="sleep-btn" id="btn-restar" aria-label="Restar hora">−</button>
+              <div class="sleep-display">
+                <i class="fi fi-bs-moon" style="color: var(--azul); font-size: 2rem; display: block; margin-bottom: 0.5rem;"></i>
+                <span id="horasDisplay">8</span>
+                <span style="font-size: 1.2rem; color: var(--texto-suave); font-family: var(--fuente);">hrs</span>
+              </div>
+              <button class="sleep-btn" id="btn-sumar" aria-label="Sumar hora">+</button>
             </div>
-            <button class="sleep-btn" id="btn-sumar" aria-label="Sumar hora">+</button>
+
+            <div class="slider-container" style="margin-top: 1rem;">
+              <input type="range" id="horasSlider" min="1" max="12" step="1" value="8">
+              <div class="slider-labels">
+                <span>1h</span><span>7h</span><span>12h</span>
+              </div>
+            </div>
+
+            <p id="calidadAutoText" class="mt-1" style="color: var(--verde); font-weight: 600; font-size: 0.9rem;">
+              ✨ Calidad sugerida: Excelente
+            </p>
+
+            <h3 style="margin-top: 1.5rem; margin-bottom: 1rem;">¿Cómo te sientes?</h3>
+            <p class="text-suave text-sm mb-1">Puedes cambiarlo si lo deseas</p>
+            
+            <div class="animo-selector" id="calidadSueno" style="justify-content: center;">
+              <button class="animo-btn" data-calidad="Malo" title="Malo" style="width: 60px; height: 60px; font-size: 1.8rem;">😴</button>
+              <button class="animo-btn" data-calidad="Regular" title="Regular" style="width: 60px; height: 60px; font-size: 1.8rem;">😐</button>
+              <button class="animo-btn" data-calidad="Excelente" title="Excelente" style="width: 60px; height: 60px; font-size: 1.8rem;">🤩</button>
+              <button class="animo-btn" data-calidad="Excesivo" title="Excesivo" style="width: 60px; height: 60px; font-size: 1.8rem;">🥱</button>
+            </div>
+
+            <div id="motivoContainer" style="display: none; text-align: left; margin-top: 1.5rem; background: rgba(239, 68, 68, 0.05); padding: 1rem; border-radius: var(--radio-sm); border: 1px solid rgba(239, 68, 68, 0.2);">
+              <label for="motivoSueno" style="color: var(--rojo); font-weight: 600; font-size: 0.9rem;">
+                ¿Por qué te sientes así? (Obligatorio) *
+              </label>
+              <textarea id="motivoSueno" class="form-grupo mt-0-5" style="width: 100%; min-height: 80px; border-color: var(--rojo); background: var(--bg);" placeholder="Ej. Tuve pesadillas, me desperté varias veces..."></textarea>
+            </div>
+
+            <button class="btn btn-primario mt-1-5" id="btnGuardarSueno" style="width: 100%; padding: 1rem; font-size: 1.1rem;">
+              <i class="fi fi-bs-check"></i> Registrar Sueño
+            </button>
           </div>
 
-          <div class="slider-container" style="margin-top: 1rem;">
-            <input type="range" id="horasSlider" min="1" max="12" step="1" value="8">
-            <div class="slider-labels">
-              <span>1h</span><span>7h</span><span>12h</span>
+          <!-- HISTORIAL -->
+          <div class="tarjeta aparecer-2">
+            <h3><i class="fi fi-bs-clock"></i> Historial de sueño</h3>
+            <div id="historialSueno" class="mt-1">
+              <p class="text-suave">Cargando registros...</p>
             </div>
           </div>
 
-          <p id="calidadAutoText" class="mt-1" style="color: var(--verde); font-weight: 600; font-size: 0.9rem;">
-            ✨ Calidad sugerida: Excelente
-          </p>
-
-          <h3 style="margin-top: 1.5rem; margin-bottom: 1rem;">¿Cómo te sientes?</h3>
-          <p class="text-suave text-sm mb-1">Puedes cambiarlo si lo deseas</p>
-          
-          <div class="animo-selector" id="calidadSueno" style="justify-content: center;">
-            <button class="animo-btn" data-calidad="Malo" title="Malo" style="width: 60px; height: 60px; font-size: 1.8rem;">😴</button>
-            <button class="animo-btn" data-calidad="Regular" title="Regular" style="width: 60px; height: 60px; font-size: 1.8rem;">😐</button>
-            <button class="animo-btn" data-calidad="Excelente" title="Excelente" style="width: 60px; height: 60px; font-size: 1.8rem;">🤩</button>
-            <button class="animo-btn" data-calidad="Excesivo" title="Excesivo" style="width: 60px; height: 60px; font-size: 1.8rem;">🥱</button>
-          </div>
-
-          <!-- 🔑 CAMPO DE MOTIVO (Oculto por defecto) -->
-          <div id="motivoContainer" style="display: none; text-align: left; margin-top: 1.5rem; background: rgba(239, 68, 68, 0.05); padding: 1rem; border-radius: var(--radio-sm); border: 1px solid rgba(239, 68, 68, 0.2);">
-            <label for="motivoSueno" style="color: var(--rojo); font-weight: 600; font-size: 0.9rem;">
-              ¿Por qué te sientes así? (Obligatorio) *
-            </label>
-            <textarea id="motivoSueno" class="form-grupo mt-0-5" style="width: 100%; min-height: 80px; border-color: var(--rojo); background: var(--bg);" placeholder="Ej. Tuve pesadillas, me desperté varias veces, mucho estrés..."></textarea>
-          </div>
-
-          <button class="btn btn-primario mt-1-5" id="btnGuardarSueno" style="width: 100%; padding: 1rem; font-size: 1.1rem;">
-            <i class="fi fi-bs-check"></i> Registrar Sueño
-          </button>
         </div>
-
-        <!-- HISTORIAL -->
-        <div class="tarjeta aparecer-2">
-          <h3><i class="fi fi-bs-clock"></i> Historial de sueño</h3>
-          <div id="historialSueno" class="mt-1">
-            <p class="text-suave">Cargando registros...</p>
-          </div>
-        </div>
-
       </div>
     </main>
   </div>

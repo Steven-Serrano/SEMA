@@ -1,12 +1,20 @@
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("registerForm");
   const submitButton = document.getElementById("btnRegister");
+  const togglePassword = document.getElementById("togglePassword");
+  const passwordInput = document.getElementById("password");
 
-  // Animación de inputs
-  document.querySelectorAll("input, select").forEach(campo => {
-    campo.addEventListener("focus", () => campo.parentElement.classList.add("activo"));
-    campo.addEventListener("blur", () => campo.parentElement.classList.remove("activo"));
-  });
+  // Mostrar/Ocultar contraseña
+  if (togglePassword) {
+    togglePassword.addEventListener("click", () => {
+      const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
+      passwordInput.setAttribute("type", type);
+      const icon = togglePassword.querySelector("i");
+      if (icon) {
+        icon.className = type === "password" ? "fa-solid fa-eye" : "fa-solid fa-eye-slash";
+      }
+    });
+  }
 
   // Envío del formulario
   form.addEventListener("submit", async function (e) {
@@ -33,7 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (password.length < 6) { document.getElementById("password").focus(); return mostrarToast("La contraseña debe tener mínimo 6 caracteres"); }
     if (password !== confirmPassword) { document.getElementById("confirmPassword").focus(); return mostrarToast("Las contraseñas no coinciden"); }
 
-    // Calcular edad
+    // Calcular edad (opcional, si el backend lo usa)
     const edad = fecha ? new Date().getFullYear() - new Date(fecha).getFullYear() : null;
 
     submitButton.disabled = true;
@@ -66,9 +74,8 @@ document.addEventListener("DOMContentLoaded", () => {
     } catch (error) {
       mostrarToast("❌ " + error.message);
     } finally {
-      // Esto asegura que el botón se restaure incluso si hay un error
       submitButton.disabled = false;
-      submitButton.innerHTML = 'Crear cuenta';
+      submitButton.innerHTML = '<i class="fa-solid fa-user-plus"></i> Crear cuenta';
     }
   });
 });

@@ -18,6 +18,7 @@
 <div id="sema-nav"></div>
 
 <div class="dashboard">
+  <!-- SIDEBAR DINÁMICO -->
   <aside class="sidebar" id="sema-sidebar"></aside>
 
   <div class="dashboard__main">
@@ -52,7 +53,7 @@
       </div>
     </header>
 
-      <!-- TERMÓMETRO -->
+    <!-- TERMÓMETRO -->
     <section class="tarjeta aparecer-2 mt-1-5">
       <h3>Mi ánimo hoy</h3>
       <p class="text-suave text-sm mb-1">¿Cómo te sientes en este momento?</p>
@@ -66,7 +67,7 @@
       </div>
     </section>
 
-    <!-- TARJETAS DE HÁBITOS (Limpias sin progreso) -->
+    <!-- TARJETAS DE HÁBITOS -->
     <div class="grid grid-3 aparecer-3 mt-1-5">
       <div class="tarjeta flex-col-between" style="text-align: center; padding: 2rem 1rem;">
         <div>
@@ -100,12 +101,11 @@
     <div class="grid grid-2 mt-1-5">
       <div class="tarjeta">
         <h3>Próxima cita</h3>
-        <div class="cita-item mt-0-8">
-          <div class="cita-fecha"><div class="dia">18</div><div class="mes">Jul</div></div>
-          <div class="cita-info"><h4>Dra. Laura Méndez</h4><p>Sesión online · 15:00</p></div>
-          <span class="badge badge-verde">Confirmada</span>
+        <!-- 🔑 El JS llenará este contenedor -->
+        <div id="contenedor-cita-dashboard" class="mt-0-8">
+          <p class="text-suave text-sm">Cargando...</p>
         </div>
-        <a href="citas.html" class="btn btn-secundario mt-0-5">Ver todas</a>
+        <a href="citas.html" class="btn btn-secundario mt-1" style="width: 100%;">Ver todas mis citas</a>
       </div>
 
       <div class="tarjeta">

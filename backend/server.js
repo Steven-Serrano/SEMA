@@ -1,8 +1,11 @@
-require('dotenv').config();
+﻿require('dotenv').config();
 const express = require('express');
+const http = require('http'); 
+const { Server } = require('socket.io'); 
 const cors = require('cors');
 const mongoose = require('mongoose');
 const path = require('path');
+const Mensaje = require('./models/Mensaje'); 
 
 // Importar rutas
 const authRoutes = require('./routes/auth');
@@ -17,10 +20,61 @@ const citasRoutes = require('./routes/citas');
 const adminRoutes = require('./routes/admin');
 const comunidadRoutes = require('./routes/comunidad');
 const habitosRoutes = require('./routes/habitos');
-
+const estadisticasRoutes = require('./routes/estadisticas');
+const authAdminRoutes = require('./routes/auth-admin');
 
 const app = express();
+const server = http.createServer(app);
 const PORT = process.env.PORT || 3000;
+
+// ==========================================
+// CONFIGURACIÓN DE SOCKET.IO
+// ==========================================
+const io = new Server(server, {
+  cors: {
+    origin: '*', 
+    methods: ['GET', 'POST']
+  }
+});
+
+app.set('io', io);
+
+// Lógica de conexión de Sockets
+io.on('connection', (socket) => {
+
+  socket.on('registrar_usuario', (userId) => {
+    if (userId) {
+      socket.join(userId.toString());
+    }
+  });
+
+  socket.on('escribiendo', ({ chatId, receptorId }) => {
+    if (receptorId) {
+      socket.to(receptorId.toString()).emit('usuario_escribiendo', chatId);
+    }
+  });
+
+  socket.on('dejo_de_escribir', ({ chatId, receptorId }) => {
+    if (receptorId) {
+      socket.to(receptorId.toString()).emit('usuario_dejo_de_escribir', chatId);
+    }
+  });
+
+  socket.on('mensajes_vistos', async ({ chatId, emisorId }) => {
+    try {
+      await Mensaje.updateMany(
+        { chatId, emisorId, leido: false },
+        { leido: true }
+      );
+      if (emisorId) {
+        socket.to(emisorId.toString()).emit('mensajes_marcados_leidos', chatId);
+      }
+    } catch (error) {
+      console.error("Error al marcar como leído:", error);
+    }
+  });
+
+});
 
 // ==========================================
 // MIDDLEWARES GLOBALES
@@ -28,12 +82,6 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-// ==========================================
-// SERVIR ARCHIVOS ESTÁTICOS (FOTOS DE PERFIL)
-// ==========================================
-// Esto permite que las fotos subidas a la carpeta /uploads
-// sean accesibles desde: http://localhost:3000/uploads/nombre-archivo.jpg
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // ==========================================
@@ -58,31 +106,15 @@ app.use('/api/citas', citasRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/comunidad', comunidadRoutes);
 app.use('/api/habitos', habitosRoutes);
+app.use('/api/estadisticas', estadisticasRoutes);
+app.use('/api/auth-admin', authAdminRoutes);
 
-// ==========================================
-// RUTA DE PRUEBA
-// ==========================================
+// Ruta de prueba
 app.get('/', (req, res) => {
-  res.json({ 
-    mensaje: 'Servidor SEMA funcionando correctamente ✅',
-    version: '1.0.0',
-    endpoints: {
-      auth: '/api/auth',
-      usuarios: '/api/usuarios',
-      psicologos: '/api/psicologos',
-      citas: '/api/citas',
-      chats: '/api/chats',
-      mensajes: '/api/mensajes',
-      notificaciones: '/api/notificaciones',
-      estados: '/api/estados-emocionales'
-    }
-  });
+  res.json({ mensaje: 'Servidor SEMA funcionando ✅', version: '1.0.0' });
 });
 
-// ==========================================
-// INICIAR SERVIDOR
-// ==========================================
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`🚀 Servidor SEMA corriendo en http://localhost:${PORT}`);
-  console.log(`📁 Carpeta uploads disponible en http://localhost:${PORT}/uploads`);
+  console.log(`🔌 Socket.io escuchando conexiones en tiempo real`);
 });

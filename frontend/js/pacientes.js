@@ -23,21 +23,18 @@
             let usuarios = [];
             let chats = [];
 
-            // 1. Intentar traer a TODOS los estudiantes registrados
             try {
                 usuarios = await fetchAuth('/usuarios/pacientes');
             } catch (error) {
                 console.warn('La ruta /usuarios/pacientes falló, usando chats...');
             }
 
-            // 2. Traer los chats para saber quién ya tiene conversación
             try {
                 chats = await fetchAuth('/chats');
             } catch (error) {
                 console.warn('No se pudieron cargar los chats');
             }
 
-            // 3. Cruzar la información
             if (usuarios.length > 0) {
                 pacientesData = usuarios.map(u => {
                     const chatExistente = chats.find(c => c.usuarioId?._id === u._id);
@@ -46,12 +43,11 @@
                         nombre: u.nombre || 'Paciente',
                         email: u.email || 'Sin correo',
                         fotoPerfil: u.fotoPerfil || null,
-                        chatId: chatExistente ? chatExistente._id : null, // Si tiene chat, guardamos su ID
+                        chatId: chatExistente ? chatExistente._id : null, 
                         ultimaActividad: chatExistente ? chatExistente.updatedAt : u.createdAt
                     };
                 });
             } else {
-                // Respaldo por si la ruta falla (solo muestra los que tienen chat)
                 pacientesData = chats.map(c => ({
                     id: c.usuarioId?._id,
                     nombre: c.usuarioId?.nombre || 'Paciente',
@@ -93,15 +89,20 @@
                   })
                 : 'Sin actividad';
             
-            // 🔑 Foto o iniciales
+            // 🔑 Renderizado de foto o iniciales
             const avatarHtml = paciente.fotoPerfil 
                 ? `<img src="${getImgUrl(paciente.fotoPerfil)}" class="avatar-grande" style="object-fit: cover;">` 
                 : `<div class="avatar-grande">${iniciales}</div>`;
 
-            // 🔑 Botón dinámico: Si tiene chat va al chat, si no, lo inicia.
             const botonChat = paciente.chatId
                 ? `<a href="chat.html?chat=${paciente.chatId}" class="btn btn-primario btn-sm"><i class="fi fi-bs-comment"></i> Chat</a>`
                 : `<a href="chat.html?nuevoChat=${paciente.id}" class="btn btn-secundario btn-sm"><i class="fi fi-bs-comment"></i> Iniciar</a>`;
+
+            const botonSeguimiento = `
+                <a href="seguimiento.html?paciente=${paciente.id}" class="btn btn-secundario btn-sm" title="Ver Seguimiento">
+                    <i class="fi fi-bs-chart-line-up"></i> Seguimiento
+                </a>
+            `;
 
             return `
                 <div class="paciente-item">
@@ -112,6 +113,7 @@
                         <small class="text-suave">Última actividad: ${fecha}</small>
                     </div>
                     <div class="flex gap-0-5">
+                        ${botonSeguimiento}
                         ${botonChat}
                         <a href="citas-psicologo.html" class="btn btn-secundario btn-sm">
                             <i class="fi fi-bs-calendar"></i> Citas
@@ -133,7 +135,6 @@
         });
     }
 
-    // MENÚ Y LOGOUT
     const userMenuBtn = document.getElementById('userMenuBtn');
     const userDropdown = document.getElementById('userDropdown');
     if (userMenuBtn && userDropdown) {

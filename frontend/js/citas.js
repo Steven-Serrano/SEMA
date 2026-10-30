@@ -30,17 +30,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                 option.value = p._id;
                 option.textContent = `${p.nombre} - ${p.especialidad}`;
                 
-                if (p._id === psicologoIdPreSeleccionado) {
-                    option.selected = true;
-                }
-                
+                if (p._id === psicologoIdPreSeleccionado) option.selected = true;
                 psiSelect.appendChild(option);
             });
 
-            // Si venimos desde el directorio, actualizar horas si ya hay fecha
-            if (psicologoIdPreSeleccionado) {
-                actualizarHorasDisponibles();
-            }
+            if (psicologoIdPreSeleccionado) actualizarHorasDisponibles();
             
         } catch (error) {
             psiSelect.innerHTML = '<option value="">Error al cargar psicólogos</option>';
@@ -63,7 +57,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         const psicologo = psicologosData.find(p => p._id === psiId);
         if (!psicologo) return;
 
-        // Buscar si el psicólogo tiene un turno para esa fecha exacta
         const turnosDelDia = psicologo.disponibilidad?.filter(d => d.fecha === fechaSeleccionada) || [];
 
         if (turnosDelDia.length === 0) {
@@ -74,7 +67,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         horaSelect.disabled = false;
         
-        // Generar bloques de 1 hora para cada turno del día
         turnosDelDia.forEach(turno => {
             const hInicio = parseInt(turno.inicio.split(':')[0]);
             const hFin = parseInt(turno.fin.split(':')[0]);
@@ -89,7 +81,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    // Escuchar cambios en el psicólogo y en la fecha
     psiSelect.addEventListener('change', actualizarHorasDisponibles);
     fechaInput.addEventListener('change', actualizarHorasDisponibles);
 
@@ -103,7 +94,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 return;
             }
             
-            const citasOrdenadas = citas.sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
+            const citasOrdenadas = citas.sort((a, b) => new Date(b.fecha) - new Date(a.fecha)); 
             
             listaCitas.innerHTML = citasOrdenadas.map(cita => {
                 const fechaObj = new Date(cita.fecha);
@@ -115,9 +106,27 @@ document.addEventListener('DOMContentLoaded', async () => {
                 let badgeClass = 'badge-azul';
                 if (cita.estado === 'confirmada') badgeClass = 'badge-verde';
                 if (cita.estado === 'cancelada') badgeClass = 'badge-rojo';
+                if (cita.estado === 'completada') badgeClass = 'badge-gris';
+
+                // 🔑 LÓGICA DE BOTONES
+                let botonAccion = '';
+                if (cita.estado === 'pendiente' || cita.estado === 'confirmada') {
+                    botonAccion = `
+                        <button class="btn btn-secundario btn-sm" onclick="cancelarCita('${cita._id}')" style="color: var(--rojo); border-color: rgba(239,68,68,0.3); font-size: 0.75rem; padding: 0.3rem 0.6rem;">
+                            Cancelar
+                        </button>
+                    `;
+                } else {
+                    // Botón de ocultar (Soft Delete)
+                    botonAccion = `
+                        <button class="btn-fantasma" onclick="ocultarCita('${cita._id}')" title="Ocultar de mi vista" style="color: var(--texto-suave); opacity: 0.6; padding: 0.3rem; transition: 0.2s;">
+                            <i class="fi fi-bs-trash" style="font-size: 1rem;"></i>
+                        </button>
+                    `;
+                }
                 
                 return `
-                    <div class="cita-item">
+                    <div class="cita-item" style="align-items: flex-start;">
                         <div class="cita-fecha">
                             <div class="dia">${dia}</div>
                             <div class="mes">${mes}</div>
@@ -127,9 +136,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                             <p>${cita.hora} · ${cita.motivo || 'Sin motivo especificado'}</p>
                             <small class="text-suave text-sm block mt-0-5">${especialidad}</small>
                         </div>
-                        <span class="badge ${badgeClass}">
-                            ${cita.estado.charAt(0).toUpperCase() + cita.estado.slice(1)}
-                        </span>
+                        <div class="flex flex-col align-end gap-0-5">
+                            <span class="badge ${badgeClass}">
+                                ${cita.estado.charAt(0).toUpperCase() + cita.estado.slice(1)}
+                            </span>
+                            ${botonAccion}
+                        </div>
                     </div>
                 `;
             }).join('');
@@ -139,7 +151,33 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-    // 4. ENVIAR NUEVA CITA
+    // 4. CANCELAR CITA (Cambia estado)
+    window.cancelarCita = async function(id) {
+        if (!confirm('¿Estás seguro de que deseas cancelar esta cita?')) return;
+
+        try {
+            await fetchAuth(`/citas/${id}/cancelar`, { method: 'PUT' });
+            mostrarToast('✅ Cita cancelada');
+            cargarCitas(); 
+        } catch (error) {
+            mostrarToast('❌ ' + error.message);
+        }
+    };
+
+    // 5. OCULTAR CITA (Soft Delete)
+    window.ocultarCita = async function(id) {
+        if (!confirm('¿Quitar esta cita de tu vista? (El psicólogo conservará el registro)')) return;
+
+        try {
+            await fetchAuth(`/citas/${id}/ocultar`, { method: 'PUT' });
+            mostrarToast('🗑️ Cita ocultada');
+            cargarCitas(); 
+        } catch (error) {
+            mostrarToast('❌ ' + error.message);
+        }
+    };
+
+    // 6. ENVIAR NUEVA CITA
     if (formCita) {
         formCita.addEventListener('submit', async (e) => {
             e.preventDefault();

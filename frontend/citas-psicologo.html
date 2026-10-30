@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Mis Citas · SEMA</title>
   <link rel="icon" type="image/png" href="assets/logo.png">
-  
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/@flaticon/flaticon-uicons@3.3.1/css/bold/straight.css" rel="stylesheet">
   
@@ -21,21 +20,10 @@
   <div id="sema-nav"></div>
 
   <div class="dashboard">
-    
-    <aside class="sidebar">
-      <h5>Panel Profesional</h5>
-      <a href="dashboard-psicologo.html"><i class="fi fi-bs-home"></i> Mi Panel</a>
-      <a href="chat.html"><i class="fi fi-bs-comment"></i> Mensajes</a>
-      <a href="citas-psicologo.html" class="activo"><i class="fi fi-bs-calendar"></i> Mis Citas</a>
-      <a href="pacientes.html"><i class="fi fi-bs-users"></i> Mis Pacientes</a>
-      <h5>Cuenta</h5>
-      <a href="perfil.html"><i class="fi fi-bs-user"></i> Mi Perfil</a>
-      <a href="configuracion.html"><i class="fi fi-bs-settings"></i> Configuración</a>
-      <a href="index.html" class="logout-link"><i class="fi fi-bs-exit"></i> Cerrar sesión</a>
-    </aside>
+    <!-- SIDEBAR DINÁMICO -->
+    <aside class="sidebar" id="sema-sidebar"></aside>
 
     <main class="dashboard__main">
-      
       <header class="dashboard-header">
         <div class="dashboard-title">
           <h1>Mis Citas Agendadas</h1>
@@ -56,7 +44,7 @@
               <a href="perfil.html"><i class="fi fi-bs-user"></i> Mi perfil</a>
               <a href="configuracion.html"><i class="fi fi-bs-settings"></i> Configuración</a>
               <hr>
-              <a href="index.html"><i class="fi fi-bs-exit"></i> Cerrar sesión</a>
+              <a href="index.html" class="logout-link"><i class="fi fi-bs-exit"></i> Cerrar sesión</a>
             </div>
           </div>
         </div>

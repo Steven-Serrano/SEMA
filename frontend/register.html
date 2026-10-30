@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 <html lang="es" data-theme="light">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Crear cuenta · SEMA</title>
-  <link rel="icon" type="image/png" href="assets/logo.png">
+  <link rel="icon" type="image/png" href="assets/logo.png" />
   
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   
-  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/styles.css" />
+  
   <script defer src="js/api.js"></script>
   <script defer src="js/app.js"></script>
   <script defer src="js/register.js"></script>
@@ -17,53 +18,59 @@
 <body>
 
 <section class="login">
+  <!-- Lado izquierdo: Branding -->
   <div class="login__left">
     <div class="login__content">
       <img src="assets/logo.png" class="login__logo" alt="SEMA" style="background:#fff; padding:10px; border-radius:20px;">
       
       <span class="chip mt-1">
-        <i class="fa-solid fa-heart" style="color: var(--azul, #2563eb);"></i> 
-        Comunicación que Sana
+        <i class="fa-solid fa-star"></i> Únete a SEMA
       </span>
       
-      <h1>Únete a SEMA</h1>
-      <p>Crea tu cuenta y comienza tu camino hacia el bienestar emocional.</p>
+      <h1>Empieza tu camino de bienestar.</h1>
+      <p>Crea tu cuenta y accede a herramientas diseñadas para cuidar tu salud mental.</p>
       
       <div class="login__features">
-        <div><i class="fa-solid fa-comment-dots"></i> Comunidad segura</div>
+        <div><i class="fa-solid fa-shield-halved"></i> Datos protegidos</div>
+        <div><i class="fa-solid fa-heart"></i> Espacio libre de juicios</div>
         <div><i class="fa-solid fa-user-doctor"></i> Psicólogos verificados</div>
-        <div><i class="fa-solid fa-chart-simple"></i> Seguimiento emocional</div>
-        <div><i class="fa-solid fa-lock"></i> Privacidad protegida</div>
       </div>
     </div>
   </div>
 
-  <div class="login__right">
-    <div class="login__card" style="max-width: 700px;">
+  <!-- Lado derecho: Formulario -->
+  <div class="login__right" style="align-items: flex-start; padding-top: 2rem; padding-bottom: 2rem;">
+    <div class="login__card" style="max-width: 550px; width: 100%;">
       <h2>Crear cuenta</h2>
-      <p>Completa la información para registrarte.</p>
-      
+      <p>Completa tus datos para comenzar.</p>
+
       <form id="registerForm">
-        <h3 class="mt-1-5 mb-1" style="color: var(--primario);">
-          <i class="fa-solid fa-clipboard-list"></i> Información personal
-        </h3>
         
-        <div class="grid grid-2">
+        <!-- SECCIÓN 1: DATOS PERSONALES -->
+        <div class="register-section">
+          <h3 class="register-section-title">
+            <i class="fa-solid fa-user"></i> Información personal
+          </h3>
+          
           <div class="form-grupo">
             <label>Nombre completo *</label>
             <input type="text" id="nombre" placeholder="Ej. Ana Pérez" required>
           </div>
           <div class="form-grupo">
-            <label>Documento *</label>
+            <label>Documento de identidad *</label>
             <input type="text" id="documento" placeholder="Ej. 10203040" required>
           </div>
           <div class="form-grupo">
-            <label>Correo *</label>
+            <label>Correo electrónico *</label>
             <input type="email" id="correo" placeholder="correo@ejemplo.com" required>
           </div>
           <div class="form-grupo">
             <label>Teléfono</label>
             <input type="tel" id="telefono" placeholder="Ej. 3001234567">
+          </div>
+          <div class="form-grupo">
+            <label>Ciudad</label>
+            <input type="text" id="ciudad" placeholder="Ej. Bogotá">
           </div>
           <div class="form-grupo">
             <label>Fecha de nacimiento</label>
@@ -79,63 +86,70 @@
               <option>Prefiero no decirlo</option>
             </select>
           </div>
-          <div class="form-grupo">
-            <label>Ciudad</label>
-            <input type="text" id="ciudad" placeholder="Ej. Bogotá">
-          </div>
         </div>
 
-        <h3 class="mt-1-5 mb-1" style="color: var(--primario);">
-          <i class="fa-solid fa-graduation-cap"></i> Información SENA
-        </h3>
-        
-        <div class="grid grid-2">
+        <!-- SECCIÓN 2: INFORMACIÓN SENA -->
+        <div class="register-section">
+          <h3 class="register-section-title">
+            <i class="fa-solid fa-graduation-cap"></i> Información SENA
+          </h3>
+          
           <div class="form-grupo">
             <label>Número de ficha *</label>
-            <input type="text" id="numeroFicha" placeholder="Ej: 3229944" required>
+            <input type="text" id="numeroFicha" placeholder="Ej. 3229944" required>
+            <small class="text-suave text-sm mt-0-5" style="display: block;">Es el número que te asignó el SENA al matricularte.</small>
           </div>
           <div class="form-grupo">
             <label>Programa de formación *</label>
-            <input type="text" id="programaFormacion" placeholder="Ej: ADSO" required>
+            <input type="text" id="programaFormacion" placeholder="Ej. Análisis y Desarrollo de Software" required>
           </div>
         </div>
 
-        <h3 class="mt-1-5 mb-1" style="color: var(--primario);">
-          <i class="fa-solid fa-shield-halved"></i> Seguridad
-        </h3>
-        
-        <div class="grid grid-2">
+        <!-- SECCIÓN 3: SEGURIDAD -->
+        <div class="register-section">
+          <h3 class="register-section-title">
+            <i class="fa-solid fa-lock"></i> Seguridad
+          </h3>
+          
           <div class="form-grupo">
             <label>Contraseña *</label>
-            <input type="password" id="password" placeholder="Mínimo 6 caracteres" required>
+            <div class="password-box">
+              <input type="password" id="password" placeholder="Mínimo 6 caracteres" required>
+              <button type="button" id="togglePassword" aria-label="Mostrar contraseña">
+                <i class="fa-solid fa-eye"></i>
+              </button>
+            </div>
           </div>
           <div class="form-grupo">
             <label>Confirmar contraseña *</label>
-            <input type="password" id="confirmPassword" placeholder="Repite tu contraseña" required>
+            <div class="password-box">
+              <input type="password" id="confirmPassword" placeholder="Repite tu contraseña" required>
+            </div>
           </div>
         </div>
 
-        <div class="mt-1-5 mb-1-5">
-          <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; font-size: 0.9rem;">
-            <input type="checkbox" required> 
-            Acepto los términos y condiciones y la política de privacidad.
+        <!-- TÉRMINOS Y CONDICIONES -->
+        <div class="mt-1 mb-1-5">
+          <label style="display: flex; align-items: flex-start; gap: 0.5rem; cursor: pointer; font-size: 0.9rem; color: var(--texto-suave);">
+            <input type="checkbox" required style="margin-top: 3px;"> 
+            Acepto los términos y condiciones y la política de privacidad de SEMA.
           </label>
         </div>
 
-        <button class="btn btn-primario login__btn" type="submit" id="btnRegister">
-          Crear cuenta
+        <button class="btn btn-primario login__btn" type="submit" id="btnRegister" style="width: 100%; padding: 1rem; font-size: 1.05rem;">
+          <i class="fa-solid fa-user-plus"></i> Crear cuenta
         </button>
       </form>
 
       <div class="login__divider"><span>o</span></div>
       
-      <a class="btn btn-secundario login__register" href="login.html">
+      <a class="btn btn-secundario login__register" href="login.html" style="width: 100%;">
         Ya tengo una cuenta
       </a>
       
       <div class="login__back mt-1">
         <a href="index.html">
-          <i class="fa-solid fa-arrow-left" style="font-size: 0.9em;"></i> Volver al inicio
+          <i class="fa-solid fa-arrow-left"></i> Volver al inicio
         </a>
       </div>
     </div>

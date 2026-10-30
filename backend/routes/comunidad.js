@@ -84,5 +84,20 @@ router.post('/', verificarToken, async (req, res) => {
 
 });
 
+// GET /api/comunidad/publicas - Obtener las últimas 3 publicaciones para el Landing (Sin Token)
+router.get('/publicas', async (req, res) => {
+  try {
+    const posts = await Publicacion.find()
+      .populate('autor', 'nombre fotoPerfil') // Traemos los datos del autor
+      .sort({ createdAt: -1 }) // Las más recientes primero
+      .limit(3); // Solo las 3 últimas
+
+    res.json(posts);
+  } catch (err) {
+    console.error("Error cargando posts públicos:", err);
+    res.status(500).json({ error: 'Error al obtener las publicaciones públicas' });
+  }
+});
+
 
 module.exports = router;

@@ -1,6 +1,23 @@
 document.addEventListener('DOMContentLoaded', async () => {
     if (typeof Auth === 'undefined' || !Auth.getToken()) return;
 
+    const user = Auth.getUser();
+    const esPsicologo = user.rol === 'psicologo';
+
+    // 🔑 DETECTAR SI ESTAMOS VIENDO A UN PACIENTE
+    const urlParams = new URLSearchParams(window.location.search);
+    const pacienteId = urlParams.get('paciente');
+    const queryStr = pacienteId ? `?paciente=${pacienteId}` : '';
+
+    // Cambiar la interfaz si es un psicólogo viendo a un paciente
+    if (pacienteId && esPsicologo) {
+        document.getElementById('titulo-seguimiento').textContent = "Seguimiento del Paciente";
+        document.getElementById('subtitulo-seguimiento').textContent = "Revisa el progreso emocional de tu estudiante.";
+        document.getElementById('btn-volver').href = "pacientes.html";
+        document.getElementById('btn-volver').innerHTML = '<i class="fi fi-bs-arrow-left"></i> Volver a Pacientes';
+        document.getElementById('seccion-calendario').textContent = "Calendario de Sueño del Paciente";
+    }
+
     const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
     const fechaActual = new Date();
     const mesActual = fechaActual.getMonth();
@@ -11,19 +28,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     const emojisEmociones = { 'Muy bien': '😄', 'Bien': '🙂', 'Neutro': '😐', 'Triste': '😔', 'Ansioso': '😰' };
     const emojisSueno = { 'Malo': '😴', 'Regular': '😐', 'Excelente': '🤩', 'Excesivo': '🥱' };
 
-    // ==========================================
     // 1. CARGAR TODOS LOS DATOS EN PARALELO
-    // ==========================================
     async function cargarTodo() {
         try {
-            // Pedimos los 3 endpoints al mismo tiempo
+            // 🔑 Agregamos el queryStr a las peticiones si es psicólogo
             const [stats, estados, suenos] = await Promise.all([
-                fetchAuth('/habitos/resumen-mensual').catch(() => null),
-                fetchAuth('/estados-emocionales').catch(() => []),
-                fetchAuth('/habitos/sueno').catch(() => [])
+                fetchAuth('/habitos/resumen-mensual' + queryStr).catch(() => null),
+                fetchAuth('/estados-emocionales' + queryStr).catch(() => []),
+                fetchAuth('/habitos/sueno' + queryStr).catch(() => [])
             ]);
 
-            // Una vez que tenemos los datos, los dibujamos
             renderResumenMensual(stats);
             renderEmociones(estados);
             renderCalendarioSueno(suenos);
@@ -34,15 +48,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-    // ==========================================
     // 2. GENERAR EL RESUMEN INTELIGENTE
-    // ==========================================
     function generarResumenGeneral(stats, estados) {
         const icono = document.getElementById('resumen-icono');
         const titulo = document.getElementById('resumen-titulo');
         const desc = document.getElementById('resumen-descripcion');
 
-        // Contar emociones positivas y negativas
         let positivas = 0;
         let negativas = 0;
         
@@ -51,35 +62,31 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (e.estado === 'Triste' || e.estado === 'Ansioso') negativas++;
         });
 
-        // Contar hábitos totales
         const totalHabitos = (stats?.meditacion || 0) + (stats?.diario || 0) + (stats?.sueno || 0);
 
-        // Lógica del veredicto
         if (totalHabitos === 0 && estados.length === 0) {
             icono.textContent = '🌱';
             titulo.textContent = 'Es un nuevo comienzo';
-            desc.textContent = 'Aún no tienes registros este mes. ¡Empieza a usar tus herramientas y llena este espacio!';
+            desc.textContent = 'Aún no hay registros este mes.';
         } 
         else if (positivas > negativas && totalHabitos >= 5) {
             icono.textContent = '🌟';
-            titulo.textContent = '¡Estás imparable!';
-            desc.textContent = 'Tu ánimo es muy positivo y estás siendo muy constante con tus hábitos. ¡Sigue así, campeón!';
+            titulo.textContent = '¡Está imparable!';
+            desc.textContent = 'Su ánimo es muy positivo y está siendo constante con sus hábitos.';
         } 
         else if (negativas > positivas) {
             icono.textContent = '💙';
             titulo.textContent = 'Hemos notado días pesados';
-            desc.textContent = 'No estás solo. Recuerda que puedes hablar con un psicólogo en el chat o usar el botón SOS si lo necesitas.';
+            desc.textContent = 'Requiere atención. Te sugerimos revisar su diario o enviarle un mensaje de apoyo.';
         } 
         else {
             icono.textContent = '🚀';
-            titulo.textContent = 'Vas por buen camino';
-            desc.textContent = 'Tus emociones están equilibradas y estás construyendo hábitos. ¡Un paso a la vez!';
+            titulo.textContent = 'Va por buen camino';
+            desc.textContent = 'Sus emociones están equilibradas y está construyendo hábitos.';
         }
     }
 
-    // ==========================================
     // 3. RENDERIZAR TOTALES
-    // ==========================================
     function renderResumenMensual(stats) {
         if (stats) {
             document.getElementById('total-meditacion').textContent = stats.meditacion || 0;
@@ -88,9 +95,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-    // ==========================================
     // 4. RENDERIZAR EMOCIONES
-    // ==========================================
     function renderEmociones(estados) {
         const graficoContainer = document.getElementById('grafico-emociones');
         const listaContainer = document.getElementById('lista-emociones');
@@ -133,9 +138,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }).join('');
     }
 
-    // ==========================================
     // 5. RENDERIZAR CALENDARIO
-    // ==========================================
     function renderCalendarioSueno(registros) {
         const wrapper = document.getElementById('calendario-sueno');
         const diasEnMes = new Date(anioActual, mesActual + 1, 0).getDate();

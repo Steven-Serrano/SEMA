@@ -3,191 +3,277 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Inicio · SEMA</title>
-  <meta name="description" content="SEMA — Comunicación que Sana. Plataforma de salud mental juvenil, acompañamiento emocional y comunidad." />
+  <title>SEMA · Comunicación que Sana</title>
+  <meta name="description" content="SEMA — Plataforma de salud mental juvenil, acompañamiento emocional y comunidad." />
   <link rel="icon" type="image/png" href="assets/logo.png" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  
+  <!-- Fuentes -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Estilos Globales -->
   <link rel="stylesheet" href="css/styles.css" />
-  <script defer src="js/app.js"></script>    
+  
+  <!-- Scripts -->
+  <script defer src="js/api.js"></script>
+  <script defer src="js/app.js"></script>
+  <script defer src="js/landing.js"></script>
 </head>
-<body>
-  <div id="sema-nav"></div>
+<body class="landing-page" style="background-color: #0B1220;">
+
+  <!-- ========== NAVBAR ESTÁTICO ========== -->
+  <nav class="navbar" style="background: rgba(11, 18, 32, 0.85); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255,255,255,0.05);">
+    <div class="navbar__logo">
+      <img src="assets/logo.png" alt="SEMA" class="navbar__logo-img">
+      <div>
+        <h1 id="logoSema" style="color: #fff; margin: 0; cursor: pointer; user-select: none;">SEMA</h1>
+        <small style="color: #94A3B8;">Comunicación que Sana</small>
+      </div>
+    </div>
+    <ul class="navbar__menu">
+      <li><a href="#beneficios" style="color: #E2E8F0;">Beneficios</a></li>
+      <li><a href="#como-funciona" style="color: #E2E8F0;">Cómo funciona</a></li>
+      <li><a href="#testimonios" style="color: #E2E8F0;">Comunidad</a></li>
+    </ul>
+    <div class="flex align-center gap-0-5">
+      <a href="login.html" class="btn btn-fantasma" style="color: #fff;">Iniciar Sesión</a>
+      <a href="register.html" class="btn btn-primario">Registrarse</a>
+    </div>
+  </nav>
 
   <!-- ========== HERO ========== -->
   <section class="hero">
     <div class="contenedor hero__grid">
       <div class="aparecer">
-        <span class="chip">
-          <i class="fa-solid fa-heart" style="color: var(--azul, #2563eb);"></i> 
-          Salud mental para jóvenes
+        <span class="chip" style="background: rgba(37, 99, 235, 0.15); color: #60A5FA;">
+          <i class="fa-solid fa-heart" style="color: #10B981;"></i> 
+          Bienestar emocional para jóvenes
         </span>
-        <h1>Comunicación que <span>Sana</span>, apoyo que transforma.</h1>
-        <p class="hero__desc">
-          SEMA es tu espacio seguro para conectar con profesionales, hacer seguimiento a tu bienestar
-          y crecer junto a una comunidad que te entiende.
+        <h1 style="margin-top: 1rem; color: #fff;">Comunicación que <span style="color: #60A5FA;">Sana</span>, apoyo que transforma.</h1>
+        <p class="hero__desc" style="font-size: 1.15rem; max-width: 500px; color: #94A3B8;">
+          SEMA es tu espacio seguro. Conecta con profesionales verificados, haz seguimiento a tus emociones y crece junto a una comunidad que realmente te entiende.
         </p>
-        <div class="hero__cta">
-          <a href="login.html" class="btn btn-primario">Comenzar mi bienestar</a>
+        <div class="hero__cta flex align-center gap-1">
+          <a href="register.html" class="btn btn-primario" style="padding: 1rem 2rem; font-size: 1.1rem;">Comenzar ahora</a>
+          <a href="#beneficios" class="btn btn-secundario" style="padding: 1rem 2rem; font-size: 1.1rem;">Conocer más</a>
+        </div>
+        <div class="flex align-center gap-1 mt-2">
+          <div class="flex" style="color: #F59E0B; font-size: 1.2rem; gap: 4px;">
+            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+          </div>
+          <!-- ID para el texto dinámico de usuarios reales -->
+          <p class="text-sm" id="texto-confianza" style="margin: 0; color: #94A3B8;">Cargando datos...</p>
         </div>
       </div>
-      <div class="hero__media aparecer-2 flotar">
-        <img src="assets/hero.jpg" alt="Ilustración de conexión emocional" />
+      <div class="hero__media aparecer-2 flotar" style="position: relative;">
+        <img src="assets/hero.jpg" alt="Ilustración de conexión emocional" style="border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.4);" />
+        
+        <!-- Adorno flotante -->
+        <div class="tarjeta aparecer-3" style="position: absolute; bottom: -20px; left: -20px; padding: 1rem; display: flex; align-items: center; gap: 1rem; background: #111A2E; border-radius: var(--radio); box-shadow: var(--sombra-lg); border: 1px solid #1E293B;">
+          <div class="avatar" style="background: #10B981; color: white;"><i class="fa-solid fa-check"></i></div>
+          <div>
+            <h4 style="margin: 0; font-size: 0.9rem; color: #F1F5F9;">Psicólogos verificados</h4>
+            <p style="margin: 0; font-size: 0.75rem; color: #94A3B8;">100% Confidencial</p>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- ========== STATS ========== -->
-  <section class="contenedor">
-    <div class="stats">
-      <div class="tarjeta text-center">
-        <div class="num">+15k</div>
-        <p>Jóvenes acompañados</p>
+  <!-- ========== STATS (Datos Reales) ========== -->
+  <section class="contenedor mt-2">
+    <div class="stats tarjeta" style="padding: 2.5rem; border-radius: var(--radio-lg); background: #111A2E; border: 1px solid #1E293B;">
+      <div class="text-center">
+        <div class="num" id="stat-usuarios" style="color: #60A5FA;">0</div>
+        <p class="text-sm" style="color: #94A3B8;">Jóvenes registrados</p>
       </div>
-      <div class="tarjeta text-center">
-        <div class="num">200+</div>
-        <p>Psicólogos verificados</p>
+      <div class="text-center">
+        <div class="num" id="stat-psicologos" style="color: #34D399;">0</div>
+        <p class="text-sm" style="color: #94A3B8;">Psicólogos activos</p>
       </div>
-      <div class="tarjeta text-center">
-        <div class="num">24/7</div>
-        <p>Apoyo disponible</p>
+      <div class="text-center">
+        <div class="num" id="stat-citas" style="color: #FBBF24;">0</div>
+        <p class="text-sm" style="color: #94A3B8;">Citas agendadas</p>
       </div>
-      <div class="tarjeta text-center">
-        <div class="num">98%</div>
-        <p>Satisfacción</p>
+      <div class="text-center">
+        <div class="num" id="stat-publicaciones" style="color: #A78BFA;">0</div>
+        <p class="text-sm" style="color: #94A3B8;">Historias compartidas</p>
       </div>
     </div>
   </section>
 
   <!-- ========== BENEFICIOS ========== -->
-  <section class="seccion">
+  <section class="seccion" id="beneficios">
     <div class="contenedor">
       <div class="seccion__titulo">
         <span class="chip">Herramientas</span>
-        <h2>Todo lo que necesitas para sentirte mejor</h2>
-        <p>Diseñado con base en psicología positiva y tecnología cálida.</p>
+        <h2 style="color: #fff;">Todo lo que necesitas para sentirte mejor</h2>
+        <p style="color: #94A3B8;">Diseñado con base en psicología positiva y tecnología cálida.</p>
       </div>
       <div class="grid grid-3">
-        <article class="tarjeta">
-          <div class="tarjeta__icono"><i class="fa-solid fa-comments"></i></div>
-          <h3>Chat con profesionales</h3>
-          <p>Conversaciones seguras y confidenciales cuando lo necesites.</p>
+        <article class="tarjeta tarjeta-hover" style="text-align: left; background: #111A2E; border-color: #1E293B;">
+          <div class="tarjeta__icono" style="background: rgba(37, 99, 235, 0.15); color: #60A5FA;"><i class="fa-solid fa-comments"></i></div>
+          <h3 style="color: #fff;">Chat con profesionales</h3>
+          <p style="color: #94A3B8;">Conversaciones seguras y 100% confidenciales cuando lo necesites.</p>
         </article>
-        <article class="tarjeta">
-          <div class="tarjeta__icono"><i class="fa-solid fa-chart-line"></i></div>
-          <h3>Seguimiento emocional</h3>
-          <p>Registra tu estado de ánimo y visualiza tu progreso día a día.</p>
+        <article class="tarjeta tarjeta-hover" style="text-align: left; background: #111A2E; border-color: #1E293B;">
+          <div class="tarjeta__icono" style="background: rgba(16, 185, 129, 0.15); color: #34D399;"><i class="fa-solid fa-chart-line"></i></div>
+          <h3 style="color: #fff;">Seguimiento emocional</h3>
+          <p style="color: #94A3B8;">Registra tu estado de ánimo y visualiza tu progreso día a día con gráficos.</p>
         </article>
-        <article class="tarjeta">
-          <div class="tarjeta__icono"><i class="fa-solid fa-calendar-check"></i></div>
-          <h3>Citas fáciles</h3>
-          <p>Agenda, reprograma o cancela sesiones en un par de clics.</p>
+        <article class="tarjeta tarjeta-hover" style="text-align: left; background: #111A2E; border-color: #1E293B;">
+          <div class="tarjeta__icono" style="background: rgba(245, 158, 11, 0.15); color: #FBBF24;"><i class="fa-solid fa-calendar-check"></i></div>
+          <h3 style="color: #fff;">Citas fáciles</h3>
+          <p style="color: #94A3B8;">Agenda, reprograma o cancela sesiones en un par de clics.</p>
         </article>
-        <article class="tarjeta">
-          <div class="tarjeta__icono"><i class="fa-solid fa-user-doctor"></i></div>
-          <h3>Directorio verificado</h3>
-          <p>Psicólogos con credenciales revisadas y reseñas reales.</p>
+        <article class="tarjeta tarjeta-hover" style="text-align: left; background: #111A2E; border-color: #1E293B;">
+          <div class="tarjeta__icono" style="background: rgba(139, 92, 246, 0.15); color: #A78BFA;"><i class="fa-solid fa-user-doctor"></i></div>
+          <h3 style="color: #fff;">Directorio verificado</h3>
+          <p style="color: #94A3B8;">Psicólogos con credenciales revisadas y reseñas reales.</p>
         </article>
-        <article class="tarjeta">
-          <div class="tarjeta__icono"><i class="fa-solid fa-seedling"></i></div>
-          <h3>Comunidad SEMA</h3>
-          <p>Comparte tu experiencia con jóvenes que te entienden.</p>
+        <article class="tarjeta tarjeta-hover" style="text-align: left; background: #111A2E; border-color: #1E293B;">
+          <div class="tarjeta__icono" style="background: rgba(16, 185, 129, 0.15); color: #34D399;"><i class="fa-solid fa-seedling"></i></div>
+          <h3 style="color: #fff;">Comunidad SEMA</h3>
+          <p style="color: #94A3B8;">Comparte tu experiencia con jóvenes que te entienden en un espacio seguro.</p>
         </article>
-        <article class="tarjeta">
-          <div class="tarjeta__icono"><i class="fa-solid fa-headphones"></i></div>
-          <h3>Recursos guiados</h3>
-          <p>Meditaciones, audios y ejercicios prácticos para tu día.</p>
+        <article class="tarjeta tarjeta-hover" style="text-align: left; background: #111A2E; border-color: #1E293B;">
+          <div class="tarjeta__icono" style="background: rgba(239, 68, 68, 0.15); color: #F87171;"><i class="fa-solid fa-headphones"></i></div>
+          <h3 style="color: #fff;">Recursos guiados</h3>
+          <p style="color: #94A3B8;">Meditaciones, audios y ejercicios prácticos para tu día a día.</p>
         </article>
       </div>
     </div>
   </section>
 
-  <!-- ========== TESTIMONIOS ========== -->
-  <section class="seccion bg-superficie">
+  <!-- ========== CÓMO FUNCIONA ========== -->
+  <section class="seccion" id="como-funciona" style="background: #0B1220;">
+    <div class="contenedor">
+      <div class="seccion__titulo">
+        <span class="chip">Paso a paso</span>
+        <h2 style="color: #fff;">¿Cómo empiezo mi camino?</h2>
+      </div>
+      <div class="grid grid-3">
+        <div class="text-center">
+          <div class="avatar-grande" style="margin: 0 auto 1.5rem; width: 80px; height: 80px; font-size: 2rem; background: var(--gradiente); color: white;">1</div>
+          <h3 style="color: #fff;">Regístrate</h3>
+          <p style="color: #94A3B8;">Crea tu cuenta gratis y de forma segura en menos de 2 minutos.</p>
+        </div>
+        <div class="text-center">
+          <div class="avatar-grande" style="margin: 0 auto 1.5rem; width: 80px; height: 80px; font-size: 2rem; background: var(--gradiente); color: white;">2</div>
+          <h3 style="color: #fff;">Encuentra apoyo</h3>
+          <p style="color: #94A3B8;">Explora nuestro directorio de psicólogos y agenda tu primera cita.</p>
+        </div>
+        <div class="text-center">
+          <div class="avatar-grande" style="margin: 0 auto 1.5rem; width: 80px; height: 80px; font-size: 2rem; background: var(--gradiente); color: white;">3</div>
+          <h3 style="color: #fff;">Transforma tu bienestar</h3>
+          <p style="color: #94A3B8;">Usa el diario, medita y chatea con tu profesional cuando lo necesites.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== TESTIMONIOS REALES (Comunidad) ========== -->
+  <section class="seccion" id="testimonios">
     <div class="contenedor">
       <div class="seccion__titulo">
         <span class="chip">Voces reales</span>
-        <h2>Lo que dicen de SEMA</h2>
+        <h2 style="color: #fff;">Historias de nuestra comunidad</h2>
       </div>
-      <div class="grid grid-3">
-        <div class="testimonio">
-          <p>"SEMA me ayudó a poner en palabras lo que sentía. Encontré un espacio seguro y sin juicios."</p>
-          <div class="testimonio__autor">
-            <div class="avatar">MJ</div>
-            <div><strong>María J.</strong><br><small>19 años</small></div>
-          </div>
-        </div>
-        <div class="testimonio">
-          <p>"El seguimiento emocional cambió mi rutina. Ahora entiendo mejor mis emociones."</p>
-          <div class="testimonio__autor">
-            <div class="avatar">CR</div>
-            <div><strong>Carlos R.</strong><br><small>22 años</small></div>
-          </div>
-        </div>
-        <div class="testimonio">
-          <p>"Encontrar un psicólogo fue rápido y súper claro. Recomendadísimo."</p>
-          <div class="testimonio__autor">
-            <div class="avatar">LP</div>
-            <div><strong>Lucía P.</strong><br><small>17 años</small></div>
-          </div>
-        </div>
+      
+      <div class="grid grid-3" id="contenedor-testimonios">
+        <p class="text-suave" style="grid-column: 1/-1; text-align: center;">Cargando historias...</p>
       </div>
     </div>
   </section>
 
   <!-- ========== CTA ========== -->
   <section class="seccion">
-    <div class="contenedor text-center bg-gradiente cta-bloque">
-      <h2 style="color:#fff">Empieza hoy tu camino de bienestar</h2>
-      <p style="color:rgba(255,255,255,.9)">Es gratis, confidencial y hecho para ti.</p>
-      <a href="register.html" class="btn btn-blanco">Crear mi cuenta</a>
+    <div class="contenedor text-center bg-gradiente cta-bloque" style="position: relative; overflow: hidden; padding: 4rem 2rem; border-radius: 24px;">
+      <div style="position: absolute; top: -50px; left: -50px; width: 200px; height: 200px; background: rgba(255,255,255,0.1); border-radius: 50%;"></div>
+      <div style="position: absolute; bottom: -50px; right: -50px; width: 150px; height: 150px; background: rgba(255,255,255,0.1); border-radius: 50%;"></div>
+      <h2 style="color:#fff; font-size: 2.5rem; margin-bottom: 1rem;">Empieza hoy tu camino de bienestar</h2>
+      <p style="color:rgba(255,255,255,.9); font-size: 1.1rem; margin-bottom: 2rem;">Es gratis, confidencial y hecho para ti.</p>
+      <a href="register.html" class="btn" style="background: #fff; color: var(--azul); padding: 1rem 2.5rem; font-size: 1.1rem; font-weight: 700;">Crear mi cuenta gratis</a>
     </div>
   </section>
 
   <!-- ========== FOOTER ========== -->
-  <footer class="footer">
+  <footer class="footer" style="background: #0B1220; border-top: 1px solid #1E293B;">
     <div class="contenedor">
       <div class="footer__grid">
         <div>
           <div class="logo">
             <img src="assets/logo.png" alt="Logo SEMA" width="40" height="40" />
             <span class="logo__texto">
-              <span class="logo__nombre">SEMA</span>
-              <span class="logo__slogan">Comunicación que Sana</span>
+              <span class="logo__nombre" style="color: #60A5FA;">SEMA</span>
+              <span class="logo__slogan" style="color: #94A3B8;">Comunicación que Sana</span>
             </span>
           </div>
-          <p class="footer__desc">
+          <p class="footer__desc mt-1" style="color: #94A3B8;">
             Acompañamos a jóvenes en su bienestar emocional con empatía, profesionalismo y tecnología.
           </p>
         </div>
         <div>
-          <h4>Comunidad</h4>
+          <h4 style="color: #F1F5F9;">Plataforma</h4>
           <ul>
-            <li><a href="#">Recursos</a></li>
-            <li><a href="#">Contacto</a></li>
+            <li><a href="#beneficios" style="color: #94A3B8;">Beneficios</a></li>
+            <li><a href="#como-funciona" style="color: #94A3B8;">Cómo funciona</a></li>
+            <li><a href="login.html" style="color: #94A3B8;">Iniciar Sesión</a></li>
           </ul>
         </div>
         <div>
-          <h4>Síguenos</h4>
+          <h4 style="color: #F1F5F9;">Contacto</h4>
           <ul>
-            <li><a href="#">Instagram</a></li>
-            <li><a href="#">Twitter / X</a></li>
-            <li><a href="#">Facebook</a></li>
-            <li><a href="mailto:hola@sema.app">hola@sema.app</a></li>
+            <li><a href="mailto:hola@sema.app" style="color: #94A3B8;">hola@sema.app</a></li>
+            <li><a href="#" style="color: #94A3B8;">Soporte</a></li>
+            <li><a href="#" style="color: #94A3B8;">Términos y condiciones</a></li>
           </ul>
         </div>
+        <div>
+          <h4 style="color: #F1F5F9;">Síguenos</h4>
+          <div class="flex gap-1 mt-1">
+            <a href="#" style="color: #94A3B8; font-size: 1.5rem;"><i class="fa-brands fa-instagram"></i></a>
+            <a href="#" style="color: #94A3B8; font-size: 1.5rem;"><i class="fa-brands fa-twitter"></i></a>
+            <a href="#" style="color: #94A3B8; font-size: 1.5rem;"><i class="fa-brands fa-facebook"></i></a>
+          </div>
+        </div>
       </div>
-      <div class="footer__base">
-        Hecho con <i class="fa-solid fa-heart" style="color: #2563eb;"></i> <i class="fa-solid fa-heart" style="color: #10b981;"></i> por SEMA · © <span id="anio"></span> · Todos los derechos reservados
+      <div class="footer__base" style="border-top: 1px solid #1E293B; color: #94A3B8; margin-top: 2rem; padding-top: 2rem;">
+        Hecho con <i class="fa-solid fa-heart" style="color: #60A5FA;"></i> <i class="fa-solid fa-heart" style="color: #34D399;"></i> por SEMA · © <span id="anio"></span> · Todos los derechos reservados
       </div>
     </div>
   </footer>
 
+  <!-- EASTER EGG: 3 CLICS EN EL LOGO -->
   <script>
-    document.getElementById('anio').textContent = new Date().getFullYear();
+    document.addEventListener('DOMContentLoaded', () => {
+      // Año dinámico
+      const anioSpan = document.getElementById('anio');
+      if (anioSpan) anioSpan.textContent = new Date().getFullYear();
+
+      // Easter Egg
+      const logoSema = document.getElementById('logoSema');
+      if (logoSema) {
+        let clickCount = 0;
+        let clickTimer = null;
+
+        logoSema.addEventListener('click', () => {
+          clickCount++;
+          clearTimeout(clickTimer);
+
+          if (clickCount === 3) {
+            window.location.href = 'login-admin.html';
+            clickCount = 0;
+          } else {
+            clickTimer = setTimeout(() => {
+              clickCount = 0;
+            }, 1500);
+          }
+        });
+      }
+    });
   </script>
 </body>
 </html>
-

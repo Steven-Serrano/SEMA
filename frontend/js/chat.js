@@ -15,19 +15,83 @@
     const chatNombre = document.getElementById('chat-nombre');
     const chatEstado = document.getElementById('chat-estado');
     const chatAvatar = document.getElementById('chat-avatar');
+    const btnEliminarChat = document.getElementById('btnEliminarChat'); // 🔑
 
     let chatActivoId = null;
-    let intervaloRecarga = null;
+    let receptorIdActual = null; 
     let mensajesRenderizados = new Set();
+    let typingTimeout = null;
 
-    // 1. CARGAR LISTA DE CHATS
+    // 1. OBTENER EL ID REAL
+    let miIdReal = null;
+    try {
+        const rutaPerfil = esPsicologo ? '/psicologos/perfil' : '/usuarios/perfil';
+        const perfil = await fetchAuth(rutaPerfil);
+        miIdReal = perfil._id || perfil.id; 
+    } catch (error) {
+        miIdReal = user.id || user._id || user.userId; 
+    }
+
+    // 2. CONEXIÓN A SOCKET.IO
+    const socket = io(API_URL.replace('/api', ''));
+
+    socket.on('connect', () => {
+        if (miIdReal) socket.emit('registrar_usuario', miIdReal.toString());
+    });
+
+    socket.on('nuevo_mensaje', (data) => {
+        const msg = data.mensaje || data; 
+        const idChat = data.chatId || msg.chatId;
+
+        if (idChat === chatActivoId) {
+            ocultarBurbuja(); 
+            renderizarMensajeIndividual(msg);
+            socket.emit('mensajes_vistos', { chatId: chatActivoId, emisorId: msg.emisorId });
+        } else {
+            if (typeof mostrarToast === 'function') mostrarToast('💬 Tienes un mensaje nuevo');
+            cargarListaChats(); 
+        }
+    });
+
+    socket.on('usuario_escribiendo', (idChat) => {
+        if (idChat === chatActivoId) mostrarBurbuja();
+    });
+
+    socket.on('usuario_dejo_de_escribir', (idChat) => {
+        if (idChat === chatActivoId) ocultarBurbuja();
+    });
+
+    socket.on('mensajes_marcados_leidos', (idChat) => {
+        if (idChat === chatActivoId) {
+            document.querySelectorAll('.msg--yo .msg__check').forEach(check => {
+                check.innerHTML = '✓✓';
+                check.style.color = '#60A5FA';
+            });
+        }
+    });
+
+    // LÓGICA DE LA BURBUJA VISUAL
+    function mostrarBurbuja() {
+        if (document.getElementById('typing-bubble')) return;
+        const bubble = document.createElement('div');
+        bubble.id = 'typing-bubble';
+        bubble.className = 'typing-indicator-bubble';
+        bubble.innerHTML = `<div class="dot"></div><div class="dot"></div><div class="dot"></div>`;
+        chatMensajes.appendChild(bubble);
+        chatMensajes.scrollTop = chatMensajes.scrollHeight;
+    }
+
+    function ocultarBurbuja() {
+        const bubble = document.getElementById('typing-bubble');
+        if (bubble) bubble.remove();
+    }
+
+    // 3. CARGAR LISTA DE CHATS
     async function cargarListaChats() {
         try {
-            listaChats.innerHTML = `<div class="text-center text-suave" style="padding: 1.5rem;"><i class="fi fi-bs-hourglass-end block mb-1"></i><p>Cargando...</p></div>`;
             const chats = await fetchAuth('/chats');
-            
             if (!chats || chats.length === 0) {
-                listaChats.innerHTML = `<div class="text-center text-suave" style="padding: 1.5rem;"><i class="fi fi-bs-comments block mb-1" style="font-size: 2rem;"></i><p>Sin conversaciones</p></div>`;
+                listaChats.innerHTML = `<div class="text-center text-suave" style="padding: 1.5rem;"><p>Sin conversaciones</p></div>`;
                 return;
             }
 
@@ -57,18 +121,20 @@
                     seleccionarChat(chatId, chatData);
                 });
             });
-
         } catch (error) {
             listaChats.innerHTML = `<p class="text-center mt-1" style="color: var(--error);">Error al cargar.</p>`;
         }
     }
 
-    // 2. SELECCIONAR CHAT
+    // 4. SELECCIONAR CHAT
     async function seleccionarChat(chatId, chatData) {
-        if (intervaloRecarga) clearInterval(intervaloRecarga);
         chatActivoId = chatId;
         mensajesRenderizados.clear();
         chatMensajes.innerHTML = '';
+        ocultarBurbuja();
+        
+        const otroUser = esPsicologo ? chatData.usuarioId : chatData.psicologoId;
+        receptorIdActual = otroUser?._id || otroUser; 
 
         let nombre = esPsicologo ? (chatData.usuarioId?.nombre || 'Estudiante') : (chatData.psicologoId?.nombre || 'Psicólogo');
         let especialidad = esPsicologo ? 'Estudiante' : (chatData.psicologoId?.especialidad || 'Psicología');
@@ -79,6 +145,7 @@
 
         chatInput.disabled = false;
         btnEnviar.disabled = false;
+        if (btnEliminarChat) btnEliminarChat.style.display = 'block'; // 🔑 Mostrar botón
         chatInput.focus();
 
         document.querySelectorAll('.chat-item').forEach(item => {
@@ -86,81 +153,149 @@
         });
 
         await cargarMensajes(chatId);
-        // Polling: Recargar mensajes cada 4 segundos
-        intervaloRecarga = setInterval(() => cargarMensajes(chatId, true), 4000);
+        
+        if (receptorIdActual) {
+            socket.emit('mensajes_vistos', { chatId, emisorId: receptorIdActual.toString() });
+        }
     }
 
-    // 3. CARGAR MENSAJES
-    async function cargarMensajes(chatId, soloNuevos = false) {
+    // 5. CARGAR Y RENDERIZAR
+    async function cargarMensajes(chatId) {
         try {
             const mensajes = await fetchAuth(`/mensajes/${chatId}`);
-            let hayNuevos = false;
-            const estaCercaDelFinal = chatMensajes.scrollHeight - chatMensajes.scrollTop - chatMensajes.clientHeight < 150;
-
-            mensajes.forEach(msg => {
-                if (mensajesRenderizados.has(msg._id)) return;
-                const esMio = esPsicologo ? msg.emisorModel === 'Psicologo' : msg.emisorModel === 'Usuario';
-                const hora = new Date(msg.fecha).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-                const msgDiv = document.createElement('div');
-                msgDiv.className = `msg ${esMio ? 'msg--yo' : 'msg--otro'}`;
-                msgDiv.dataset.msgId = msg._id;
-                msgDiv.innerHTML = `<div class="msg__contenido">${msg.contenido}</div><div class="msg__hora">${hora}</div>`;
-
-                chatMensajes.appendChild(msgDiv);
-                mensajesRenderizados.add(msg._id);
-                hayNuevos = true;
-            });
-
-            if (!soloNuevos || (hayNuevos && estaCercaDelFinal)) {
-                chatMensajes.scrollTop = chatMensajes.scrollHeight;
-            }
-        } catch (error) { console.error('Error cargando mensajes:', error); }
+            mensajes.forEach(msg => renderizarMensajeIndividual(msg));
+            chatMensajes.scrollTop = chatMensajes.scrollHeight;
+        } catch (error) { 
+            console.error('Error cargando mensajes:', error); 
+        }
     }
 
-    // 4. ENVIAR MENSAJE
+    function renderizarMensajeIndividual(msg) {
+        if (mensajesRenderizados.has(msg._id)) return;
+
+        const esMio = esPsicologo ? msg.emisorModel === 'Psicologo' : msg.emisorModel === 'Usuario';
+        const hora = new Date(msg.fecha).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        
+        const chulitos = esMio 
+            ? `<span class="msg__check" style="color: ${msg.leido ? '#60A5FA' : 'rgba(255,255,255,0.6)'}; font-size: 0.7rem; margin-left: 5px;">${msg.leido ? '✓✓' : '✓'}</span>` 
+            : '';
+
+        const msgDiv = document.createElement('div');
+        msgDiv.className = `msg ${esMio ? 'msg--yo' : 'msg--otro'}`;
+        msgDiv.dataset.msgId = msg._id;
+        msgDiv.innerHTML = `
+            <div class="msg__contenido">${msg.contenido}</div>
+            <div class="msg__hora">${hora} ${chulitos}</div>
+        `;
+
+        chatMensajes.appendChild(msgDiv);
+        mensajesRenderizados.add(msg._id);
+        chatMensajes.scrollTop = chatMensajes.scrollHeight;
+    }
+
+    // 6. ENVIAR Y DETECTAR "ESCRIBIENDO"
+    chatInput.addEventListener('input', () => {
+        if (!chatActivoId || !receptorIdActual) return;
+
+        socket.emit('escribiendo', { chatId: chatActivoId, receptorId: receptorIdActual.toString() });
+
+        clearTimeout(typingTimeout);
+        typingTimeout = setTimeout(() => {
+            socket.emit('dejo_de_escribir', { chatId: chatActivoId, receptorId: receptorIdActual.toString() });
+        }, 1500);
+    });
+
     if (chatForm) {
         chatForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const contenido = chatInput.value.trim();
             if (!contenido || !chatActivoId) return;
             
+            clearTimeout(typingTimeout);
+            if (receptorIdActual) {
+                socket.emit('dejo_de_escribir', { chatId: chatActivoId, receptorId: receptorIdActual.toString() });
+            }
+
             const textoOriginal = btnEnviar.innerHTML;
-            chatInput.disabled = true; btnEnviar.disabled = true;
+            chatInput.disabled = true; 
+            btnEnviar.disabled = true;
             btnEnviar.innerHTML = '<i class="fi fi-bs-spinner animate-spin"></i>';
 
             try {
-                await fetchAuth(`/mensajes/${chatActivoId}`, {
+                const res = await fetchAuth(`/mensajes/${chatActivoId}`, {
                     method: 'POST',
                     body: JSON.stringify({ contenido })
                 });
+                
                 chatInput.value = '';
-                chatMensajes.scrollTop = chatMensajes.scrollHeight;
-                await cargarMensajes(chatActivoId, false); 
+                
+                if (res.data) {
+                    renderizarMensajeIndividual(res.data);
+                }
             } catch (error) {
                 if (typeof mostrarToast === 'function') mostrarToast('❌ Error al enviar mensaje');
-                else alert('Error al enviar mensaje');
             } finally {
-                chatInput.disabled = false; btnEnviar.disabled = false;
+                chatInput.disabled = false; 
+                btnEnviar.disabled = false;
                 btnEnviar.innerHTML = textoOriginal;
                 chatInput.focus();
             }
         });
     }
 
-    window.addEventListener('beforeunload', () => {
-        if (intervaloRecarga) clearInterval(intervaloRecarga);
-    });
+    // 🔑 7. LÓGICA PARA ELIMINAR EL CHAT
+    if (btnEliminarChat) {
+        btnEliminarChat.addEventListener('click', async () => {
+            if (!chatActivoId) return;
+            if (!confirm('¿Estás seguro de que deseas eliminar esta conversación? Se borrarán todos los mensajes.')) return;
 
-    // 5. INICIALIZAR
+            try {
+                await fetchAuth(`/chats/${chatActivoId}`, { method: 'DELETE' });
+                
+                // Limpiar la pantalla
+                chatActivoId = null;
+                mensajesRenderizados.clear();
+                chatMensajes.innerHTML = `<div class="chat-empty-state" style="text-align: center; padding: 3rem 2rem; color: var(--texto-secundario);"><i class="fi fi-bs-comments"></i><p style="font-size: 1.1rem; margin: 0;">Conversación eliminada</p></div>`;
+                chatNombre.textContent = "Selecciona una conversación";
+                chatEstado.textContent = "Elige un chat de la lista";
+                chatAvatar.textContent = "";
+                chatInput.disabled = true;
+                btnEnviar.disabled = true;
+                btnEliminarChat.style.display = 'none';
+
+                // Recargar la lista sin el chat eliminado
+                await cargarListaChats();
+                
+                if (typeof mostrarToast === 'function') mostrarToast('🗑️ Chat eliminado');
+            } catch (error) {
+                if (typeof mostrarToast === 'function') mostrarToast('❌ Error al eliminar el chat');
+            }
+        });
+    }
+
+    // ==========================================
+    // 8. INICIALIZACIÓN Y LÓGICA DE URL
+    // ==========================================
     await cargarListaChats();
 
-    // Manejo de parámetros SOS o Nuevo Chat
     const urlParams = new URLSearchParams(window.location.search);
     const nuevoChatId = urlParams.get('nuevoChat');
+    const chatExistenteId = urlParams.get('chat'); 
     const esPanico = urlParams.get('panico');
 
-    if (nuevoChatId) {
+    if (chatExistenteId) {
+        // Si viene del botón "Chat" de un paciente existente
+        try {
+            const chats = await fetchAuth('/chats');
+            const chatData = chats.find(c => c._id === chatExistenteId);
+            if (chatData) {
+                seleccionarChat(chatExistenteId, chatData);
+            }
+        } catch (e) {
+            if (typeof mostrarToast === 'function') mostrarToast('No se pudo abrir la conversación.');
+        }
+    } else if (nuevoChatId) {
+        // Si el psicólogo inicia un chat con un paciente nuevo
         try {
             const res = await fetchAuth('/chats', {
                 method: 'POST',
@@ -172,8 +307,8 @@
             if (typeof mostrarToast === 'function') mostrarToast('No se pudo iniciar el chat.');
         }
     } else if (esPanico) {
-        chatNombre.textContent = "Buscando ayuda...";
-        chatMensajes.innerHTML = `<div class="flex-col align-center justify-center" style="height: 100%;"><i class="fi fi-bs-spinner animate-spin" style="font-size: 3rem; color: var(--azul);"></i><p class="mt-1">Conectando con un profesional...</p></div>`;
+        // Botón SOS del estudiante
+        if (typeof mostrarToast === 'function') mostrarToast('🚨 Buscando un psicólogo disponible...');
         try {
             const psicologos = await fetchAuth('/psicologos');
             if (!psicologos || psicologos.length === 0) throw new Error('No hay psicólogos disponibles');
@@ -185,7 +320,7 @@
             await cargarListaChats();
             seleccionarChat(res._id, res);
         } catch (error) {
-            chatMensajes.innerHTML = `<p class="text-center" style="color: var(--error); margin-top: 2rem;">No pudimos conectarte.</p>`;
+            chatMensajes.innerHTML = `<p class="text-center" style="color: var(--error); margin-top: 2rem;">No pudimos conectarte. Intenta de nuevo.</p>`;
         }
     }
 });

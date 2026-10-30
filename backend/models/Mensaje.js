@@ -10,7 +10,6 @@ const MensajeSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     required: true
   },
-  // 🔑 ESTO ES CLAVE: Saber si el mensaje lo envió un Usuario o un Psicologo
   emisorModel: {
     type: String,
     enum: ['Usuario', 'Psicologo'],
@@ -23,6 +22,11 @@ const MensajeSchema = new mongoose.Schema({
   fecha: {
     type: Date,
     default: Date.now
+  },
+  // 🔑 NUEVO CAMPO: Para los chulitos
+  leido: {
+    type: Boolean,
+    default: false
   }
 });
 

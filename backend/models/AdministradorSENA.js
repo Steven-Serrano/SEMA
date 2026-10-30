@@ -11,10 +11,14 @@ const adminSenaSchema = new mongoose.Schema({
   estado: { type: String, enum: ['activo', 'inactivo'], default: 'activo' }
 }, { timestamps: true });
 
-// ✅ CORREGIDO
 adminSenaSchema.pre('save', async function() {
   if (!this.isModified('password')) return;
   this.password = await bcrypt.hash(this.password, 10);
 });
+
+// 🔑 AGREGADO: Método para comparar contraseñas
+adminSenaSchema.methods.comparePassword = async function(candidatePassword) {
+  return await bcrypt.compare(candidatePassword, this.password);
+};
 
 module.exports = mongoose.model('AdministradorSENA', adminSenaSchema);

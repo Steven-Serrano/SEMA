@@ -56,7 +56,7 @@ router.post('/sueno', verificarToken, async (req, res) => {
       tipo: 'sueno',
       horas: req.body.horas,
       calidad: req.body.calidad,
-      motivo: req.body.motivo || '', // 🔑 GUARDAMOS EL MOTIVO
+      motivo: req.body.motivo || '',
       fecha: new Date()
     });
     
@@ -67,18 +67,22 @@ router.post('/sueno', verificarToken, async (req, res) => {
 });
 
 // 4. GET /api/habitos/estadisticas-semanales
-// Esta ruta calcula los días únicos de la última semana para llenar las barras del dashboard
 router.get('/estadisticas-semanales', verificarToken, async (req, res) => {
   try {
+    let targetUserId = req.usuario.id;
+    const rol = req.usuario.rol || req.usuario.tipo;
+    if (rol === 'psicologo' && req.query.paciente) {
+      targetUserId = req.query.paciente;
+    }
+
     const hace7Dias = new Date();
     hace7Dias.setDate(hace7Dias.getDate() - 7);
 
     const registros = await Habito.find({
-      usuarioId: req.usuario.id,
+      usuarioId: targetUserId,
       fecha: { $gte: hace7Dias }
     });
 
-    // Usamos un Set para contar días únicos (si meditas 2 veces hoy, cuenta como 1 día)
     const contarDiasUnicos = (tipo) => {
       return new Set(
         registros
@@ -97,13 +101,19 @@ router.get('/estadisticas-semanales', verificarToken, async (req, res) => {
   }
 });
 
-// GET /api/habitos/sueno - Obtener historial de sueño
+// GET /api/habitos/sueno
 router.get('/sueno', verificarToken, async (req, res) => {
   try {
+    let targetUserId = req.usuario.id;
+    const rol = req.usuario.rol || req.usuario.tipo;
+    if (rol === 'psicologo' && req.query.paciente) {
+      targetUserId = req.query.paciente;
+    }
+
     const registros = await Habito.find({ 
-      usuarioId: req.usuario.id, 
+      usuarioId: targetUserId, 
       tipo: 'sueno' 
-    }).sort({ fecha: -1 }); // Los más recientes primero
+    }).sort({ fecha: -1 }); 
     
     res.json(registros);
   } catch (err) {
@@ -111,13 +121,19 @@ router.get('/sueno', verificarToken, async (req, res) => {
   }
 });
 
-// GET /api/habitos/diario - Obtener todas las entradas del diario
+// GET /api/habitos/diario
 router.get('/diario', verificarToken, async (req, res) => {
   try {
+    let targetUserId = req.usuario.id;
+    const rol = req.usuario.rol || req.usuario.tipo;
+    if (rol === 'psicologo' && req.query.paciente) {
+      targetUserId = req.query.paciente;
+    }
+
     const entradas = await Habito.find({ 
-      usuarioId: req.usuario.id, 
+      usuarioId: targetUserId, 
       tipo: 'diario' 
-    }).sort({ fecha: -1 }); // Las más recientes primero
+    }).sort({ fecha: -1 }); 
     
     res.json(entradas);
   } catch (err) {
@@ -125,7 +141,7 @@ router.get('/diario', verificarToken, async (req, res) => {
   }
 });
 
-// DELETE /api/habitos/diario/:id - Eliminar una entrada
+// DELETE /api/habitos/diario/:id
 router.delete('/diario/:id', verificarToken, async (req, res) => {
   try {
     const eliminada = await Habito.findOneAndDelete({
@@ -141,7 +157,7 @@ router.delete('/diario/:id', verificarToken, async (req, res) => {
   }
 });
 
-// PUT /api/habitos/diario/:id - Editar una entrada
+// PUT /api/habitos/diario/:id
 router.put('/diario/:id', verificarToken, async (req, res) => {
   try {
     const { contenido } = req.body;
@@ -150,7 +166,7 @@ router.put('/diario/:id', verificarToken, async (req, res) => {
     const actualizada = await Habito.findOneAndUpdate(
       { _id: req.params.id, usuarioId: req.usuario.id, tipo: 'diario' },
       { contenido: contenido },
-      { new: true } // Devuelve el documento actualizado
+      { new: true }
     );
 
     if (!actualizada) return res.status(404).json({ error: 'Entrada no encontrada' });
@@ -164,17 +180,21 @@ router.put('/diario/:id', verificarToken, async (req, res) => {
 // GET /api/habitos/resumen-mensual
 router.get('/resumen-mensual', verificarToken, async (req, res) => {
   try {
+    let targetUserId = req.usuario.id;
+    const rol = req.usuario.rol || req.usuario.tipo;
+    if (rol === 'psicologo' && req.query.paciente) {
+      targetUserId = req.query.paciente;
+    }
+
     const ahora = new Date();
-    // Calculamos el primer y último día del mes actual
     const inicioMes = new Date(ahora.getFullYear(), ahora.getMonth(), 1);
     const finMes = new Date(ahora.getFullYear(), ahora.getMonth() + 1, 0, 23, 59, 59);
 
     const registros = await Habito.find({
-      usuarioId: req.usuario.id,
+      usuarioId: targetUserId,
       fecha: { $gte: inicioMes, $lte: finMes }
     });
 
-    // Contamos cuántos hay de cada tipo
     const conteo = {
       meditacion: registros.filter(r => r.tipo === 'meditacion').length,
       diario: registros.filter(r => r.tipo === 'diario').length,

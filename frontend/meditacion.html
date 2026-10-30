@@ -2,7 +2,10 @@
 <html lang="es" data-theme="light">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Meditación Diaria · SEMA</title>
+  <link rel="icon" type="image/png" href="assets/logo.png">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/@flaticon/flaticon-uicons@3.3.1/css/bold/straight.css" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
   <script defer src="js/api.js"></script>
@@ -10,11 +13,14 @@
   <script defer src="js/layout.js"></script>
 </head>
 <body>
+
   <div id="sema-nav"></div>
+  
   <div class="dashboard">
     <aside class="sidebar" id="sema-sidebar"></aside>
-    <div class="dashboard__main">
-      <header class="dashboard-header">
+    
+    <main class="dashboard__main">
+      <header class="dashboard-header" style="border-bottom: none; margin-bottom: 0;">
         <div class="dashboard-title">
           <h1>Meditación Diaria</h1>
           <p>Respira, enfócate y reduce tu estrés.</p>
@@ -22,60 +28,81 @@
         <a href="dashboard.html" class="btn btn-secundario"><i class="fi fi-bs-arrow-left"></i> Volver al Dashboard</a>
       </header>
 
-      <div class="tarjeta text-center" style="max-width: 500px; margin: 2rem auto; padding: 3rem 1rem;">
-        <h2 id="timerDisplay" style="font-size: 4rem; margin: 0; color: var(--azul);">05:00</h2>
-        <p class="text-suave mb-1-5">Tiempo de respiración</p>
-        
-        <div class="flex mb-1-5" style="justify-content: center; gap: 1rem;">
-          <button class="btn btn-secundario btn-sm" onclick="setTimer(5)">5 min</button>
-          <button class="btn btn-secundario btn-sm" onclick="setTimer(10)">10 min</button>
-          <button class="btn btn-secundario btn-sm" onclick="setTimer(15)">15 min</button>
+      <div class="meditacion-container">
+        <div class="breathing-circle" id="circulo-respiracion">
+          <h2 class="timer-text" id="timerDisplay">05:00</h2>
+          <span class="timer-label" id="timerLabel">Tiempo de respiración</span>
         </div>
 
-        <button class="btn btn-primario" id="btnPlay" style="width: 100%; margin-bottom: 1rem;">Iniciar Meditación</button>
-        <button class="btn btn-primario" id="btnCompletar" style="width: 100%; display: none; background: var(--verde);"><i class="fi fi-bs-check"></i> Marcar como completada</button>
+        <div class="time-pills" id="time-pills">
+          <button class="time-pill activo" onclick="setTimer(5)">5 min</button>
+          <button class="time-pill" onclick="setTimer(10)">10 min</button>
+          <button class="time-pill" onclick="setTimer(15)">15 min</button>
+        </div>
+
+        <button class="btn-play-meditacion" id="btnPlay" aria-label="Iniciar meditación">
+          <i class="fi fi-bs-play" style="margin-left: 5px;"></i>
+        </button>
+
+        <button class="btn btn-primario btn-completar" id="btnCompletar" style="display: none;">
+          <i class="fi fi-bs-check"></i> Marcar como completada
+        </button>
       </div>
-    </div>
+    </main>
   </div>
+
   <div id="sema-footer"></div>
 
   <script>
-    let tiempoTotal = 300, tiempoRestante = 300, interval = null;
+    let tiempoTotal = 300, tiempoRestante = tiempoTotal, interval = null, enMarcha = false;
     const display = document.getElementById('timerDisplay');
     const btnPlay = document.getElementById('btnPlay');
     const btnCompletar = document.getElementById('btnCompletar');
+    const circulo = document.getElementById('circulo-respiracion');
+    const label = document.getElementById('timerLabel');
+    const pills = document.querySelectorAll('.time-pill');
 
     function formatTime(secs) {
       return `${Math.floor(secs / 60).toString().padStart(2, '0')}:${(secs % 60).toString().padStart(2, '0')}`;
     }
 
     window.setTimer = function(minutos) {
-      if (interval) clearInterval(interval);
-      interval = null;
+      if (enMarcha) return;
       tiempoTotal = minutos * 60;
       tiempoRestante = tiempoTotal;
       display.textContent = formatTime(tiempoRestante);
-      btnPlay.textContent = 'Iniciar Meditación';
-      btnPlay.style.display = 'block';
+      pills.forEach(p => p.classList.remove('activo'));
+      event.target.classList.add('activo');
       btnCompletar.style.display = 'none';
+      btnPlay.style.display = 'flex';
+      label.textContent = 'Tiempo de respiración';
     }
 
     btnPlay.addEventListener('click', () => {
-      if (interval) {
+      if (enMarcha) {
         clearInterval(interval);
-        interval = null;
-        btnPlay.textContent = 'Continuar';
+        enMarcha = false;
+        btnPlay.innerHTML = '<i class="fi fi-bs-play" style="margin-left: 5px;"></i>';
+        btnPlay.classList.remove('activo');
+        circulo.classList.remove('activo');
+        label.textContent = 'En pausa';
       } else {
-        btnPlay.textContent = 'Pausar';
+        enMarcha = true;
+        btnPlay.innerHTML = '<i class="fi fi-bs-pause"></i>';
+        btnPlay.classList.add('activo');
+        circulo.classList.add('activo');
+        label.textContent = 'Inhala... Exhala...';
         interval = setInterval(() => {
           tiempoRestante--;
           display.textContent = formatTime(tiempoRestante);
           if (tiempoRestante <= 0) {
             clearInterval(interval);
-            interval = null;
+            enMarcha = false;
+            display.textContent = "00:00";
             btnPlay.style.display = 'none';
-            btnCompletar.style.display = 'block';
-            if (typeof mostrarToast === 'function') mostrarToast('¡Meditación terminada!');
+            circulo.classList.remove('activo');
+            label.textContent = '¡Lo lograste!';
+            btnCompletar.style.display = 'inline-flex';
           }
         }, 1000);
       }
@@ -86,7 +113,7 @@
       this.disabled = true;
       try {
         await fetchAuth('/habitos/meditaciones', { method: 'POST', body: JSON.stringify({}) });
-        if (typeof mostrarToast === 'function') mostrarToast('✅ Registro guardado');
+        if (typeof mostrarToast === 'function') mostrarToast('✅ Meditación registrada');
         setTimeout(() => window.location.href = 'dashboard.html', 1000);
       } catch (error) {
         if (typeof mostrarToast === 'function') mostrarToast('❌ Error al guardar');

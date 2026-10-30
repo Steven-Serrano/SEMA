@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gestión de Psicólogos · SEMA</title>
+  <link rel="icon" type="image/png" href="assets/logo.png">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <link rel="stylesheet" href="css/styles.css">
+  
+  <script defer src="js/api.js"></script>
+  <script defer src="js/app.js"></script>
+  <script defer src="js/layout.js"></script>
+  <script defer src="js/gestion-psicologos.js"></script>
+</head>
+<body class="admin-view">
+  <div id="sema-nav"></div>
+
+  <div class="dashboard">
+    <aside class="sidebar" id="sema-sidebar"></aside>
+
+    <main class="dashboard__main">
+      <header class="dashboard-header">
+        <div class="dashboard-title">
+          <span class="admin-header-badge"><i class="fa-solid fa-users-gear"></i> Gestión de Personal</span>
+          <h1>Psicólogos</h1>
+          <p>Administra las cuentas de los profesionales de SEMA.</p>
+        </div>
+        <a href="dashboard-admin.html" class="btn btn-secundario"><i class="fa-solid fa-arrow-left"></i> Volver al Panel</a>
+      </header>
+
+      <!-- BUSCADOR Y ACCIONES -->
+      <div class="tarjeta mb-1-5" style="padding: 1.5rem;">
+        <div class="flex-between align-center flex-wrap gap-1">
+          <div class="buscador-wrapper">
+            <i class="fi fi-bs-search buscador-icono" style="color: var(--texto-suave);"></i>
+            <input type="search" id="buscador-psi" class="buscador-input" placeholder="Buscar por nombre o especialidad...">
+          </div>
+          <a href="dashboard-admin.html" class="btn btn-primario">
+            <i class="fa-solid fa-plus"></i> Nuevo Psicólogo
+          </a>
+        </div>
+      </div>
+
+      <!-- LISTA DE PSICÓLOGOS -->
+      <div id="lista-gestion-psicologos" class="grid grid-2">
+        <p class="text-suave text-center" style="grid-column: 1/-1; padding: 3rem;">Cargando profesionales...</p>
+      </div>
+    </main>
+  </div>
+  <div id="sema-footer"></div>
+</body>
+</html>

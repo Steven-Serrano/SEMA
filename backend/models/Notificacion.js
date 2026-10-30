@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 
 const notificacionSchema = new mongoose.Schema({
-  usuarioId: { type: mongoose.Schema.Types.ObjectId, ref: 'Usuario', required: true },
+  usuarioId: { type: mongoose.Schema.Types.ObjectId, ref: 'Usuario' },
+  psicologoId: { type: mongoose.Schema.Types.ObjectId, ref: 'Psicologo' },
   titulo: { type: String, required: true, trim: true },
   mensaje: { type: String, required: true, trim: true },
   fecha: { type: Date, default: Date.now },

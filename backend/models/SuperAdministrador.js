@@ -11,10 +11,14 @@ const superAdminSchema = new mongoose.Schema({
   fechaCreacion: { type: Date, default: Date.now }
 }, { timestamps: true });
 
-// ✅ CORREGIDO
 superAdminSchema.pre('save', async function() {
   if (!this.isModified('password')) return;
   this.password = await bcrypt.hash(this.password, 10);
 });
+
+// 🔑 ESTE ES EL MÉTODO QUE FALTABA
+superAdminSchema.methods.comparePassword = async function(candidatePassword) {
+  return await bcrypt.compare(candidatePassword, this.password);
+};
 
 module.exports = mongoose.model('SuperAdministrador', superAdminSchema);

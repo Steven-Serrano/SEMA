@@ -1,9 +1,9 @@
-/* ============================================================
-   SEMA — Comunicación que Sana
+﻿/* ============================================================
+   SEMA â€” ComunicaciÃ³n que Sana
    Hoja de estilos principal (refactor)
    ============================================================ */
 
-/* ---------- Tokens de diseño ---------- */
+/* ---------- Tokens de diseÃ±o ---------- */
 :root {
   /* Paleta */
   --azul: #2563EB;
@@ -28,7 +28,7 @@
   --texto-suave: #64748B;
   --texto-secundario: #64748B;
 
-  /* Alias semánticos */
+  /* Alias semÃ¡nticos */
   --primario: var(--azul);
   --primario-oscuro: var(--azul-oscuro);
   --secundario: var(--verde);
@@ -50,7 +50,7 @@
   --gradiente: linear-gradient(135deg, #2563EB 0%, #10B981 100%);
   --gradiente-suave: linear-gradient(135deg, rgba(37, 99, 235, .08), rgba(16, 185, 129, .08));
 
-  /* Transición y tipografía */
+  /* TransiciÃ³n y tipografÃ­a */
   --transicion: 240ms cubic-bezier(.4, 0, .2, 1);
   --fuente: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --fuente-display: 'Sora', var(--fuente);
@@ -291,7 +291,7 @@ button { font-family: inherit; cursor: pointer; border: 0; background: none; col
   margin-bottom: 1rem;
 }
 
-/* ---------- Estadísticas ---------- */
+/* ---------- EstadÃ­sticas ---------- */
 .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-top: 3rem; }
 .stats .num {
   font-family: var(--fuente-display);
@@ -426,12 +426,12 @@ button { font-family: inherit; cursor: pointer; border: 0; background: none; col
 }
 
 /* ==========================================
-   SELECTOR DE ÁNIMO (DISEÑO PREMIUM)
+   SELECTOR DE ÃNIMO (DISEÃ‘O PREMIUM)
    ========================================== */
 .animo-selector {
   display: flex;
   flex-wrap: wrap;
-  gap: 1.25rem; /* Más espacio para que respiren */
+  gap: 1.25rem; /* MÃ¡s espacio para que respiren */
   margin-top: 1.5rem;
   padding: 0.5rem 0;
 }
@@ -466,13 +466,13 @@ button { font-family: inherit; cursor: pointer; border: 0; background: none; col
     inset 0 2px 4px rgba(255, 255, 255, 0.1);
 }
 
-/* El emoji en sí (para que resalte) */
+/* El emoji en sÃ­ (para que resalte) */
 .animo-btn > span, 
 .animo-btn {
   filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
 }
 
-/* Cuando el emoji está seleccionado */
+/* Cuando el emoji estÃ¡ seleccionado */
 .animo-btn.activo {
   /* Fondo con el gradiente de SEMA */
   background: var(--gradiente);
@@ -487,7 +487,7 @@ button { font-family: inherit; cursor: pointer; border: 0; background: none; col
   filter: brightness(1.1) contrast(1.1); 
 }
 
-/* Animación de "pop" cuando se hace clic */
+/* AnimaciÃ³n de "pop" cuando se hace clic */
 .animo-btn.activo::after {
   content: '';
   position: absolute;
@@ -571,7 +571,7 @@ html[data-theme="dark"] .animo-btn {
   transform: translateY(-2px);
 }
 
-/* ---------- Menú de usuario ---------- */
+/* ---------- MenÃº de usuario ---------- */
 .user-menu { position: relative; display: inline-block; z-index: 10000; }
 .user-menu-btn {
   display: flex;
@@ -735,7 +735,25 @@ html[data-theme="dark"] .animo-btn {
   border-bottom-left-radius: 4px;
 }
 .msg__contenido { margin-bottom: .25rem; }
-.msg__hora { font-size: .7rem; opacity: .7; text-align: right; }
+.msg__hora {
+  font-size: .7rem; 
+  opacity: .8; 
+  text-align: right;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+}
+
+/* AnimaciÃ³n para el texto de "Escribiendo..." */
+#chat-typing {
+  animation: pulsoTexto 1.5s infinite;
+}
+
+@keyframes pulsoTexto {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
 
 .chat-form {
   display: flex;
@@ -765,7 +783,7 @@ html[data-theme="dark"] .animo-btn {
 }
 
 /* ==========================================
-   PSICÓLOGOS
+   PSICÃ“LOGOS
    ========================================== */
 .psi-card { text-align: center; }
 .psi-card .avatar-grande {
@@ -778,7 +796,7 @@ html[data-theme="dark"] .animo-btn {
 .psi-card .rating { color: var(--verde); font-weight: 600; }
 
 /* ==========================================
-   SEGUIMIENTO (gráficas)
+   SEGUIMIENTO (grÃ¡ficas)
    ========================================== */
 .chart-wrap { position: relative; padding: 1rem; }
 .bars {
@@ -865,13 +883,13 @@ html[data-theme="dark"] .animo-btn {
 .filtro-btn:hover { transform: translateY(-2px); }
 
 /* ==========================================
-   PACIENTES (dashboard psicólogo)
+   PACIENTES (dashboard psicÃ³logo)
    ========================================== */
 .paciente-item { transition: background var(--transicion); }
 .paciente-item:hover { background: var(--hover-bg); border-radius: var(--radio-sm); }
 .paciente-item:last-child { border-bottom: none; }
 
-/* Stats tarjetas dashboard psicólogo */
+/* Stats tarjetas dashboard psicÃ³logo */
 .stat-card { text-align: center; padding: 1.5rem; }
 .stat-card h2 {
   font-size: 2.5rem;
@@ -935,7 +953,7 @@ html[data-theme="dark"] .animo-btn {
 .comunidad-form  { max-width: 850px; margin: 0 auto 2rem; }
 .comunidad-posts { max-width: 850px; margin: 0 auto; }
 
-/* Filtro de categoría */
+/* Filtro de categorÃ­a */
 .filtro-categoria { max-width: 850px; margin: 0 auto 1.5rem; }
 .filtro-categoria label {
   display: block;
@@ -963,7 +981,7 @@ html[data-theme="dark"] .animo-btn {
   box-shadow: 0 0 0 4px rgba(37, 99, 235, .15);
 }
 
-/* Selector de categoría antiguo (compatibilidad) */
+/* Selector de categorÃ­a antiguo (compatibilidad) */
 .btn-opciones { margin-bottom: 1rem; }
 .btn-opciones h1 {
   display: block;
@@ -1017,7 +1035,7 @@ html[data-theme="dark"] .animo-btn {
 .post .acciones button:hover { color: var(--azul); }
 .post .acciones button.gustado { color: var(--verde); font-weight: 600; }
 
-/* Estado vacío */
+/* Estado vacÃ­o */
 .comunidad-vacio { max-width: 850px; margin: 0 auto; text-align: center; padding: 3rem 2rem; }
 .comunidad-vacio-icono { font-size: 2.5rem; margin-bottom: .8rem; }
 .comunidad-vacio h3 { margin: 0 0 .4rem; }
@@ -1396,7 +1414,7 @@ html[data-theme="dark"] .login__card {
   margin-bottom: 1.5rem;
 }
 
-/* Estadísticas perfil */
+/* EstadÃ­sticas perfil */
 #estadisticas .grid { gap: 1.5rem; }
 #estadisticas .tarjeta { text-align: center; transition: var(--transicion); }
 #estadisticas .tarjeta:hover { transform: translateY(-6px); }
@@ -1563,7 +1581,7 @@ html[data-theme="dark"] .login__card {
   font-size: 1rem;
 }
 
-/* Citas del psicólogo */
+/* Citas del psicÃ³logo */
 .cita-item {
   display: flex;
   align-items: center;
@@ -1583,7 +1601,7 @@ html[data-theme="dark"] .login__card {
   gap: 0.5rem;
   margin-left: auto;
 }
-/* Botón de Pánico */
+/* BotÃ³n de PÃ¡nico */
 .btn-panico {
   position: fixed;
   bottom: 30px;
@@ -1612,7 +1630,7 @@ html[data-theme="dark"] .login__card {
 .notif-delete:hover { background: rgba(239, 68, 68, 0.1); color: var(--rojo); opacity: 1; transform: scale(1.1); }
 
 /* ==========================================
-   SELECTOR DE HORAS DE SUEÑO
+   SELECTOR DE HORAS DE SUEÃ‘O
    ========================================== */
 .sleep-tracker {
   display: flex;
@@ -1671,6 +1689,7 @@ html[data-theme="dark"] .login__card {
 
 input[type="range"] {
   -webkit-appearance: none;
+  appearance: none;
   width: 100%;
   height: 10px;
   border-radius: 999px;
@@ -1679,7 +1698,7 @@ input[type="range"] {
   margin-bottom: 0.5rem;
 }
 
-/* Círculo del Slider (Thumb) */
+/* CÃ­rculo del Slider (Thumb) */
 input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
@@ -1715,7 +1734,7 @@ input[type="range"]::-moz-range-thumb {
   font-weight: 600;
 }
 /* ==========================================
-   HISTORIAL DE SUEÑO
+   HISTORIAL DE SUEÃ‘O
    ========================================== */
 .historial-item {
   display: flex;
@@ -1780,7 +1799,7 @@ input:disabled, button:disabled {
   background: var(--bg);
 }
 
-/* Línea de tiempo */
+/* LÃ­nea de tiempo */
 .diario-timeline {
   display: flex;
   flex-direction: column;
@@ -1889,7 +1908,7 @@ input:disabled, button:disabled {
   text-decoration: underline;
 }
 
-/* Caja de texto cuando se está editando */
+/* Caja de texto cuando se estÃ¡ editando */
 .diario-textarea-edit {
   width: 100%;
   min-height: 100px;
@@ -1911,14 +1930,14 @@ input:disabled, button:disabled {
    PANTALLA DE SEGUIMIENTO (SEMA)
    ============================================================ */
 
-/* --- Utilidades específicas --- */
+/* --- Utilidades especÃ­ficas --- */
 .flex-between { display: flex; justify-content: space-between; }
 .align-center { align-items: center; }
 .mb-0-5 { margin-bottom: 0.5rem; }
 .mt-2 { margin-top: 2rem; }
 
 /* ==========================================
-   1. TARJETAS DE ESTADÍSTICAS (Totales del mes)
+   1. TARJETAS DE ESTADÃSTICAS (Totales del mes)
    ========================================== */
 .stat-card {
   text-align: center;
@@ -1949,7 +1968,7 @@ input:disabled, button:disabled {
 }
 
 /* ==========================================
-   2. GRÁFICO DE BARRAS (Emociones)
+   2. GRÃFICO DE BARRAS (Emociones)
    ========================================== */
 #grafico-emociones {
   display: flex;
@@ -1964,7 +1983,7 @@ input:disabled, button:disabled {
 
 .bars .bar {
   flex: none; /* Evita que la barra se estire como chicle */
-  width: 50px; /* Ancho fijo y simétrico */
+  width: 50px; /* Ancho fijo y simÃ©trico */
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -1980,7 +1999,7 @@ input:disabled, button:disabled {
   filter: brightness(1.1);
 }
 
-/* Cantidad (número arriba de la barra) */
+/* Cantidad (nÃºmero arriba de la barra) */
 .bars .bar em {
   position: absolute;
   top: -25px;
@@ -2007,14 +2026,14 @@ input:disabled, button:disabled {
   white-space: nowrap;
 }
 
-/* Lista de últimos registros */
+/* Lista de Ãºltimos registros */
 #lista-emociones {
   max-height: 250px;
   overflow-y: auto;
   padding-right: 0.5rem;
 }
 
-/* Personalización de la barra de scroll para la lista */
+/* PersonalizaciÃ³n de la barra de scroll para la lista */
 #lista-emociones::-webkit-scrollbar {
   width: 6px;
 }
@@ -2024,7 +2043,7 @@ input:disabled, button:disabled {
 }
 
 /* ==========================================
-   3. CALENDARIO DE SUEÑO
+   3. CALENDARIO DE SUEÃ‘O
    ========================================== */
 .calendario-wrapper {
   width: 100%;
@@ -2047,11 +2066,11 @@ input:disabled, button:disabled {
 .calendario-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 0.75rem; /* Separación entre los días */
+  gap: 0.75rem; /* SeparaciÃ³n entre los dÃ­as */
 }
 
 .calendario-dia {
-  aspect-ratio: 1 / 1; /* 🔑 MAGIA: Fuerza a que sea un cuadrado perfecto */
+  aspect-ratio: 1 / 1; /* ðŸ”‘ MAGIA: Fuerza a que sea un cuadrado perfecto */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -2074,7 +2093,7 @@ input:disabled, button:disabled {
   box-shadow: var(--sombra-sm);
 }
 
-/* Número del día en la esquina */
+/* NÃºmero del dÃ­a en la esquina */
 .calendario-numero {
   font-size: 0.8rem;
   font-weight: 600;
@@ -2084,7 +2103,7 @@ input:disabled, button:disabled {
   left: 8px;
 }
 
-/* Día de hoy (si no tiene registro) */
+/* DÃ­a de hoy (si no tiene registro) */
 .calendario-dia.hoy {
   border: 2px dashed var(--azul);
   background: var(--gradiente-suave);
@@ -2114,7 +2133,7 @@ input:disabled, button:disabled {
   margin-top: 3px;
 }
 
-/* --- Colores según la calidad del sueño (Fondos sutiles) --- */
+/* --- Colores segÃºn la calidad del sueÃ±o (Fondos sutiles) --- */
 .calendario-dia.calidad-excelente { 
   border-color: var(--verde); 
   background: rgba(16, 185, 129, 0.08); 
@@ -2148,7 +2167,7 @@ input:disabled, button:disabled {
 }
 
 /* ==========================================
-   4. RESPONSIVE (Móviles y Tablets)
+   4. RESPONSIVE (MÃ³viles y Tablets)
    ========================================== */
 @media (max-width: 768px) {
   .stat-card h2 {
@@ -2267,7 +2286,7 @@ input:disabled, button:disabled {
   padding: 1.2rem;
   background: var(--superficie);
   border: 1px solid var(--borde);
-  border-left: 4px solid var(--azul); /* Línea de color a la izquierda */
+  border-left: 4px solid var(--azul); /* LÃ­nea de color a la izquierda */
   border-radius: var(--radio-sm);
   margin-bottom: 1rem;
   transition: transform 0.2s, box-shadow 0.2s;
@@ -2324,7 +2343,7 @@ input:disabled, button:disabled {
   color: var(--texto-suave);
 }
 
-/* Ajuste para pantallas pequeñas */
+/* Ajuste para pantallas pequeÃ±as */
 @media (max-width: 500px) {
   .cita-item {
     flex-direction: column;
@@ -2338,10 +2357,10 @@ input:disabled, button:disabled {
 }
 
 /* ==========================================================================
-   PARCHE DE CORRECCIÓN RESPONSIVE (PEGAR AL FINAL DE TODO)
+   PARCHE DE CORRECCIÃ“N RESPONSIVE (PEGAR AL FINAL DE TODO)
    ========================================================================== */
 
-/* 1. ARREGLAR EL APLASTAMIENTO EN CELULAR (Diario, Sueño, etc.) */
+/* 1. ARREGLAR EL APLASTAMIENTO EN CELULAR (Diario, SueÃ±o, etc.) */
 @media (max-width: 768px) {
   /* Forza a que todas las columnas se apilen una debajo de otra en celular */
   .grid-2, .grid-3, .grid-4 {
@@ -2353,7 +2372,7 @@ input:disabled, button:disabled {
     padding: 1rem !important;
   }
 
-  /* Ajustes para que el diario y sueño respiren bien */
+  /* Ajustes para que el diario y sueÃ±o respiren bien */
   .diario-textarea {
     min-height: 150px;
   }
@@ -2372,14 +2391,14 @@ input:disabled, button:disabled {
     font-size: 3.5rem;
   }
 
-  /* Ajuste para la meditación */
+  /* Ajuste para la meditaciÃ³n */
   .player-box {
     padding: 2rem 1rem;
   }
 }
 
-/* 2. ARREGLAR EL MENÚ LATERAL (HAMBURGUESA) EN CELULAR */
-/* Ocultamos el botón de hamburguesa por defecto en PC */
+/* 2. ARREGLAR EL MENÃš LATERAL (HAMBURGUESA) EN CELULAR */
+/* Ocultamos el botÃ³n de hamburguesa por defecto en PC */
 .menu-toggle {
   display: none;
   background: transparent;
@@ -2391,7 +2410,7 @@ input:disabled, button:disabled {
   margin-right: 0.5rem;
 }
 
-/* Fondo oscuro para cuando se abre el menú */
+/* Fondo oscuro para cuando se abre el menÃº */
 .sidebar-overlay {
   display: none;
   position: fixed;
@@ -2409,14 +2428,14 @@ input:disabled, button:disabled {
 }
 
 @media (max-width: 800px) {
-  /* Mostramos el botón de hamburguesa */
+  /* Mostramos el botÃ³n de hamburguesa */
   .menu-toggle {
     display: flex;
     align-items: center;
     justify-content: center;
   }
 
-  /* Sobrescribimos el display: none que tenías antes */
+  /* Sobrescribimos el display: none que tenÃ­as antes */
   .sidebar {
     display: block !important; 
     position: fixed;
@@ -2442,12 +2461,12 @@ input:disabled, button:disabled {
   }
   
   .navbar__menu {
-    display: none; /* Ocultamos el menú superior en celular, usamos el lateral */
+    display: none; /* Ocultamos el menÃº superior en celular, usamos el lateral */
   }
 }
 
 /* ==========================================================================
-   CORRECCIONES FINALES DE CAPAS Y MÓVIL
+   CORRECCIONES FINALES DE CAPAS Y MÃ“VIL
    ========================================================================== */
 
 /* 1. Evitar que los enlaces se queden "pegados" como activos al tocarlos en celular */
@@ -2457,17 +2476,17 @@ input:disabled, button:disabled {
     background: transparent;
     color: var(--texto-suave);
   }
-  /* Solo el que tenga la clase .activo de verdad se pintará */
+  /* Solo el que tenga la clase .activo de verdad se pintarÃ¡ */
   .sidebar a.activo {
     background: var(--gradiente-suave);
     color: var(--azul);
   }
 }
 
-/* 2. Subir las capas (z-index) para que el menú lateral y su fondo tapen TODO */
+/* 2. Subir las capas (z-index) para que el menÃº lateral y su fondo tapen TODO */
 @media (max-width: 800px) {
   .sidebar-overlay {
-    z-index: 99998 !important; /* Por encima del menú de usuario (10000) */
+    z-index: 99998 !important; /* Por encima del menÃº de usuario (10000) */
   }
   
   .sidebar {
@@ -2475,7 +2494,7 @@ input:disabled, button:disabled {
   }
 }
 /* ==========================================================================
-   PANTALLA DE MEDITACIÓN (INMERSIVA)
+   PANTALLA DE MEDITACIÃ“N (INMERSIVA)
    ========================================================================== */
 
 .meditacion-wrapper {
@@ -2488,7 +2507,7 @@ input:disabled, button:disabled {
   text-align: center;
 }
 
-/* Círculo de respiración */
+/* CÃ­rculo de respiraciÃ³n */
 .breathing-circle {
   width: 280px;
   height: 280px;
@@ -2505,7 +2524,7 @@ input:disabled, button:disabled {
   transition: all 0.5s ease;
 }
 
-/* Animación de respiración (solo cuando está activo) */
+/* AnimaciÃ³n de respiraciÃ³n (solo cuando estÃ¡ activo) */
 .breathing-circle.activo {
   animation: respirar 8s ease-in-out infinite;
 }
@@ -2537,7 +2556,7 @@ input:disabled, button:disabled {
   margin-top: 0.5rem;
 }
 
-/* Botones de tiempo (Píldoras) */
+/* Botones de tiempo (PÃ­ldoras) */
 .time-pills {
   display: flex;
   gap: 1rem;
@@ -2568,7 +2587,7 @@ input:disabled, button:disabled {
   box-shadow: var(--sombra);
 }
 
-/* Botón de Play Gigante */
+/* BotÃ³n de Play Gigante */
 .btn-play-meditacion {
   width: 80px;
   height: 80px;
@@ -2596,7 +2615,7 @@ input:disabled, button:disabled {
   border: 2px solid var(--borde);
 }
 
-/* Botón de completar */
+/* BotÃ³n de completar */
 .btn-completar {
   display: none;
   animation: aparecer 0.5s ease;
@@ -2617,10 +2636,10 @@ input:disabled, button:disabled {
   }
 }
 /* ==========================================================================
-   CORRECCIÓN DE ANCHOS Y ESTRUCTURA (DIARIO Y SUEÑO)
+   CORRECCIÃ“N DE ANCHOS Y ESTRUCTURA (DIARIO Y SUEÃ‘O)
    ========================================================================== */
 
-/* 1. Hacer que el área principal ocupe todo el ancho y se centre */
+/* 1. Hacer que el Ã¡rea principal ocupe todo el ancho y se centre */
 .dashboard__main {
   width: 100% !important;
   max-width: 1200px !important;
@@ -2668,7 +2687,7 @@ input:disabled, button:disabled {
   width: 100%;
 }
 
-/* 6. Ajustar Sueño */
+/* 6. Ajustar SueÃ±o */
 .sleep-tracker {
   width: 100%;
   justify-content: center;
@@ -2676,4 +2695,810 @@ input:disabled, button:disabled {
 
 .slider-container {
   width: 100% !important;
+}
+/* Hover para el botÃ³n de eliminar cita (basura) */
+button[onclick^="eliminarCita"]:hover {
+  color: var(--rojo) !important;
+  opacity: 1 !important;
+  transform: scale(1.1);
+}
+/* ==========================================
+   REGISTRO - SECCIONES
+   ========================================== */
+.register-section {
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.register-section-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--texto);
+  margin-bottom: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid var(--borde);
+}
+
+.register-section-title i {
+  color: var(--azul);
+  font-size: 1.2rem;
+}
+
+/* Ajuste para que los inputs dentro de la secciÃ³n se vean mÃ¡s compactos */
+.register-section .form-grupo {
+  margin-bottom: 0.8rem;
+}
+
+.register-section .form-grupo label {
+  font-size: 0.85rem;
+}
+
+.register-section .form-grupo input,
+.register-section .form-grupo select {
+  padding: 0.7rem 0.9rem;
+  font-size: 0.9rem;
+}
+
+/* Responsive para el formulario de registro */
+@media (max-width: 768px) {
+  .login__right {
+    padding: 1rem;
+  }
+  .login__card {
+    padding: 1.5rem;
+  }
+  .register-section {
+    padding: 1rem;
+  }
+  .grid-2 {
+    grid-template-columns: 1fr !important; /* Fuerza una columna en mÃ³vil */
+  }
+}
+/* ==========================================================================
+   FIX DEFINITIVO: MENÃš HAMBURGUESA
+   ========================================================================== */
+
+/* Ocultar botÃ³n en PC */
+.menu-toggle {
+  display: none !important;
+}
+
+@media (max-width: 800px) {
+  /* 1. Mostrar el botÃ³n de hamburguesa */
+  .menu-toggle {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    color: var(--texto);
+    font-size: 1.5rem;
+    cursor: pointer;
+    margin-right: 10px;
+  }
+
+  /* 2. Posicionar el Sidebar fuera de la pantalla */
+  .sidebar {
+    display: block !important; 
+    position: fixed !important;
+    top: 0 !important;
+    left: -100% !important; /* Usar porcentaje asegura que se oculte 100% */
+    width: 280px !important;
+    height: 100vh !important;
+    z-index: 99999 !important; /* Capa altÃ­sima */
+    background: var(--superficie) !important;
+    transition: left 0.3s ease-in-out !important;
+    box-shadow: var(--sombra-lg) !important;
+    overflow-y: auto !important;
+  }
+
+  /* 3. Clase que activa el deslizamiento */
+  .sidebar.activo {
+    left: 0 !important;
+  }
+
+  /* 4. El fondo oscuro */
+  .sidebar-overlay {
+    display: none;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    background: rgba(0, 0, 0, 0.6) !important;
+    z-index: 99998 !important; /* Justo debajo del sidebar */
+    backdrop-filter: blur(3px);
+  }
+
+  .sidebar-overlay.activo {
+    display: block !important;
+  }
+}
+
+/* Esta regla solo afecta al menÃº cuando NO estÃ¡ dentro del dashboard (como en el chat) */
+body > .sidebar {
+  position: fixed !important;
+  top: 65px !important; /* Justo debajo del navbar */
+  left: -280px !important; /* Oculto por defecto */
+  height: calc(100vh - 65px) !important;
+  z-index: 99999 !important;
+  background: var(--superficie) !important;
+  transition: left 0.3s ease-in-out !important;
+  box-shadow: var(--sombra-lg) !important;
+}
+
+/* Cuando se activa, se desliza */
+body > .sidebar.activo {
+  left: 0 !important;
+}
+
+/* Ajustar el botÃ³n de hamburguesa para que se vea en el chat */
+@media (max-width: 800px) {
+  .menu-toggle {
+    display: flex !important;
+  }
+}
+/* ==========================================
+   BURBUJA DE "ESCRIBIENDO..." (ESTILO WHATSAPP)
+   ========================================== */
+.typing-indicator-bubble {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--card-bg);
+  border: 1px solid var(--borde);
+  padding: 12px 16px;
+  border-radius: 16px;
+  border-bottom-left-radius: 4px;
+  align-self: flex-start;
+  width: fit-content;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  animation: aparecer 0.3s ease-out;
+}
+
+.typing-indicator-bubble .dot {
+  width: 6px;
+  height: 6px;
+  background: var(--texto-suave);
+  border-radius: 50%;
+  animation: typingBounce 1.4s infinite ease-in-out both;
+}
+
+.typing-indicator-bubble .dot:nth-child(1) { animation-delay: -0.32s; }
+.typing-indicator-bubble .dot:nth-child(2) { animation-delay: -0.16s; }
+
+@keyframes typingBounce {
+  0%, 80%, 100% { transform: scale(0); }
+  40% { transform: scale(1); }
+}
+/* ==========================================================================
+   FIX MAESTRO PARA LOS 3 HÁBITOS (MEDITACIÓN, DIARIO, SUEÑO)
+   ========================================================================== */
+
+/* 1. Forzar que el área principal ocupe todo el ancho disponible */
+.dashboard {
+    display: flex !important;
+    width: 100%;
+}
+
+.dashboard__main {
+    flex: 1 !important;
+    width: 100% !important;
+    max-width: 100% !important; /* Quitamos límites para que no se pegue a la izquierda */
+    padding: 2rem !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centra el contenido */
+}
+
+/* 2. Contenedor universal para los 3 hábitos */
+.habito-container {
+    width: 100%;
+    max-width: 800px; /* Ancho ideal para leer y ver los controles */
+    margin: 0 auto;
+}
+
+/* Hacemos que las tarjetas dentro de los hábitos ocupen el 100% de ese contenedor */
+.habito-container .tarjeta {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 2.5rem !important;
+}
+
+/* 3. Estilos específicos: SUEÑO */
+.sleep-tracker {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    margin: 2rem 0;
+    width: 100%;
+}
+
+.sleep-display span#horasDisplay {
+    font-size: 4.5rem !important;
+    background: var(--gradiente);
+    background-clip: text;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    display: block;
+}
+
+.slider-container {
+    width: 100% !important;
+    max-width: 500px !important;
+    margin: 0 auto 2rem auto !important;
+}
+
+/* 4. Estilos específicos: DIARIO */
+.diario-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+/* Forzamos que el textarea del diario tenga fondo oscuro y texto claro */
+.diario-textarea, 
+#motivoSueno {
+    width: 100% !important;
+    color: var(--texto) !important;
+    background-color: var(--superficie) !important;
+    border: 1px solid var(--borde) !important;
+    font-size: 1rem !important;
+    padding: 1rem !important;
+    border-radius: var(--radio-sm) !important;
+}
+
+/* 5. Estilos específicos: MEDITACIÓN */
+.meditacion-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 2rem 0;
+}
+
+.breathing-circle {
+    width: 250px;
+    height: 250px;
+    margin: 0 auto 2rem auto;
+}
+
+/* 6. Responsive (Celulares) */
+@media (max-width: 800px) {
+    .dashboard__main {
+        padding: 1rem !important;
+    }
+    
+    .habito-container .tarjeta {
+        padding: 1.5rem !important;
+    }
+
+    .diario-grid {
+        grid-template-columns: 1fr; /* Una sola columna en celular */
+    }
+
+    .sleep-tracker {
+        gap: 1rem;
+    }
+    
+    .sleep-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+    }
+
+    .sleep-display span#horasDisplay {
+        font-size: 3.5rem !important;
+    }
+}
+/* ==========================================================================
+   FIX ESPECÍFICO PARA LA PANTALLA DE SUEÑO
+   ========================================================================== */
+
+/* 1. Asegurar que el contenedor esté centrado */
+.habito-container {
+    width: 100%;
+    max-width: 1000px; /* Un poco más ancho para que quepan las 2 columnas */
+    margin: 0 auto;
+}
+
+/* 2. Forzar las columnas del sueño */
+.habito-container .grid-2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 2rem;
+    width: 100%;
+}
+
+/* 3. Arreglar el texto negro en el textarea del motivo */
+#motivoSueno {
+    color: var(--texto) !important;
+    background-color: var(--bg) !important;
+    font-family: inherit;
+}
+
+#motivoSueno::placeholder {
+    color: var(--texto-suave) !important;
+    opacity: 0.7;
+}
+
+/* 4. Ajustes del Slider y botones para que no se desborden */
+.sleep-tracker {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    margin: 1.5rem 0;
+}
+
+.slider-container {
+    max-width: 100% !important; /* Ocupa todo el ancho de su columna */
+    margin: 0 auto;
+}
+
+/* 5. Responsive: En celular, una sola columna */
+@media (max-width: 800px) {
+    .habito-container .grid-2 {
+        grid-template-columns: 1fr !important;
+    }
+    
+    .sleep-tracker {
+        gap: 1rem;
+    }
+}
+/* ==========================================================================
+   DISEÑO EXCLUSIVO PARA ADMINISTRADORES (ADMIN VIEW) - MASTER CSS
+   ========================================================================== */
+
+/* 1. LAYOUT GENERAL Y ESPACIADO */
+.admin-view .dashboard__main {
+    width: 100% !important;
+    max-width: 1250px !important;
+    margin: 0 auto !important;
+    padding: 2.5rem !important;
+}
+
+/* Espacio entre las tarjetas de arriba (stats) y las de abajo (formulario/lista) */
+.admin-view .grid-3 {
+    margin-bottom: 3.5rem !important; /* 🔑 EL ARREGLO DEL ESPACIO */
+    gap: 2rem !important;
+}
+
+/* Espacio entre el formulario y la lista */
+.admin-view .grid-2 {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 2.5rem !important;
+    align-items: start !important;
+}
+
+/* 2. TARJETAS DE ESTADÍSTICAS (SUPERIORES) */
+.admin-view .stat-card {
+    background: linear-gradient(145deg, var(--card-bg), var(--superficie));
+    border: 1px solid var(--borde);
+    border-radius: var(--radio-lg);
+    padding: 2.5rem 1.5rem;
+    text-align: center;
+    box-shadow: var(--sombra-sm);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.admin-view .stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.2);
+    border-color: rgba(37, 99, 235, 0.4);
+}
+
+.admin-view .stat-card .tarjeta__icono {
+    width: 70px;
+    height: 70px;
+    border-radius: 20px; /* Cuadrado redondeado para verse moderno */
+    font-size: 2rem;
+    margin: 0 auto 1.5rem auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 16px -4px rgba(0, 0, 0, 0.1);
+}
+
+.admin-view .stat-card h2 {
+    font-family: var(--fuente-display);
+    font-size: 3.5rem;
+    font-weight: 800;
+    margin: 0 0 0.5rem 0;
+    background: var(--gradiente);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    line-height: 1;
+}
+
+.admin-view .stat-card p {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--texto-suave);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin: 0;
+}
+
+/* 3. FORMULARIO (CREAR PSICÓLOGO) */
+.admin-view .form-crear {
+    background: var(--card-bg);
+    border: 1px solid var(--borde);
+    border-radius: var(--radio-lg);
+    padding: 2.5rem;
+    box-shadow: var(--sombra-sm);
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.admin-view .form-crear h3 {
+    font-size: 1.4rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px dashed var(--borde);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.admin-view .form-crear .form-grupo {
+    margin-bottom: 1.2rem;
+}
+
+.admin-view .form-crear .form-grupo input {
+    width: 100%;
+    box-sizing: border-box;
+    background: var(--superficie);
+    border: 1px solid var(--borde);
+    padding: 1rem;
+    border-radius: var(--radio-sm);
+    font-size: 0.95rem;
+    color: var(--texto);
+    transition: all 0.3s ease;
+}
+
+.admin-view .form-crear .form-grupo input:focus {
+    border-color: var(--azul);
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+    outline: none;
+    background: var(--bg);
+}
+
+.admin-view .btn-crear-admin {
+    width: 100%;
+    padding: 1.1rem;
+    font-size: 1rem;
+    font-weight: 700;
+    border-radius: var(--radio-sm);
+    background: var(--gradiente);
+    color: white;
+    box-shadow: 0 8px 20px -6px rgba(37, 99, 235, 0.5);
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.admin-view .btn-crear-admin:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 25px -6px rgba(37, 99, 235, 0.6);
+}
+
+/* 4. TARJETA DE LA LISTA (DERECHA) */
+.admin-view .lista-psi-container {
+    background: var(--card-bg);
+    border: 1px solid var(--borde);
+    border-radius: var(--radio-lg);
+    padding: 2rem;
+    box-shadow: var(--sombra-sm);
+    max-height: 550px;
+    overflow-y: auto;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Scrollbar personalizado para la lista */
+.admin-view .lista-psi-container::-webkit-scrollbar {
+    width: 6px;
+}
+.admin-view .lista-psi-container::-webkit-scrollbar-thumb {
+    background: var(--borde);
+    border-radius: 10px;
+}
+
+/* 5. DISEÑO INTERNO DE LAS TARJETAS DE PSICÓLOGOS (DASHBOARD Y GESTIÓN) */
+.admin-card-psi {
+    background: var(--superficie);
+    border: 1px solid var(--borde);
+    border-radius: var(--radio);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--sombra-sm);
+    transition: all 0.3s ease;
+    margin-bottom: 1rem;
+}
+
+.admin-card-psi:hover {
+    transform: translateX(5px);
+    border-color: var(--azul);
+    background: var(--bg);
+    box-shadow: var(--sombra);
+}
+
+.admin-card-psi__header {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.avatar-admin {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #8B5CF6, #6366F1); /* Morado para diferenciar */
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    box-shadow: 0 4px 10px rgba(139, 92, 246, 0.3);
+}
+
+.admin-card-psi__info {
+    flex: 1;
+}
+
+.admin-card-psi__info h4 {
+    margin: 0 0 0.3rem 0;
+    font-size: 1.15rem;
+    color: var(--texto);
+}
+
+.especialidad-tag {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    background: rgba(37, 99, 235, 0.1);
+    color: var(--azul);
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.estado-indicador {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-top: 5px;
+}
+.estado-indicador.activo { background: var(--verde); box-shadow: 0 0 10px rgba(16, 185, 129, 0.5); }
+.estado-indicador.inactivo { background: var(--rojo); box-shadow: 0 0 10px rgba(239, 68, 68, 0.5); }
+
+.admin-card-psi__body {
+    flex: 1;
+    border-top: 1px solid var(--borde);
+    border-bottom: 1px solid var(--borde);
+    padding: 1rem 0;
+    margin-bottom: 1rem;
+}
+
+.admin-card-psi__body p {
+    margin: 0 0 0.5rem 0;
+    color: var(--texto-suave);
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.admin-card-psi__body p:last-child { margin-bottom: 0; }
+
+.admin-card-psi__footer {
+    display: flex;
+    gap: 1rem;
+}
+
+/* 6. BOTONES DE ACCIÓN (ACTIVAR/DESACTIVAR) */
+.btn-peligro {
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--rojo);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    transition: all 0.3s ease;
+}
+
+.btn-peligro:hover {
+    background: var(--rojo);
+    color: white;
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+/* 7. RESPONSIVE (CELULARES Y TABLETS) */
+@media (max-width: 900px) {
+    .admin-view .grid-2 {
+        grid-template-columns: 1fr !important;
+    }
+    .admin-view .grid-3 {
+        grid-template-columns: repeat(2, 1fr) !important;
+        margin-bottom: 2rem !important;
+    }
+}
+
+@media (max-width: 600px) {
+    .admin-view .grid-3 {
+        grid-template-columns: 1fr !important;
+    }
+    .admin-view .stat-card h2 {
+        font-size: 2.5rem;
+    }
+    .admin-view .dashboard__main {
+        padding: 1.5rem !important;
+    }
+}
+/* ==========================================================================
+   FIX PARA EL BUSCADOR EN VISTA ADMIN
+   ========================================================================== */
+
+.admin-view .buscador-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.admin-view .buscador-icono {
+    position: absolute;
+    left: 1.2rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--texto-suave);
+    font-size: 1rem;
+    pointer-events: none; /* Para que al hacer clic pase al input */
+}
+
+.admin-view .buscador-input {
+    width: 100%;
+    padding: 0.9rem 1rem 0.9rem 2.8rem !important; /* Más espacio a la izquierda para el icono */
+    border: 1px solid var(--borde);
+    border-radius: 999px !important; /* Forma de píldora para que se vea mejor */
+    background: var(--superficie);
+    color: var(--texto);
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+}
+
+.admin-view .buscador-input:focus {
+    outline: none;
+    border-color: var(--azul);
+    background: var(--bg);
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+}
+/* ==========================================================================
+   PESTAÑAS ADMIN (TABS)
+   ========================================================================== */
+.admin-tabs {
+    display: flex;
+    gap: 1rem;
+    border-bottom: 2px solid var(--borde);
+    padding-bottom: 1rem;
+}
+
+.admin-tab {
+    background: transparent;
+    border: none;
+    color: var(--texto-suave);
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 0.8rem 1.5rem;
+    border-radius: var(--radio-sm);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.admin-tab:hover {
+    color: var(--azul);
+    background: var(--hover-bg);
+}
+
+.admin-tab.activo {
+    color: white;
+    background: var(--gradiente);
+    box-shadow: var(--sombra);
+}
+
+.admin-tab-content {
+    display: none;
+    animation: aparecer 0.4s ease-out;
+}
+
+.admin-tab-content.activo {
+    display: block;
+}
+/* ==========================================================================
+   PESTAÑAS ADMIN (TABS)
+   ========================================================================== */
+.admin-tabs {
+    display: flex;
+    gap: 0.5rem;
+    border-bottom: 2px solid var(--borde);
+    padding-bottom: 1rem;
+    overflow-x: auto;
+}
+
+.admin-tab {
+    background: transparent;
+    border: none;
+    color: var(--texto-suave);
+    font-size: 0.95rem;
+    font-weight: 600;
+    padding: 0.8rem 1.2rem;
+    border-radius: var(--radio-sm);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    white-space: nowrap;
+}
+
+.admin-tab:hover {
+    color: var(--azul);
+    background: var(--hover-bg);
+}
+
+.admin-tab.activo {
+    color: white;
+    background: var(--gradiente);
+    box-shadow: var(--sombra);
+}
+
+.admin-tab-content {
+    display: none;
+    animation: aparecer 0.4s ease-out;
+}
+
+.admin-tab-content.activo {
+    display: block;
+}
+.admin-view .paciente-item .flex.gap-0-5 {
+    display: flex;
+    flex-direction: column; /* En pantallas medianas, los botones se apilan */
+    gap: 0.5rem;
+}
+
+@media (min-width: 900px) {
+    .admin-view .paciente-item .flex.gap-0-5 {
+        flex-direction: row;
+    }
+}
+
+.admin-view .paciente-item .badge-rojo {
+    background: rgba(239, 68, 68, 0.15);
+    color: var(--rojo);
+    border: 1px solid rgba(239, 68, 68, 0.3);
 }

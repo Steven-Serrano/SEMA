@@ -1,14 +1,22 @@
 const express = require('express');
 const Psicologo = require('../models/Psicologo');
 const verificarToken = require('../middleware/auth');
-const verificarAdmin = require('../middleware/admin');
-const upload = require('../middleware/upload'); // 🔑 Importamos multer
-const path = require('path');
+const upload = require('../middleware/upload'); 
 
 const router = express.Router();
 
-// GET /api/psicologos - Obtener todos los psicólogos activos
+// GET /api/psicologos - Obtener TODOS los psicólogos (Para el panel de admin)
 router.get('/', async (req, res) => {
+  try {
+    const psicologos = await Psicologo.find().select('-password');
+    res.json(psicologos);
+  } catch (err) {
+    res.status(500).json({ error: 'Error al obtener psicólogos' });
+  }
+});
+
+// GET /api/psicologos/directorio - Obtener solo los activos (Para el estudiante)
+router.get('/directorio', async (req, res) => {
   try {
     const psicologos = await Psicologo.find({ estado: 'activo' }).select('-password');
     res.json(psicologos);
@@ -17,7 +25,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-// GET /api/psicologos/perfil - Obtener el perfil del psicólogo logueado
+// GET /api/psicologos/perfil
 router.get('/perfil', verificarToken, async (req, res) => {
   try {
     const psicologo = await Psicologo.findById(req.usuario.id).select('-password');
@@ -28,7 +36,7 @@ router.get('/perfil', verificarToken, async (req, res) => {
   }
 });
 
-// PUT /api/psicologos/perfil - Actualizar datos del perfil
+// PUT /api/psicologos/perfil
 router.put('/perfil', verificarToken, async (req, res) => {
   try {
     const { nombre, email, telefono, ciudad, biografia, documento, especialidad } = req.body;
@@ -50,34 +58,26 @@ router.put('/perfil', verificarToken, async (req, res) => {
   }
 });
 
-// 🔑 NUEVA RUTA: PUT /api/psicologos/subir-foto
+// PUT /api/psicologos/subir-foto
 router.put('/subir-foto', verificarToken, upload.single('foto'), async (req, res) => {
   try {
     if (!req.file) return res.status(400).json({ error: 'No se ha seleccionado ninguna imagen' });
-
     const psicologo = await Psicologo.findById(req.usuario.id);
     if (!psicologo) return res.status(404).json({ error: 'Psicólogo no encontrado' });
-
     psicologo.fotoPerfil = `/uploads/${req.file.filename}`;
     await psicologo.save();
-
     res.json({ mensaje: 'Foto actualizada', fotoPerfil: psicologo.fotoPerfil });
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
 });
 
-// 🔑 NUEVA RUTA: PUT /api/psicologos/cambiar-password
+// PUT /api/psicologos/cambiar-password
 router.put('/cambiar-password', verificarToken, async (req, res) => {
   try {
     const { passwordActual, passwordNueva } = req.body;
-
-    if (!passwordActual || !passwordNueva) {
-      return res.status(400).json({ error: 'Ambas contraseñas son requeridas' });
-    }
-    if (passwordNueva.length < 6) {
-      return res.status(400).json({ error: 'Mínimo 6 caracteres' });
-    }
+    if (!passwordActual || !passwordNueva) return res.status(400).json({ error: 'Ambas contraseñas son requeridas' });
+    if (passwordNueva.length < 6) return res.status(400).json({ error: 'Mínimo 6 caracteres' });
 
     const psicologo = await Psicologo.findById(req.usuario.id);
     if (!psicologo) return res.status(404).json({ error: 'Psicólogo no encontrado' });
@@ -87,40 +87,29 @@ router.put('/cambiar-password', verificarToken, async (req, res) => {
 
     psicologo.password = passwordNueva;
     await psicologo.save();
-
     res.json({ mensaje: 'Contraseña actualizada correctamente' });
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
 });
 
-// POST /api/psicologos/disponibilidad - Agregar un bloque de horario
+// POST /api/psicologos/disponibilidad
 router.post('/disponibilidad', verificarToken, async (req, res) => {
   try {
     const { fecha, inicio, fin } = req.body;
-    
     if (!fecha || !inicio || !fin) return res.status(400).json({ error: 'Faltan datos' });
     if (inicio >= fin) return res.status(400).json({ error: 'La hora de inicio debe ser menor a la de fin' });
-
-    const psicologo = await Psicologo.findByIdAndUpdate(
-      req.usuario.id,
-      { $push: { disponibilidad: { fecha, inicio, fin } } },
-      { new: true }
-    );
-    
+    const psicologo = await Psicologo.findByIdAndUpdate(req.usuario.id, { $push: { disponibilidad: { fecha, inicio, fin } } }, { new: true });
     res.json({ mensaje: 'Turno agregado', disponibilidad: psicologo.disponibilidad });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-// DELETE /api/psicologos/disponibilidad/:id - Eliminar un bloque de horario
+// DELETE /api/psicologos/disponibilidad/:id
 router.delete('/disponibilidad/:id', verificarToken, async (req, res) => {
   try {
-    await Psicologo.findByIdAndUpdate(
-      req.usuario.id,
-      { $pull: { disponibilidad: { _id: req.params.id } } }
-    );
+    await Psicologo.findByIdAndUpdate(req.usuario.id, { $pull: { disponibilidad: { _id: req.params.id } } });
     res.json({ mensaje: 'Turno eliminado' });
   } catch (err) {
     res.status(500).json({ error: err.message });
