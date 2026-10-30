@@ -38,10 +38,16 @@
     const formDisponibilidad = document.getElementById('form-disponibilidad');
     const listaDisponibilidad = document.getElementById('lista-disponibilidad');
     const dispFecha = document.getElementById('disp-fecha');
-
+    
     if (dispFecha) {
-        const hoy = new Date().toISOString().split('T')[0];
-        dispFecha.setAttribute('min', hoy);
+        // Calculamos la fecha local correctamente para que no falle por la zona horaria
+        const ahora = new Date();
+        const year = ahora.getFullYear();
+        const month = String(ahora.getMonth() + 1).padStart(2, '0');
+        const day = String(ahora.getDate()).padStart(2, '0');
+        const hoyLocal = `${year}-${month}-${day}`;
+        
+        dispFecha.setAttribute('min', hoyLocal);
     }
 
     async function cargarDisponibilidad() {
@@ -125,7 +131,8 @@
             document.getElementById('stat-pacientes').textContent = totalPacientes;
 
             const citas = await fetchAuth('/citas');
-            const hoyStr = new Date().toISOString().split('T')[0];
+            const ahora = new Date();
+            const hoyStr = `${ahora.getFullYear()}-${String(ahora.getMonth() + 1).padStart(2, '0')}-${String(ahora.getDate()).padStart(2, '0')}`;
             
             const citasHoy = citas.filter(c => {
                 const fechaCita = new Date(c.fecha).toISOString().split('T')[0];

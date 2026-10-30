@@ -15,7 +15,7 @@
     const chatNombre = document.getElementById('chat-nombre');
     const chatEstado = document.getElementById('chat-estado');
     const chatAvatar = document.getElementById('chat-avatar');
-    const btnEliminarChat = document.getElementById('btnEliminarChat'); // 🔑
+    const btnEliminarChat = document.getElementById('btnEliminarChat');
 
     let chatActivoId = null;
     let receptorIdActual = null; 
@@ -69,6 +69,27 @@
             });
         }
     });
+
+    // 🔑 FUNCIÓN AUXILIAR: CALCULAR SI EL PSICÓLOGO ESTÁ EN LÍNEA
+    function estaEnLinea(psicologo) {
+        if (!psicologo || !psicologo.disponibilidad) return false;
+        
+        const ahora = new Date();
+        // Generamos la fecha de hoy local en formato YYYY-MM-DD
+        const hoyStr = `${ahora.getFullYear()}-${String(ahora.getMonth() + 1).padStart(2, '0')}-${String(ahora.getDate()).padStart(2, '0')}`;
+        
+        const turnoHoy = psicologo.disponibilidad.find(d => d.fecha === hoyStr);
+        if (!turnoHoy) return false;
+
+        const [hInicio, mInicio] = turnoHoy.inicio.split(':').map(Number);
+        const [hFin, mFin] = turnoHoy.fin.split(':').map(Number);
+        
+        const minInicio = (hInicio * 60) + mInicio;
+        const minFin = (hFin * 60) + mFin;
+        const minActual = (ahora.getHours() * 60) + ahora.getMinutes();
+
+        return minActual >= minInicio && minActual <= minFin;
+    }
 
     // LÓGICA DE LA BURBUJA VISUAL
     function mostrarBurbuja() {
@@ -140,12 +161,28 @@
         let especialidad = esPsicologo ? 'Estudiante' : (chatData.psicologoId?.especialidad || 'Psicología');
         
         chatNombre.textContent = nombre;
-        chatEstado.textContent = `En línea · ${especialidad}`;
+        
+        // 🔑 LÓGICA PARA EL ESTADO (EN LÍNEA / FUERA DE HORARIO)
+        if (!esPsicologo && chatData.psicologoId) {
+            const enLinea = estaEnLinea(chatData.psicologoId);
+            if (enLinea) {
+                chatEstado.textContent = `En línea · ${especialidad}`;
+                chatEstado.style.color = 'var(--verde)';
+            } else {
+                chatEstado.textContent = `Fuera de horario · ${especialidad}`;
+                chatEstado.style.color = 'var(--amarillo)';
+            }
+        } else {
+            // Si el que mira es el psicólogo, el estudiante siempre está "En línea"
+            chatEstado.textContent = `En línea · ${especialidad}`;
+            chatEstado.style.color = 'var(--verde)';
+        }
+
         chatAvatar.textContent = nombre.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
 
         chatInput.disabled = false;
         btnEnviar.disabled = false;
-        if (btnEliminarChat) btnEliminarChat.style.display = 'block'; // 🔑 Mostrar botón
+        if (btnEliminarChat) btnEliminarChat.style.display = 'block';
         chatInput.focus();
 
         document.querySelectorAll('.chat-item').forEach(item => {
@@ -159,7 +196,7 @@
         }
     }
 
-    // 5. CARGAR Y RENDERIZAR
+    // 5. CARGAR Y RENDERIZAR MENSAJES
     async function cargarMensajes(chatId) {
         try {
             const mensajes = await fetchAuth(`/mensajes/${chatId}`);
@@ -243,7 +280,7 @@
         });
     }
 
-    // 🔑 7. LÓGICA PARA ELIMINAR EL CHAT
+    // 7. ELIMINAR CHAT
     if (btnEliminarChat) {
         btnEliminarChat.addEventListener('click', async () => {
             if (!chatActivoId) return;
@@ -252,18 +289,17 @@
             try {
                 await fetchAuth(`/chats/${chatActivoId}`, { method: 'DELETE' });
                 
-                // Limpiar la pantalla
                 chatActivoId = null;
                 mensajesRenderizados.clear();
                 chatMensajes.innerHTML = `<div class="chat-empty-state" style="text-align: center; padding: 3rem 2rem; color: var(--texto-secundario);"><i class="fi fi-bs-comments"></i><p style="font-size: 1.1rem; margin: 0;">Conversación eliminada</p></div>`;
                 chatNombre.textContent = "Selecciona una conversación";
                 chatEstado.textContent = "Elige un chat de la lista";
+                chatEstado.style.color = 'var(--texto-suave)';
                 chatAvatar.textContent = "";
                 chatInput.disabled = true;
                 btnEnviar.disabled = true;
                 btnEliminarChat.style.display = 'none';
 
-                // Recargar la lista sin el chat eliminado
                 await cargarListaChats();
                 
                 if (typeof mostrarToast === 'function') mostrarToast('🗑️ Chat eliminado');
@@ -284,7 +320,6 @@
     const esPanico = urlParams.get('panico');
 
     if (chatExistenteId) {
-        // Si viene del botón "Chat" de un paciente existente
         try {
             const chats = await fetchAuth('/chats');
             const chatData = chats.find(c => c._id === chatExistenteId);
@@ -295,7 +330,6 @@
             if (typeof mostrarToast === 'function') mostrarToast('No se pudo abrir la conversación.');
         }
     } else if (nuevoChatId) {
-        // Si el psicólogo inicia un chat con un paciente nuevo
         try {
             const res = await fetchAuth('/chats', {
                 method: 'POST',
@@ -307,15 +341,30 @@
             if (typeof mostrarToast === 'function') mostrarToast('No se pudo iniciar el chat.');
         }
     } else if (esPanico) {
-        // Botón SOS del estudiante
-        if (typeof mostrarToast === 'function') mostrarToast('🚨 Buscando un psicólogo disponible...');
+        // 🔑 BOTÓN SOS INTELIGENTE
+        if (typeof mostrarToast === 'function') mostrarToast('🚨 Buscando un psicólogo disponible en línea...');
         try {
             const psicologos = await fetchAuth('/psicologos');
-            if (!psicologos || psicologos.length === 0) throw new Error('No hay psicólogos disponibles');
+            if (!psicologos || psicologos.length === 0) throw new Error('No hay psicólogos en el sistema');
+            
+            // Filtramos a los psicólogos que estén en línea
+            const psicologosEnLinea = psicologos.filter(p => estaEnLinea(p));
+            
+            let psicologoAsignado = null;
+            
+            if (psicologosEnLinea.length > 0) {
+                // Si hay alguien en línea, lo elegimos
+                psicologoAsignado = psicologosEnLinea[0];
+                if (typeof mostrarToast === 'function') mostrarToast(`✅ Conectado con ${psicologoAsignado.nombre}`);
+            } else {
+                // Si no hay nadie en línea, usamos el primero (fallback) y avisamos
+                psicologoAsignado = psicologos[0];
+                if (typeof mostrarToast === 'function') mostrarToast('⚠️ No hay psicólogos en línea ahora. Te conectamos con el primero disponible.');
+            }
             
             const res = await fetchAuth('/chats', {
                 method: 'POST',
-                body: JSON.stringify({ psicologoId: psicologos[0]._id })
+                body: JSON.stringify({ psicologoId: psicologoAsignado._id })
             });
             await cargarListaChats();
             seleccionarChat(res._id, res);

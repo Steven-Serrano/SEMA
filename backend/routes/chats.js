@@ -1,11 +1,11 @@
 const express = require('express');
 const Chat = require('../models/Chat');
-const Mensaje = require('../models/Mensaje'); // 🔑 Necesario para borrar los mensajes
+const Mensaje = require('../models/Mensaje');
 const verificarToken = require('../middleware/auth');
 
 const router = express.Router();
 
-// GET /api/chats - Obtener chats del usuario logueado
+// GET /api/chats
 router.get('/', verificarToken, async (req, res) => {
   try {
     const rol = req.usuario.rol || req.usuario.tipo;
@@ -19,7 +19,8 @@ router.get('/', verificarToken, async (req, res) => {
 
     const chats = await Chat.find(query)
       .populate('usuarioId', 'nombre email fotoPerfil')
-      .populate('psicologoId', 'nombre email fotoPerfil especialidad')
+      // 🔑 Agregamos 'disponibilidad' aquí
+      .populate('psicologoId', 'nombre email fotoPerfil especialidad disponibilidad')
       .sort({ updatedAt: -1 });
 
     res.json(chats);
@@ -29,7 +30,7 @@ router.get('/', verificarToken, async (req, res) => {
   }
 });
 
-// POST /api/chats - Crear o recuperar un chat
+// POST /api/chats
 router.post('/', verificarToken, async (req, res) => {
   try {
     const { usuarioId, psicologoId } = req.body;
@@ -48,17 +49,16 @@ router.post('/', verificarToken, async (req, res) => {
       return res.status(400).json({ error: 'Faltan datos para crear el chat' });
     }
 
-    // Buscar si ya existe
     let chatExistente = await Chat.findOne({ 
       usuarioId: finalUsuarioId, 
       psicologoId: finalPsicologoId 
     })
     .populate('usuarioId', 'nombre email fotoPerfil')
-    .populate('psicologoId', 'nombre email fotoPerfil especialidad');
+    // 🔑 Agregamos 'disponibilidad' aquí también
+    .populate('psicologoId', 'nombre email fotoPerfil especialidad disponibilidad');
 
     if (chatExistente) return res.json(chatExistente);
 
-    // Si no existe, crear
     const nuevoChat = await Chat.create({
       usuarioId: finalUsuarioId,
       psicologoId: finalPsicologoId
@@ -66,7 +66,8 @@ router.post('/', verificarToken, async (req, res) => {
 
     const chatPoblado = await Chat.findById(nuevoChat._id)
       .populate('usuarioId', 'nombre email fotoPerfil')
-      .populate('psicologoId', 'nombre email fotoPerfil especialidad');
+      // 🔑 Y aquí
+      .populate('psicologoId', 'nombre email fotoPerfil especialidad disponibilidad');
 
     res.status(201).json(chatPoblado);
   } catch (err) {
@@ -75,15 +76,13 @@ router.post('/', verificarToken, async (req, res) => {
   }
 });
 
-// 🔑 DELETE /api/chats/:chatId - Eliminar un chat y sus mensajes
+// DELETE /api/chats/:chatId
 router.delete('/:chatId', verificarToken, async (req, res) => {
   try {
     const chat = await Chat.findById(req.params.chatId);
     if (!chat) return res.status(404).json({ error: 'Chat no encontrado' });
 
     const userId = req.usuario.id;
-    
-    // Verificar que quien borra sea parte del chat
     const isPsicologo = chat.psicologoId && chat.psicologoId.toString() === userId;
     const isUsuario = chat.usuarioId && chat.usuarioId.toString() === userId;
 
@@ -91,10 +90,7 @@ router.delete('/:chatId', verificarToken, async (req, res) => {
       return res.status(403).json({ error: 'No tienes permiso para eliminar este chat' });
     }
 
-    // 1. Borrar todos los mensajes asociados
     await Mensaje.deleteMany({ chatId: req.params.chatId });
-    
-    // 2. Borrar el chat
     await Chat.findByIdAndDelete(req.params.chatId);
 
     res.json({ mensaje: 'Chat eliminado correctamente' });
