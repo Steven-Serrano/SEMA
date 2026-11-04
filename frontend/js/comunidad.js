@@ -1,45 +1,40 @@
 ﻿document.addEventListener('DOMContentLoaded', () => {
-    // ==========================================
     // 1. DATOS DE PRUEBA (Fallback si la API falla)
-    // ==========================================
     let posts = [
         {
             id: 1, autor: 'Mario', ini: 'M', tiempo: 'hace 2h',
-            texto: 'LogrÃ© terminar mis exÃ¡menes finales. Fue duro, pero SEMA me ayudÃ³ a mantenerme enfocado.',
+            texto: 'Logre terminar mis examenes finales. Fue duro, pero SEMA me ayudo a mantenerme enfocado.',
             likes: 24, gustado: false, comentado: false, compartido: false,
             comentarios: [], categoria: 'Logro Personal'
         },
         {
-            id: 2, autor: 'SofÃ­a', ini: 'S', tiempo: 'hace 5h',
-            texto: 'Compartir aquÃ­ me hace sentir menos sola. Gracias a todos por leer.',
+            id: 2, autor: 'Sofi­a', ini: 'S', tiempo: 'hace 5h',
+            texto: 'Compartir aqui­ me hace sentir menos sola. Gracias a todos por leer.',
             likes: 42, gustado: false, comentado: false, compartido: false,
             comentarios: [], categoria: 'ReflexiÃ³n'
         },
         {
             id: 3, autor: 'Diego', ini: 'D', tiempo: 'hace 1d',
-            texto: 'EmpecÃ© a meditar 10 min al dÃ­a. La diferencia es real.',
+            texto: 'Empezo a meditar 10 min al dia. La diferencia es real.',
             likes: 31, gustado: false, comentado: false, compartido: false,
             comentarios: [], categoria: 'MotivaciÃ³n'
         }
     ];
 
-    // FunciÃ³n auxiliar para mostrar toasts
+    // Función auxiliar para mostrar toasts
     function toast(msg) {
         if (typeof mostrarToast === 'function') return mostrarToast(msg);
         if (window.SEMA && window.SEMA.toast) return window.SEMA.toast(msg);
-        alert(msg); // Ãšltimo recurso
+        alert(msg);
     }
 
-    // ==========================================
     // 2. INTENTAR CARGAR DESDE EL BACKEND
-    // ==========================================
     async function cargarPublicaciones() {
         try {
-            // Descomentar cuando el backend estÃ© listo
-            /*
+            
             const data = await fetchAuth('/posts');
             if (data && data.length > 0) posts = data;
-            */
+            
             render(posts);
         } catch (error) {
             console.warn('Usando datos de prueba para comunidad:', error);
@@ -47,9 +42,7 @@
         }
     }
 
-    // ==========================================
     // 3. RENDERIZAR PUBLICACIONES
-    // ==========================================
     const contenedorPosts = document.getElementById('posts');
 
     function render(lista = posts) {
@@ -103,9 +96,9 @@
         `).join('');
     }
 
-    // ==========================================
+
     // 4. INTERACCIONES (Likes, Comentarios, Compartir)
-    // ==========================================
+    
     window.darLike = async function(id) {
         const post = posts.find(p => p.id === id);
         if (!post) return;
@@ -115,8 +108,7 @@
         render(); // Renderizado optimista
 
         try {
-            // Descomentar cuando el backend estÃ© listo
-            // await fetchAuth(`/posts/${id}/like`, { method: 'POST' });
+            await fetchAuth(`/posts/${id}/like`, { method: 'POST' });
         } catch (e) {
             console.error('Error al dar like en backend', e);
         }
@@ -126,7 +118,7 @@
         const post = posts.find(p => p.id === id);
         if (!post) return;
 
-        // Evitar duplicar el formulario si ya estÃ¡ abierto
+        // Evitar duplicar el formulario si ya esta abierto
         const postElement = document.querySelector(`.post[data-id="${id}"]`);
         if (postElement.querySelector('.comentario-form')) return;
 
@@ -162,13 +154,12 @@
         toast('Comentario publicado');
 
         try {
-            // Descomentar cuando el backend estÃ© listo
-            /*
+        
             await fetchAuth(`/posts/${id}/comment`, {
                 method: 'POST',
                 body: JSON.stringify({ texto })
             });
-            */
+    
         } catch (e) {
             console.error('Error al comentar en backend', e);
         }
@@ -182,9 +173,7 @@
         toast('PublicaciÃ³n marcada como compartida');
     };
 
-    // ==========================================
-    // 5. CREAR NUEVA PUBLICACIÃ“N
-    // ==========================================
+    // 5. CREAR NUEVA PUBLICACIÓN
     document.getElementById('form-post').addEventListener('submit', async (e) => {
         e.preventDefault();
         const texto = document.getElementById('post-texto').value.trim();
@@ -203,22 +192,18 @@
         render();
         toast('PublicaciÃ³n creada con Ã©xito');
 
-        try {
-            // Descomentar cuando el backend estÃ© listo
-            /*
+        try {          
             await fetchAuth('/posts', {
                 method: 'POST',
                 body: JSON.stringify({ texto, categoria })
             });
-            */
+        
         } catch (error) {
             console.error('Error al publicar en backend', error);
         }
     });
 
-    // ==========================================
     // 6. TABS Y FILTROS
-    // ==========================================
     document.querySelectorAll('.comunidad-tab').forEach(tab => {
         tab.addEventListener('click', () => {
             document.querySelectorAll('.comunidad-tab').forEach(t => t.classList.remove('activo'));

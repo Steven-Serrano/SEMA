@@ -70,7 +70,7 @@
         }
     });
 
-    // 🔑 FUNCIÓN AUXILIAR: CALCULAR SI EL PSICÓLOGO ESTÁ EN LÍNEA
+    //  FUNCIÓN AUXILIAR: CALCULAR SI EL PSICÓLOGO ESTÁ EN LÍNEA
     function estaEnLinea(psicologo) {
         if (!psicologo || !psicologo.disponibilidad) return false;
         

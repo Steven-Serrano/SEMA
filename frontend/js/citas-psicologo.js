@@ -75,14 +75,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                     `;
                 }
                 
-                // 🔑 Renderizar foto o iniciales
+                //  Renderizar foto o iniciales
                 const avatarHtml = fotoPaciente 
                     ? `<img src="${getImgUrl(fotoPaciente)}" class="avatar-grande" style="width: 50px; height: 50px; object-fit: cover;">` 
                     : `<div class="avatar-grande" style="width: 50px; height: 50px;">${iniciales}</div>`;
 
                 return `
                     <div class="cita-item" style="align-items: flex-start;">
-                        <!-- 🔑 AVATAR DEL PACIENTE -->
+                        <!--  AVATAR DEL PACIENTE -->
                         <div style="margin-right: 1rem;">
                             ${avatarHtml}
                         </div>

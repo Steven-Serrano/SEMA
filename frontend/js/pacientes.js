@@ -89,7 +89,7 @@
                   })
                 : 'Sin actividad';
             
-            // 🔑 Renderizado de foto o iniciales
+            // Renderizado de foto o iniciales
             const avatarHtml = paciente.fotoPerfil 
                 ? `<img src="${getImgUrl(paciente.fotoPerfil)}" class="avatar-grande" style="object-fit: cover;">` 
                 : `<div class="avatar-grande">${iniciales}</div>`;

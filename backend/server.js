@@ -27,9 +27,7 @@ const app = express();
 const server = http.createServer(app);
 const PORT = process.env.PORT || 3000;
 
-// ==========================================
 // CONFIGURACIÓN DE SOCKET.IO
-// ==========================================
 const io = new Server(server, {
   cors: {
     origin: '*', 
@@ -76,24 +74,19 @@ io.on('connection', (socket) => {
 
 });
 
-// ==========================================
 // MIDDLEWARES GLOBALES
-// ==========================================
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// ==========================================
+
 // CONEXIÓN A MONGODB ATLAS
-// ==========================================
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log('✅ SEMA conectado a MongoDB Atlas'))
   .catch((err) => console.error('❌ Error de conexión de SEMA:', err));
 
-// ==========================================
 // MONTAJE DE RUTAS
-// ==========================================
 app.use('/api/auth', authRoutes);
 app.use('/api/auth-psicologo', authPsicologoRoutes);
 app.use('/api/usuarios', usuarioRoutes);

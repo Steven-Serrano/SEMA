@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (!contenedor) return;
 
         try {
-            // 🔑 Usamos la nueva ruta pública que creamos en el backend
+            //  Usamos la nueva ruta pública que creamos en el backend
             const res = await fetch(`${API_URL}/comunidad/publicas`);
             const posts = await res.json();
 

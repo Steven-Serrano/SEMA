@@ -1,8 +1,8 @@
 {
   "info": {
-    "_postman_id": "sema-api-collection-v3",
-    "name": "SEMA - API Collection (Full Admin)",
-    "description": "Colección completa de endpoints del proyecto SEMA. Incluye Hábitos, Seguimiento, Tiempo Real y Roles de Administrador.",
+    "_postman_id": "sema-api-collection-v4",
+    "name": "SEMA - API Collection (Full Admin + Automation)",
+    "description": "Colección completa de endpoints del proyecto SEMA. Incluye Hábitos, Seguimiento, Tiempo Real y Roles de Administrador. Incluye scripts de automatización de tokens e IDs.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
@@ -15,6 +15,16 @@
       "key": "token",
       "value": "",
       "type": "string"
+    },
+    {
+      "key": "psicologoId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "usuarioId",
+      "value": "",
+      "type": "string"
     }
   ],
   "item": [
@@ -23,6 +33,21 @@
       "item": [
         {
           "name": "Registrar Usuario",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();",
+                  "if (response.token) {",
+                  "    pm.collectionVariables.set(\"token\", response.token);",
+                  "    console.log(\"Token de usuario guardado automáticamente\");",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "header": [
@@ -44,6 +69,21 @@
         },
         {
           "name": "Login Usuario",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();",
+                  "if (response.token) {",
+                  "    pm.collectionVariables.set(\"token\", response.token);",
+                  "    console.log(\"Token de usuario guardado automáticamente\");",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "header": [
@@ -70,6 +110,21 @@
       "item": [
         {
           "name": "Login Psicólogo",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();",
+                  "if (response.token) {",
+                  "    pm.collectionVariables.set(\"token\", response.token);",
+                  "    console.log(\"Token de psicólogo guardado automáticamente\");",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "header": [
@@ -190,6 +245,21 @@
         },
         {
           "name": "Listar Pacientes (Para Psicólogos)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();",
+                  "if (response && response.length > 0) {",
+                  "    pm.collectionVariables.set(\"usuarioId\", response[0]._id);",
+                  "    console.log(\"ID de paciente guardado automáticamente\");",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [
@@ -212,6 +282,21 @@
       "item": [
         {
           "name": "Listar Todos los Psicólogos",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();",
+                  "if (response && response.length > 0) {",
+                  "    pm.collectionVariables.set(\"psicologoId\", response[0]._id);",
+                  "    console.log(\"ID de psicólogo guardado automáticamente\");",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [
@@ -224,6 +309,18 @@
               "raw": "{{base_url}}/psicologos",
               "host": ["{{base_url}}"],
               "path": ["psicologos"]
+            }
+          }
+        },
+        {
+          "name": "Listar Directorio (Solo Activos)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/psicologos/directorio",
+              "host": ["{{base_url}}"],
+              "path": ["psicologos", "directorio"]
             }
           }
         },
@@ -266,6 +363,31 @@
               "raw": "{{base_url}}/psicologos/perfil",
               "host": ["{{base_url}}"],
               "path": ["psicologos", "perfil"]
+            }
+          }
+        },
+        {
+          "name": "Cambiar Contraseña (Psicólogo)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"passwordActual\": \"psico123\",\n  \"passwordNueva\": \"nueva123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/psicologos/cambiar-password",
+              "host": ["{{base_url}}"],
+              "path": ["psicologos", "cambiar-password"]
             }
           }
         },
@@ -382,7 +504,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"psicologoId\": \"ID_DEL_PSICOLOGO\",\n  \"fecha\": \"2026-11-05\",\n  \"hora\": \"09:00\",\n  \"motivo\": \"Consulta de seguimiento\"\n}"
+              "raw": "{\n  \"psicologoId\": \"{{psicologoId}}\",\n  \"fecha\": \"2026-11-05\",\n  \"hora\": \"09:00\",\n  \"motivo\": \"Consulta de seguimiento\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/citas",
@@ -529,7 +651,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"psicologoId\": \"ID_DEL_PSICOLOGO\"\n}"
+              "raw": "{\n  \"psicologoId\": \"{{psicologoId}}\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/chats",
@@ -554,7 +676,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"usuarioId\": \"ID_DEL_USUARIO\"\n}"
+              "raw": "{\n  \"usuarioId\": \"{{usuarioId}}\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/chats",
@@ -678,13 +800,13 @@
               }
             ],
             "url": {
-              "raw": "{{base_url}}/estados-emocionales?paciente=ID_DEL_PACIENTE",
+              "raw": "{{base_url}}/estados-emocionales?paciente={{usuarioId}}",
               "host": ["{{base_url}}"],
               "path": ["estados-emocionales"],
               "query": [
                 {
                   "key": "paciente",
-                  "value": "ID_DEL_PACIENTE"
+                  "value": "{{usuarioId}}"
                 }
               ]
             }
@@ -1013,13 +1135,13 @@
               }
             ],
             "url": {
-              "raw": "{{base_url}}/habitos/resumen-mensual?paciente=ID_DEL_PACIENTE",
+              "raw": "{{base_url}}/habitos/resumen-mensual?paciente={{usuarioId}}",
               "host": ["{{base_url}}"],
               "path": ["habitos", "resumen-mensual"],
               "query": [
                 {
                   "key": "paciente",
-                  "value": "ID_DEL_PACIENTE"
+                  "value": "{{usuarioId}}"
                 }
               ]
             }
@@ -1119,6 +1241,21 @@
       "item": [
         {
           "name": "Login Admin (SENA / Super)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();",
+                  "if (response.token) {",
+                  "    pm.collectionVariables.set(\"token\", response.token);",
+                  "    console.log(\"Token de administrador guardado automáticamente\");",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "header": [
@@ -1135,6 +1272,36 @@
               "raw": "{{base_url}}/auth-admin/login",
               "host": ["{{base_url}}"],
               "path": ["auth-admin", "login"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "13 - SuperAdmin",
+      "item": [
+        {
+          "name": "Crear Admin SENA (Solo SuperAdmin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Nuevo Admin SENA\",\n  \"email\": \"admin2@sema.com\",\n  \"password\": \"admin1234\",\n  \"documento\": \"123456789\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/admin/crear-admin",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "crear-admin"]
             }
           }
         }

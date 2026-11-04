@@ -108,7 +108,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (cita.estado === 'cancelada') badgeClass = 'badge-rojo';
                 if (cita.estado === 'completada') badgeClass = 'badge-gris';
 
-                // 🔑 LÓGICA DE BOTONES
+                //  LÓGICA DE BOTONES
                 let botonAccion = '';
                 if (cita.estado === 'pendiente' || cita.estado === 'confirmada') {
                     botonAccion = `

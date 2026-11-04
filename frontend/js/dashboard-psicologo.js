@@ -17,7 +17,7 @@
     document.querySelector('.nombre-usuario').textContent = user.nombre;
     document.querySelector('.correo-usuario').textContent = user.email;
 
-    // 🔑 ACTUALIZAR FOTO DESDE EL SERVIDOR
+    //  ACTUALIZAR FOTO DESDE EL SERVIDOR
     try {
         const perfil = await fetchAuth('/psicologos/perfil');
         const fotoUsuario = document.querySelector('.foto-usuario');
@@ -32,9 +32,7 @@
         console.warn('No se pudo actualizar la foto de perfil:', error);
     }
 
-    // ==========================================
     // 1. GESTIÓN DE DISPONIBILIDAD
-    // ==========================================
     const formDisponibilidad = document.getElementById('form-disponibilidad');
     const listaDisponibilidad = document.getElementById('lista-disponibilidad');
     const dispFecha = document.getElementById('disp-fecha');

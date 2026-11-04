@@ -14,13 +14,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     const previewFoto = document.getElementById('previewFoto');
     const inputFoto = document.getElementById('fotoPerfilInput');
 
-    // 🔑 FUNCIÓN CLAVE: Armar la URL completa de la foto
+    // FUNCIÓN CLAVE: Armar la URL completa de la foto
     function obtenerUrlFoto(ruta) {
         if (!ruta) return 'assets/avatar-default.png';
         if (ruta.startsWith('http') || ruta.startsWith('data:')) return ruta;
         
-        // Si viene "/uploads/foto.jpg", le pegamos la URL base del servidor
-        // API_URL es "http://localhost:3000/api", quitamos el "/api"
         const baseUrl = API_URL.replace('/api', ''); 
         return `${baseUrl}${ruta}`;
     }
@@ -106,12 +104,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         this.innerHTML = '<span class="spinner"></span> Subiendo...';
 
         try {
-            // 🔑 USAMOS FETCH NATIVO (No fetchAuth)
+            // USAMOS FETCH NATIVO (No fetchAuth)
             const response = await fetch(`${API_URL}${rutaFoto}`, {
                 method: 'PUT',
                 headers: { 
                     'Authorization': `Bearer ${Auth.getToken()}` 
-                    // ⚠️ NO PONEMOS Content-Type, el navegador lo maneja solo
+                    //  NO PONEMOS Content-Type, el navegador lo maneja solo
                 },
                 body: formData
             });

@@ -158,7 +158,7 @@
         });
     }
 
-    // 🔑 7. ESCUCHAR EL EVENTO DE SOCKET.IO PARA ACTUALIZAR LA TARJETA
+    // 7. ESCUCHAR EL EVENTO DE SOCKET.IO PARA ACTUALIZAR LA TARJETA
     document.addEventListener('actualizarNotificaciones', () => {
         console.log("🔄 Actualizando tarjeta de notificaciones...");
         cargarNotificacionesTarjeta();

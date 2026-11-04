@@ -33,9 +33,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     });
 
-    // ==========================================
     // 3. CARGAR ESTADÍSTICAS
-    // ==========================================
     async function cargarEstadisticas() {
         try {
             const stats = await fetchAuth('/estadisticas');
@@ -47,9 +45,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-    // ==========================================
     // 4. GESTIÓN DE PSICÓLOGOS
-    // ==========================================
     async function cargarPsicologos() {
         const contenedor = document.getElementById('lista-psicologos-admin');
         try {
@@ -93,9 +89,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     };
 
-    // ==========================================
     // 5. GESTIÓN DE ESTUDIANTES
-    // ==========================================
     let estudiantesData = [];
     
     async function cargarEstudiantes() {
@@ -185,9 +179,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    // ==========================================
     // 6. GESTIÓN DE ADMINISTRADORES (Solo Super Admin)
-    // ==========================================
     async function cargarAdminsSena() {
         if (!esSuperAdmin) return;
         const contenedor = document.getElementById('lista-admins-sena');
@@ -230,9 +222,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     };
 
-    // ==========================================
     // 7. FORMULARIOS DE CREACIÓN
-    // ==========================================
     const formPsi = document.getElementById('form-crear-psicologo');
     if (formPsi) {
         formPsi.addEventListener('submit', async (e) => {
@@ -297,9 +287,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    // ==========================================
     // 8. CERRAR SESIÓN
-    // ==========================================
     document.querySelectorAll('.logout-link').forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault(); 
@@ -308,9 +296,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     });
 
-    // ==========================================
     // 9. INICIALIZAR TODO
-    // ==========================================
     await cargarEstadisticas();
     await cargarPsicologos();
     await cargarEstudiantes();

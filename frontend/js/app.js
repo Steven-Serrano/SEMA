@@ -1,9 +1,9 @@
-/* ============================================================
+/*
    SEMA — Script global
    - Navegación móvil
    - Cambio de tema claro/oscuro
    - Notificaciones toast
-   ============================================================ */
+*/
 
 (function () {
   // -------- Tema --------

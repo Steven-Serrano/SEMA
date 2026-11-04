@@ -1,9 +1,4 @@
-﻿/* ============================================================
-   SEMA â€” ComunicaciÃ³n que Sana
-   Hoja de estilos principal (refactor)
-   ============================================================ */
-
-/* ---------- Tokens de diseÃ±o ---------- */
+﻿/*Tokens de diseño*/
 :root {
   /* Paleta */
   --azul: #2563EB;
@@ -28,7 +23,7 @@
   --texto-suave: #64748B;
   --texto-secundario: #64748B;
 
-  /* Alias semÃ¡nticos */
+  /* Alias semanticos */
   --primario: var(--azul);
   --primario-oscuro: var(--azul-oscuro);
   --secundario: var(--verde);
@@ -50,14 +45,14 @@
   --gradiente: linear-gradient(135deg, #2563EB 0%, #10B981 100%);
   --gradiente-suave: linear-gradient(135deg, rgba(37, 99, 235, .08), rgba(16, 185, 129, .08));
 
-  /* TransiciÃ³n y tipografÃ­a */
+  /* Transición y tipografi­a */
   --transicion: 240ms cubic-bezier(.4, 0, .2, 1);
   --fuente: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --fuente-display: 'Sora', var(--fuente);
   --fuente-principal: var(--fuente);
 }
 
-/* ---------- Modo oscuro ---------- */
+/*Modo oscuro*/
 html[data-theme="dark"] {
   --bg: #0B1220;
   --fondo: #0B1220;
@@ -75,7 +70,7 @@ html[data-theme="dark"] {
   --gradiente-suave: linear-gradient(135deg, rgba(37, 99, 235, .18), rgba(16, 185, 129, .14));
 }
 
-/* ---------- Reset ---------- */
+/*Reset*/
 *, *::before, *::after { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 body {
@@ -105,7 +100,7 @@ img { max-width: 100%; display: block; }
 button { font-family: inherit; cursor: pointer; border: 0; background: none; color: inherit; }
 :focus-visible { outline: 3px solid var(--azul); outline-offset: 3px; border-radius: 4px; }
 
-/* ---------- Utilidades ---------- */
+/*Utilidades*/
 .contenedor { max-width: 1200px; margin: 0 auto; padding: 0 1.25rem; }
 .grid { display: grid; gap: 1.5rem; }
 .flex { display: flex; }
@@ -117,7 +112,7 @@ button { font-family: inherit; cursor: pointer; border: 0; background: none; col
 @media (max-width: 900px) { .grid-3, .grid-4 { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 600px) { .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; } }
 
-/* ---------- Botones ---------- */
+/*Botones*/
 .btn {
   display: inline-flex;
   align-items: center;
@@ -143,7 +138,6 @@ button { font-family: inherit; cursor: pointer; border: 0; background: none; col
 .btn-fantasma { background: transparent; color: var(--texto); }
 .btn-fantasma:hover { background: var(--superficie); }
 
-/* ---------- Chip ---------- */
 .chip {
   display: inline-flex;
   align-items: center;
@@ -156,9 +150,7 @@ button { font-family: inherit; cursor: pointer; border: 0; background: none; col
   font-weight: 600;
 }
 
-/* ==========================================
-   NAVBAR
-   ========================================== */
+/*NAVBAR*/
 .navbar {
   display: flex;
   align-items: center;
@@ -235,9 +227,7 @@ button { font-family: inherit; cursor: pointer; border: 0; background: none; col
   .navbar__menu li a { font-size: .8rem; padding: .4rem .65rem; }
 }
 
-/* ==========================================
-   HERO / LANDING
-   ========================================== */
+/*HERO / LANDING*/
 .hero { padding: 4rem 0 3rem; }
 .hero__grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 3rem; align-items: center; }
 .hero h1 span {
@@ -260,12 +250,12 @@ button { font-family: inherit; cursor: pointer; border: 0; background: none; col
 }
 @media (max-width: 900px) { .hero__grid { grid-template-columns: 1fr; } }
 
-/* ---------- Secciones ---------- */
+/*Secciones*/
 .seccion { padding: 4rem 0; }
 .seccion__titulo { text-align: center; max-width: 640px; margin: 0 auto 2.5rem; }
 .seccion__titulo p { color: var(--texto-suave); }
 
-/* ---------- Tarjetas ---------- */
+/*Tarjetas*/
 .tarjeta {
   background: var(--bg);
   border: 1px solid var(--borde);
@@ -291,7 +281,7 @@ button { font-family: inherit; cursor: pointer; border: 0; background: none; col
   margin-bottom: 1rem;
 }
 
-/* ---------- EstadÃ­sticas ---------- */
+/*Estadísticas*/
 .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-top: 3rem; }
 .stats .num {
   font-family: var(--fuente-display);
@@ -304,7 +294,7 @@ button { font-family: inherit; cursor: pointer; border: 0; background: none; col
 }
 @media (max-width: 700px) { .stats { grid-template-columns: repeat(2, 1fr); } }
 
-/* ---------- Testimonios ---------- */
+/*Testimonios*/
 .testimonio {
   background: var(--gradiente-suave);
   border-radius: var(--radio);
@@ -312,7 +302,7 @@ button { font-family: inherit; cursor: pointer; border: 0; background: none; col
 }
 .testimonio__autor { display: flex; align-items: center; gap: .8rem; margin-top: 1rem; }
 
-/* ---------- Avatar (base) ---------- */
+/*Avatar (base)*/
 .avatar {
   width: 42px;
   height: 42px;
@@ -338,7 +328,7 @@ button { font-family: inherit; cursor: pointer; border: 0; background: none; col
   flex-shrink: 0;
 }
 
-/* ---------- Footer ---------- */
+/*Footer*/
 .footer {
   margin-top: 4rem;
   padding: 3rem 0 1.5rem;
@@ -361,7 +351,7 @@ button { font-family: inherit; cursor: pointer; border: 0; background: none; col
 }
 @media (max-width: 800px) { .footer__grid { grid-template-columns: 1fr 1fr; } }
 
-/* ---------- Animaciones ---------- */
+/*Animaciones*/
 @keyframes flotar {
   0%, 100% { transform: translateY(0); }
   50%      { transform: translateY(-8px); }
@@ -382,9 +372,7 @@ button { font-family: inherit; cursor: pointer; border: 0; background: none; col
 .aparecer-3 { animation: aparecer .6s ease-out .3s both; }
 .flotar     { animation: flotar 4s ease-in-out infinite; }
 
-/* ==========================================
-   DASHBOARD (general)
-   ========================================== */
+/*DASHBOARD (general)*/
 .dashboard {
   display: grid;
   grid-template-columns: 260px 1fr;
@@ -425,13 +413,11 @@ button { font-family: inherit; cursor: pointer; border: 0; background: none; col
   .sidebar   { display: none; }
 }
 
-/* ==========================================
-   SELECTOR DE ÃNIMO (DISEÃ‘O PREMIUM)
-   ========================================== */
+/*SELECTOR DE ANIMO*/
 .animo-selector {
   display: flex;
   flex-wrap: wrap;
-  gap: 1.25rem; /* MÃ¡s espacio para que respiren */
+  gap: 1.25rem; /* Mas espacio para que respiren */
   margin-top: 1.5rem;
   padding: 0.5rem 0;
 }
@@ -466,7 +452,7 @@ button { font-family: inherit; cursor: pointer; border: 0; background: none; col
     inset 0 2px 4px rgba(255, 255, 255, 0.1);
 }
 
-/* El emoji en sÃ­ (para que resalte) */
+/*para que resalte el emoji*/
 .animo-btn > span, 
 .animo-btn {
   filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
@@ -487,7 +473,7 @@ button { font-family: inherit; cursor: pointer; border: 0; background: none; col
   filter: brightness(1.1) contrast(1.1); 
 }
 
-/* AnimaciÃ³n de "pop" cuando se hace clic */
+/*Animacion de "pop" cuando se hace clic*/
 .animo-btn.activo::after {
   content: '';
   position: absolute;
@@ -514,7 +500,7 @@ html[data-theme="dark"] .animo-btn {
 }
 
 
-/* ---------- Barra de progreso ---------- */
+/*Barra de progreso*/
 .progreso {
   height: 8px;
   background: var(--borde);
@@ -529,9 +515,7 @@ html[data-theme="dark"] .animo-btn {
   transition: width .8s cubic-bezier(.4, 0, .2, 1);
 }
 
-/* ==========================================
-   DASHBOARD HEADER
-   ========================================== */
+/*DASHBOARD HEADER*/
 .dashboard-header {
   display: flex;
   justify-content: space-between;
@@ -552,7 +536,7 @@ html[data-theme="dark"] .animo-btn {
   overflow: visible;
 }
 
-/* ---------- Notificaciones ---------- */
+/*Notificaciones*/
 .notification-btn {
   width: 46px;
   height: 46px;
@@ -571,7 +555,7 @@ html[data-theme="dark"] .animo-btn {
   transform: translateY(-2px);
 }
 
-/* ---------- MenÃº de usuario ---------- */
+/*Menu de usuario*/
 .user-menu { position: relative; display: inline-block; z-index: 10000; }
 .user-menu-btn {
   display: flex;
@@ -602,7 +586,7 @@ html[data-theme="dark"] .animo-btn {
 .correo-usuario { font-size: .75rem; color: var(--texto-suave); }
 .user-arrow { font-size: .7rem; color: var(--texto-suave); transition: transform var(--transicion); }
 
-/* ---------- Dropdown ---------- */
+/*Dropdown*/
 .user-dropdown {
   display: none;
   position: absolute;
@@ -646,9 +630,7 @@ html[data-theme="dark"] .animo-btn {
   .correo-usuario { font-size: .7rem; }
 }
 
-/* ==========================================
-   CHAT
-   ========================================== */
+/*CHAT*/
 .chat-layout {
   display: flex;
   height: calc(100vh - 80px);
@@ -745,7 +727,7 @@ html[data-theme="dark"] .animo-btn {
   gap: 4px;
 }
 
-/* AnimaciÃ³n para el texto de "Escribiendo..." */
+/* Animacion para el texto de "Escribiendo..." */
 #chat-typing {
   animation: pulsoTexto 1.5s infinite;
 }
@@ -782,9 +764,7 @@ html[data-theme="dark"] .animo-btn {
   .msg          { max-width: 85%; }
 }
 
-/* ==========================================
-   PSICÃ“LOGOS
-   ========================================== */
+/*PSICILOGOS*/
 .psi-card { text-align: center; }
 .psi-card .avatar-grande {
   width: 90px;
@@ -795,9 +775,7 @@ html[data-theme="dark"] .animo-btn {
 .psi-card .especialidad { color: var(--texto-suave); font-size: .88rem; margin-bottom: .6rem; }
 .psi-card .rating { color: var(--verde); font-weight: 600; }
 
-/* ==========================================
-   SEGUIMIENTO (grÃ¡ficas)
-   ========================================== */
+/*SEGUIMIENTO (graficas)*/
 .chart-wrap { position: relative; padding: 1rem; }
 .bars {
   display: flex;
@@ -835,9 +813,7 @@ html[data-theme="dark"] .animo-btn {
   font-weight: 600;
 }
 
-/* ==========================================
-   CITAS
-   ========================================== */
+/*CITAS*/
 .cita-item {
   display: flex;
   justify-content: space-between;
@@ -882,9 +858,7 @@ html[data-theme="dark"] .animo-btn {
 .filtro-btn { transition: transform var(--transicion); }
 .filtro-btn:hover { transform: translateY(-2px); }
 
-/* ==========================================
-   PACIENTES (dashboard psicÃ³logo)
-   ========================================== */
+/*PACIENTES (dashboard psicIlogo)*/
 .paciente-item { transition: background var(--transicion); }
 .paciente-item:hover { background: var(--hover-bg); border-radius: var(--radio-sm); }
 .paciente-item:last-child { border-bottom: none; }
@@ -899,9 +873,7 @@ html[data-theme="dark"] .animo-btn {
 }
 .stat-card p { color: var(--texto-suave); font-size: .9rem; margin: 0; }
 
-/* ==========================================
-   COMUNIDAD
-   ========================================== */
+/*COMUNIDAD*/
 .comunidad-layout { min-height: calc(100vh - 68px); }
 .comunidad-main { padding: 2rem; }
 
@@ -980,8 +952,7 @@ html[data-theme="dark"] .animo-btn {
   border-color: var(--azul);
   box-shadow: 0 0 0 4px rgba(37, 99, 235, .15);
 }
-
-/* Selector de categorÃ­a antiguo (compatibilidad) */
+/* Selector de categoria antiguo (compatibilidad) */
 .btn-opciones { margin-bottom: 1rem; }
 .btn-opciones h1 {
   display: block;
@@ -1035,7 +1006,7 @@ html[data-theme="dark"] .animo-btn {
 .post .acciones button:hover { color: var(--azul); }
 .post .acciones button.gustado { color: var(--verde); font-weight: 600; }
 
-/* Estado vacÃ­o */
+/* Estado vaci­o */
 .comunidad-vacio { max-width: 850px; margin: 0 auto; text-align: center; padding: 3rem 2rem; }
 .comunidad-vacio-icono { font-size: 2.5rem; margin-bottom: .8rem; }
 .comunidad-vacio h3 { margin: 0 0 .4rem; }
@@ -1116,9 +1087,7 @@ html[data-theme="dark"] .animo-btn {
   .comunidad-tab   { padding: .6rem .8rem; font-size: .82rem; }
 }
 
-/* ==========================================
-   FORMULARIOS
-   ========================================== */
+/*FORMULARIOS*/
 .form-grupo { margin-bottom: 1rem; }
 .form-grupo label {
   display: block;
@@ -1148,9 +1117,7 @@ html[data-theme="dark"] .animo-btn {
   box-shadow: 0 0 0 4px rgba(37, 99, 235, .15);
 }
 
-/* ==========================================
-   TOAST
-   ========================================== */
+/*TOAST*/
 .toast {
   position: fixed;
   bottom: 24px;
@@ -1167,9 +1134,7 @@ html[data-theme="dark"] .animo-btn {
 }
 .toast.activo { transform: translateY(0); }
 
-/* ==========================================
-   LOGIN
-   ========================================== */
+/*LOGIN*/
 .login {
   min-height: 100vh;
   display: grid;
@@ -1333,9 +1298,7 @@ html[data-theme="dark"] .login__card {
   animation: spin .7s linear infinite;
 }
 
-/* ==========================================
-   PERFIL
-   ========================================== */
+/*PERFIL*/
 .perfil-header {
   display: flex;
   align-items: center;
@@ -1448,9 +1411,7 @@ html[data-theme="dark"] .login__card {
   .profile-photo img { width: 170px; height: 170px; }
 }
 
-/* ==========================================
-   UTILIDADES EXTRA Y LOGO FOOTER
-   ========================================== */
+/*UTILIDADES EXTRA Y LOGO FOOTER*/
 .bg-superficie { background: var(--superficie); }
 .bg-gradiente { background: var(--gradiente); color: #fff; }
 
@@ -1477,9 +1438,7 @@ html[data-theme="dark"] .login__card {
 .lista-notificaciones li { padding: .6rem 0; border-bottom: 1px solid var(--borde); }
 .lista-notificaciones li:last-child { border-bottom: none; }
 
-/* ==========================================
-   EXTRAS DASHBOARD (Notificaciones y Botones)
-   ========================================== */
+/*EXTRAS DASHBOARD (Notificaciones y Botones)*/
 .flex-col-between {
   display: flex;
   flex-direction: column;
@@ -1581,7 +1540,7 @@ html[data-theme="dark"] .login__card {
   font-size: 1rem;
 }
 
-/* Citas del psicÃ³logo */
+/* Citas del psicologo */
 .cita-item {
   display: flex;
   align-items: center;
@@ -1601,7 +1560,7 @@ html[data-theme="dark"] .login__card {
   gap: 0.5rem;
   margin-left: auto;
 }
-/* BotÃ³n de PÃ¡nico */
+/* Boton de Panico */
 .btn-panico {
   position: fixed;
   bottom: 30px;
@@ -1629,9 +1588,7 @@ html[data-theme="dark"] .login__card {
 .notif-delete { background: transparent; border: none; color: var(--texto-suave); cursor: pointer; padding: 0.4rem; border-radius: 50%; transition: all 0.2s; opacity: 0.5; }
 .notif-delete:hover { background: rgba(239, 68, 68, 0.1); color: var(--rojo); opacity: 1; transform: scale(1.1); }
 
-/* ==========================================
-   SELECTOR DE HORAS DE SUEÃ‘O
-   ========================================== */
+/*SELECTOR DE HORAS DE SUEÑO*/
 .sleep-tracker {
   display: flex;
   align-items: center;
@@ -1698,7 +1655,7 @@ input[type="range"] {
   margin-bottom: 0.5rem;
 }
 
-/* CÃ­rculo del Slider (Thumb) */
+/* Calculo del Slider (Thumb) */
 input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
@@ -1733,9 +1690,7 @@ input[type="range"]::-moz-range-thumb {
   color: var(--texto-suave);
   font-weight: 600;
 }
-/* ==========================================
-   HISTORIAL DE SUEÃ‘O
-   ========================================== */
+/*HISTORIAL DE SUEÑO*/
 .historial-item {
   display: flex;
   align-items: center;
@@ -1774,9 +1729,7 @@ input:disabled, button:disabled {
   opacity: 0.7;
 }
 
-/* ==========================================
-   DIARIO EMOCIONAL
-   ========================================== */
+/*DIARIO EMOCIONAL*/
 .diario-textarea {
   width: 100%;
   min-height: 250px;
@@ -1799,7 +1752,7 @@ input:disabled, button:disabled {
   background: var(--bg);
 }
 
-/* LÃ­nea de tiempo */
+/* Linea de tiempo */
 .diario-timeline {
   display: flex;
   flex-direction: column;
@@ -1873,9 +1826,7 @@ input:disabled, button:disabled {
   text-decoration: underline;
 }
 
-/* ==========================================
-   ACCIONES DEL DIARIO (Editar/Borrar)
-   ========================================== */
+/*ACCIONES DEL DIARIO (Editar/Borrar)*/
 .diario-botones {
   display: flex;
   gap: 1rem;
@@ -1908,7 +1859,7 @@ input:disabled, button:disabled {
   text-decoration: underline;
 }
 
-/* Caja de texto cuando se estÃ¡ editando */
+/* Caja de texto cuando se esta editando */
 .diario-textarea-edit {
   width: 100%;
   min-height: 100px;
@@ -1926,19 +1877,15 @@ input:disabled, button:disabled {
   margin-bottom: 0.5rem;
 }
 
-/* ============================================================
-   PANTALLA DE SEGUIMIENTO (SEMA)
-   ============================================================ */
+/*PANTALLA DE SEGUIMIENTO (SEMA)*/
 
-/* --- Utilidades especÃ­ficas --- */
+/* --- Utilidades especificas --- */
 .flex-between { display: flex; justify-content: space-between; }
 .align-center { align-items: center; }
 .mb-0-5 { margin-bottom: 0.5rem; }
 .mt-2 { margin-top: 2rem; }
 
-/* ==========================================
-   1. TARJETAS DE ESTADÃSTICAS (Totales del mes)
-   ========================================== */
+/*1. TARJETAS DE ESTADISTICAS (Totales del mes)*/
 .stat-card {
   text-align: center;
   padding: 2rem 1rem;
@@ -1967,9 +1914,7 @@ input:disabled, button:disabled {
   font-weight: 500;
 }
 
-/* ==========================================
-   2. GRÃFICO DE BARRAS (Emociones)
-   ========================================== */
+/*2. GRAFICO DE BARRAS (Emociones)*/
 #grafico-emociones {
   display: flex;
   align-items: flex-end;
@@ -1983,7 +1928,7 @@ input:disabled, button:disabled {
 
 .bars .bar {
   flex: none; /* Evita que la barra se estire como chicle */
-  width: 50px; /* Ancho fijo y simÃ©trico */
+  width: 50px; 
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -1999,7 +1944,7 @@ input:disabled, button:disabled {
   filter: brightness(1.1);
 }
 
-/* Cantidad (nÃºmero arriba de la barra) */
+/* Cantidad (numero arriba de la barra) */
 .bars .bar em {
   position: absolute;
   top: -25px;
@@ -2026,14 +1971,14 @@ input:disabled, button:disabled {
   white-space: nowrap;
 }
 
-/* Lista de Ãºltimos registros */
+/* Lista de ultimos registros */
 #lista-emociones {
   max-height: 250px;
   overflow-y: auto;
   padding-right: 0.5rem;
 }
 
-/* PersonalizaciÃ³n de la barra de scroll para la lista */
+/* Personalización de la barra de scroll para la lista */
 #lista-emociones::-webkit-scrollbar {
   width: 6px;
 }
@@ -2042,9 +1987,7 @@ input:disabled, button:disabled {
   border-radius: 10px;
 }
 
-/* ==========================================
-   3. CALENDARIO DE SUEÃ‘O
-   ========================================== */
+/*3. CALENDARIO DE SUEÑO*/
 .calendario-wrapper {
   width: 100%;
   max-width: 750px; /* Evita que se estire en pantallas grandes */
@@ -2066,11 +2009,11 @@ input:disabled, button:disabled {
 .calendario-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 0.75rem; /* SeparaciÃ³n entre los dÃ­as */
+  gap: 0.75rem; /* Separación entre los dias */
 }
 
 .calendario-dia {
-  aspect-ratio: 1 / 1; /* ðŸ”‘ MAGIA: Fuerza a que sea un cuadrado perfecto */
+  aspect-ratio: 1 / 1;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -2093,7 +2036,7 @@ input:disabled, button:disabled {
   box-shadow: var(--sombra-sm);
 }
 
-/* NÃºmero del dÃ­a en la esquina */
+/* Numero del dia en la esquina */
 .calendario-numero {
   font-size: 0.8rem;
   font-weight: 600;
@@ -2103,7 +2046,7 @@ input:disabled, button:disabled {
   left: 8px;
 }
 
-/* DÃ­a de hoy (si no tiene registro) */
+/* Dia de hoy (si no tiene registro) */
 .calendario-dia.hoy {
   border: 2px dashed var(--azul);
   background: var(--gradiente-suave);
@@ -2133,7 +2076,7 @@ input:disabled, button:disabled {
   margin-top: 3px;
 }
 
-/* --- Colores segÃºn la calidad del sueÃ±o (Fondos sutiles) --- */
+/*Colores segun la calidad del sueño (Fondos sutiles)*/
 .calendario-dia.calidad-excelente { 
   border-color: var(--verde); 
   background: rgba(16, 185, 129, 0.08); 
@@ -2166,9 +2109,7 @@ input:disabled, button:disabled {
   color: var(--azul); 
 }
 
-/* ==========================================
-   4. RESPONSIVE (MÃ³viles y Tablets)
-   ========================================== */
+/*4. RESPONSIVE (Moviles y Tablets)*/
 @media (max-width: 768px) {
   .stat-card h2 {
     font-size: 2.5rem;
@@ -2216,9 +2157,7 @@ input:disabled, button:disabled {
   }
 }
 
-/* ==========================================
-   TARJETA DE RESUMEN GENERAL (SEGUIMIENTO)
-   ========================================== */
+/*TARJETA DE RESUMEN GENERAL (SEGUIMIENTO)*/
 .resumen-general {
   display: flex;
   align-items: center;
@@ -2276,9 +2215,7 @@ input:disabled, button:disabled {
   }
 }
 
-/* ==========================================
-   ESTILOS DE CITAS (TARJETAS)
-   ========================================== */
+/*ESTILOS DE CITAS (TARJETAS)*/
 .cita-item {
   display: flex;
   align-items: center;
@@ -2286,7 +2223,7 @@ input:disabled, button:disabled {
   padding: 1.2rem;
   background: var(--superficie);
   border: 1px solid var(--borde);
-  border-left: 4px solid var(--azul); /* LÃ­nea de color a la izquierda */
+  border-left: 4px solid var(--azul); /* Li­nea de color a la izquierda */
   border-radius: var(--radio-sm);
   margin-bottom: 1rem;
   transition: transform 0.2s, box-shadow 0.2s;
@@ -2343,7 +2280,7 @@ input:disabled, button:disabled {
   color: var(--texto-suave);
 }
 
-/* Ajuste para pantallas pequeÃ±as */
+/* Ajuste para pantallas pequeñas */
 @media (max-width: 500px) {
   .cita-item {
     flex-direction: column;
@@ -2356,23 +2293,21 @@ input:disabled, button:disabled {
   }
 }
 
-/* ==========================================================================
-   PARCHE DE CORRECCIÃ“N RESPONSIVE (PEGAR AL FINAL DE TODO)
-   ========================================================================== */
+/*PARCHE DE CORRECCIÓN RESPONSIVE (PEGAR AL FINAL DE TODO)*/
 
-/* 1. ARREGLAR EL APLASTAMIENTO EN CELULAR (Diario, SueÃ±o, etc.) */
+/* 1. ARREGLAR EL APLASTAMIENTO EN CELULAR (Diario, Sueño, etc.) */
 @media (max-width: 768px) {
   /* Forza a que todas las columnas se apilen una debajo de otra en celular */
   .grid-2, .grid-3, .grid-4 {
     grid-template-columns: 1fr !important;
     gap: 1rem !important;
-  }
+  } 
 
   .dashboard__main {
     padding: 1rem !important;
   }
 
-  /* Ajustes para que el diario y sueÃ±o respiren bien */
+  /* Ajustes para que el diario y sueño respiren bien */
   .diario-textarea {
     min-height: 150px;
   }
@@ -2397,8 +2332,8 @@ input:disabled, button:disabled {
   }
 }
 
-/* 2. ARREGLAR EL MENÃš LATERAL (HAMBURGUESA) EN CELULAR */
-/* Ocultamos el botÃ³n de hamburguesa por defecto en PC */
+/* 2. ARREGLAR EL MENU LATERAL (HAMBURGUESA) EN CELULAR */
+/* Ocultamos el boton de hamburguesa por defecto en PC */
 .menu-toggle {
   display: none;
   background: transparent;
@@ -2410,7 +2345,7 @@ input:disabled, button:disabled {
   margin-right: 0.5rem;
 }
 
-/* Fondo oscuro para cuando se abre el menÃº */
+/* Fondo oscuro para cuando se abre el menu */
 .sidebar-overlay {
   display: none;
   position: fixed;
@@ -2428,14 +2363,14 @@ input:disabled, button:disabled {
 }
 
 @media (max-width: 800px) {
-  /* Mostramos el botÃ³n de hamburguesa */
+  /* Mostramos el boton de hamburguesa */
   .menu-toggle {
     display: flex;
     align-items: center;
     justify-content: center;
   }
 
-  /* Sobrescribimos el display: none que tenÃ­as antes */
+  /* Sobrescribimos el display: none que ten­ias antes */
   .sidebar {
     display: block !important; 
     position: fixed;
@@ -2465,9 +2400,7 @@ input:disabled, button:disabled {
   }
 }
 
-/* ==========================================================================
-   CORRECCIONES FINALES DE CAPAS Y MÃ“VIL
-   ========================================================================== */
+/*CORRECCIONES FINALES DE CAPAS Y MOVIL*/
 
 /* 1. Evitar que los enlaces se queden "pegados" como activos al tocarlos en celular */
 @media (hover: none) {
@@ -2493,9 +2426,7 @@ input:disabled, button:disabled {
     z-index: 99999 !important; /* Por encima de todo */
   }
 }
-/* ==========================================================================
-   PANTALLA DE MEDITACIÃ“N (INMERSIVA)
-   ========================================================================== */
+/*PANTALLA DE MEDITACIÓN (INMERSIVA)*/
 
 .meditacion-wrapper {
   display: flex;
@@ -2635,9 +2566,7 @@ input:disabled, button:disabled {
     font-size: 4rem;
   }
 }
-/* ==========================================================================
-   CORRECCIÃ“N DE ANCHOS Y ESTRUCTURA (DIARIO Y SUEÃ‘O)
-   ========================================================================== */
+/*CORRECCIÓN DE ANCHOS Y ESTRUCTURA*/
 
 /* 1. Hacer que el Ã¡rea principal ocupe todo el ancho y se centre */
 .dashboard__main {
@@ -2702,9 +2631,7 @@ button[onclick^="eliminarCita"]:hover {
   opacity: 1 !important;
   transform: scale(1.1);
 }
-/* ==========================================
-   REGISTRO - SECCIONES
-   ========================================== */
+/*REGISTRO - SECCIONES*/
 .register-section {
   background: var(--superficie);
   border: 1px solid var(--borde);
@@ -2760,9 +2687,7 @@ button[onclick^="eliminarCita"]:hover {
     grid-template-columns: 1fr !important; /* Fuerza una columna en mÃ³vil */
   }
 }
-/* ==========================================================================
-   FIX DEFINITIVO: MENÃš HAMBURGUESA
-   ========================================================================== */
+/*FIX DEFINITIVO: MENÃš HAMBURGUESA*/
 
 /* Ocultar botÃ³n en PC */
 .menu-toggle {
@@ -2844,9 +2769,7 @@ body > .sidebar.activo {
     display: flex !important;
   }
 }
-/* ==========================================
-   BURBUJA DE "ESCRIBIENDO..." (ESTILO WHATSAPP)
-   ========================================== */
+/*BURBUJA DE "ESCRIBIENDO..." (ESTILO WHATSAPP)*/
 .typing-indicator-bubble {
   display: flex;
   align-items: center;
@@ -2878,9 +2801,7 @@ body > .sidebar.activo {
   0%, 80%, 100% { transform: scale(0); }
   40% { transform: scale(1); }
 }
-/* ==========================================================================
-   FIX MAESTRO PARA LOS 3 HÁBITOS (MEDITACIÓN, DIARIO, SUEÑO)
-   ========================================================================== */
+/*3 HÁBITOS (MEDITACIÓN, DIARIO, SUEÑO)*/
 
 /* 1. Forzar que el área principal ocupe todo el ancho disponible */
 .dashboard {
@@ -3006,9 +2927,7 @@ body > .sidebar.activo {
         font-size: 3.5rem !important;
     }
 }
-/* ==========================================================================
-   FIX ESPECÍFICO PARA LA PANTALLA DE SUEÑO
-   ========================================================================== */
+/*PANTALLA DE SUEÑO*/
 
 /* 1. Asegurar que el contenedor esté centrado */
 .habito-container {
@@ -3061,9 +2980,7 @@ body > .sidebar.activo {
         gap: 1rem;
     }
 }
-/* ==========================================================================
-   DISEÑO EXCLUSIVO PARA ADMINISTRADORES (ADMIN VIEW) - MASTER CSS
-   ========================================================================== */
+/*DISEÑO EXCLUSIVO PARA ADMINISTRADORES (ADMIN VIEW) - MASTER CSS*/
 
 /* 1. LAYOUT GENERAL Y ESPACIADO */
 .admin-view .dashboard__main {
@@ -3359,9 +3276,7 @@ body > .sidebar.activo {
         padding: 1.5rem !important;
     }
 }
-/* ==========================================================================
-   FIX PARA EL BUSCADOR EN VISTA ADMIN
-   ========================================================================== */
+/*FIX PARA EL BUSCADOR EN VISTA ADMIN*/
 
 .admin-view .buscador-wrapper {
     position: relative;
@@ -3395,9 +3310,7 @@ body > .sidebar.activo {
     background: var(--bg);
     box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
 }
-/* ==========================================================================
-   PESTAÑAS ADMIN (TABS)
-   ========================================================================== */
+/*PESTAÑAS ADMIN (TABS)*/
 .admin-tabs {
     display: flex;
     gap: 1rem;
@@ -3439,9 +3352,7 @@ body > .sidebar.activo {
 .admin-tab-content.activo {
     display: block;
 }
-/* ==========================================================================
-   PESTAÑAS ADMIN (TABS)
-   ========================================================================== */
+/*PESTAÑAS ADMIN (TABS)*/
 .admin-tabs {
     display: flex;
     gap: 0.5rem;
