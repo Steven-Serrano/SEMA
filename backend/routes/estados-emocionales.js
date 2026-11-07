@@ -30,13 +30,16 @@ router.get('/', verificarToken, async (req, res) => {
     let targetUserId = req.usuario.id;
     const rol = req.usuario.rol || req.usuario.tipo;
     
-    // 🔑 Si es psicólogo y pide un paciente específico
+    // 🔑 VALIDACIÓN: Esta condición ahora es segura. 
+    // Como el registro público fue corregido, nadie puede obtener un token falso de 'psicologo'.
+    // Solo un psicólogo real (creado por un admin) podrá cumplir esta condición.
     if (rol === 'psicologo' && req.query.paciente) {
       targetUserId = req.query.paciente;
     }
 
     const estados = await EstadoEmocional.find({ usuarioId: targetUserId })
       .sort({ fecha: -1 });
+      
     res.json(estados);
   } catch (err) {
     res.status(500).json({ error: 'Error al obtener estados emocionales' });

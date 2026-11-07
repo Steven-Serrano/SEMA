@@ -61,9 +61,10 @@ const UsuarioSchema = new mongoose.Schema({
     required: [true, 'El programa de formación es obligatorio'],
     trim: true
   },
+  // ⚠️ CORRECCIÓN DE SEGURIDAD: El registro público solo debe permitir el rol 'usuario'
   rol: {
     type: String,
-    enum: ['usuario', 'psicologo', 'administrador'],
+    enum: ['usuario'], 
     default: 'usuario'
   },
   activo: {

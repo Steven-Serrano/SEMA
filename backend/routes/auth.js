@@ -9,6 +9,7 @@ const router = express.Router();
 // ==========================================
 router.post('/registro', async (req, res) => {
   try {
+    // ⚠️ CORRECCIÓN: Se elimina 'rol' de la desestructuración para ignorar cualquier valor enviado por el cliente
     const { 
       nombre, 
       documento, 
@@ -20,8 +21,7 @@ router.post('/registro', async (req, res) => {
       genero,
       numeroFicha,
       programaFormacion,
-      edad,
-      rol = 'usuario'
+      edad
     } = req.body;
 
     if (!nombre || !documento || !email || !password || !numeroFicha || !programaFormacion) {
@@ -40,6 +40,7 @@ router.post('/registro', async (req, res) => {
       return res.status(400).json({ error: 'El número de documento ya está registrado' });
     }
 
+    // ⚠️ CORRECCIÓN: Se fuerza el rol a 'usuario' sin importar lo que diga el body
     const usuario = new Usuario({
       nombre,
       documento,
@@ -52,13 +53,14 @@ router.post('/registro', async (req, res) => {
       numeroFicha,
       programaFormacion,
       edad,
-      rol
+      rol: 'usuario' // FORZADO
     });
 
     await usuario.save();
 
     const token = jwt.sign(
-      { id: usuario._id, tipo: rol },
+      // Se usa el rol del objeto guardado en BD, que ahora es 100% confiable
+      { id: usuario._id, tipo: usuario.rol, rol: usuario.rol },
       process.env.JWT_SECRET,
       { expiresIn: '24h' }
     );
@@ -99,7 +101,6 @@ router.post('/login', async (req, res) => {
       return res.status(401).json({ error: 'Credenciales incorrectas' });
     }
 
-    // 🔑 VALIDACIÓN DE BANEO
     if (usuario.activo === false) {
       return res.status(403).json({ 
         error: 'Tu cuenta ha sido suspendida por un administrador. Contacta a Bienestar SENA.' 
@@ -107,7 +108,7 @@ router.post('/login', async (req, res) => {
     }
 
     const token = jwt.sign(
-      { id: usuario._id, tipo: usuario.rol },
+      { id: usuario._id, tipo: usuario.rol, rol: usuario.rol },
       process.env.JWT_SECRET,
       { expiresIn: '24h' }
     );
